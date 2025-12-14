@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+
+
+
+{% block body %}
+
+<div class="index">
+
+<h3>Welcome to neat code</h3>
+
+
+    <button><a href="{{ url_for('register_user')}}">Click here to register</a></button>
+    <br>
+    <br>
+    <button><a href="{{ url_for('login')}}">Click here to login</a></button>
+    
+
+</div>
+
+{% endblock %}
