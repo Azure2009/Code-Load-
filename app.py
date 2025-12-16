@@ -1,12 +1,25 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash 
+import pymysql
 
 app = Flask(__name__)
 
 app.secret_key = "0920juancarlo"
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:0920juancarlo@localhost/mydatabase'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+conn = pymysql.connect(
+
+   host="localhost",
+   user="root",
+   password="0920juancarlo",
+   database="mydatabase",
+   cursorclass=pymysql.cursors.DictCursor
+
+)
+
+cursor = conn.cursor()
 
 db = SQLAlchemy(app)
 
@@ -19,7 +32,10 @@ class User(db.Model):
    
 class Problem(db.Model):
    problem_id = db.Column(db.Integer, nullable = False, primary_key=True)
+   problem_title = db.Column(db.String(200), nullable = False)
    problem_set = db.Column(db.Text, nullable = False)
+   expected_output = db.Column(db.Text, nullable = False)
+   difficulty = db.Column(db.String(50), nullable = False)
 
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
@@ -34,7 +50,7 @@ class Submission(db.Model):
 class Result(db.Model):
    result_id = db.Column(db.Integer, nullable = False, primary_key=True)
    result = db.Column(db.String(50), nullable = False)
-   submission_id = db.Column(db.Integer, nullable = False)
+   submission_id = db.Column(db.Integer, nullable = True)
    
 
 with app.app_context():
@@ -78,6 +94,8 @@ def login():
 
       if user and check_password_hash(user.hash_password, password):
 
+         session.clear()
+
          session["user_id"] = user.user_id
 
          return redirect(url_for("dashboard"))
@@ -97,7 +115,38 @@ def dashboard():
    
    current_user = User.query.get_or_404(int(user_id))
 
-   return render_template("dashboard.html", current_user=current_user) 
+   problems_list = Problem.query.all()
+
+   return render_template("dashboard.html", current_user=current_user, problems_list=problems_list) 
+
+@app.route('/solving_page/<int:problem_id>', methods=['POST', 'GET'])
+def problem(problem_id):
+
+      problem = Problem.query.get_or_404(problem_id)
+
+      return render_template("solving_page.html", problem=problem)
+   
+@app.route('/solving_page/submit', methods=['POST', 'GET'])
+def submit():
+
+   if request.method == 'POST':
+
+
+      submission_form = request.form["submission"]
+
+      user_submission = Submission(submission = submission_form)
+   
+      try:
+
+         db.session.add(user_submission)
+         db.session.commit()
+
+      except:
+         return redirect('/dashboard')
+
+
+   else:
+      return redirect('/dashboard')
 
 if __name__ == '__main__':
    app.run(debug=True)

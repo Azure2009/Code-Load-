@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="mainContainer">
+
+        <div id="title">
+            <h1>{{problem.problem_title}}</h1>
+        </div>
+
+        <div id="description">
+            <h3>What is the expected output?</h3>
+        </div>
+
+        <div id="problem">
+            
+            <pre>{{problem.problem_set | e}}</pre>
+        </div>
+
+        <div id="solving_area_container">
+            
+            <form action="/solving_page/submit" method='POST'>
+            <textarea name="submission" rows="10" cols="50" id="textarea"></textarea>
+            <input type="submit" value="Submit">
+            </form>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
