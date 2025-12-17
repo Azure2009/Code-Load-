@@ -25,8 +25,8 @@
 
         <div id="solving_area_container">
             
-            <form action="/solving_page/submit" method='POST'>
-            <textarea name="submission" rows="10" cols="50" id="textarea"></textarea>
+            <form action="/solving_page/{{problem.problem_id}}" method='POST'>
+            <textarea name='submission' rows="10" cols="50" id="textarea"></textarea>
             <input type="submit" value="Submit">
             </form>
 
