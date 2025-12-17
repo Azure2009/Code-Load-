@@ -50,7 +50,7 @@ class Submission(db.Model):
 class Result(db.Model):
    result_id = db.Column(db.Integer, nullable = False, primary_key=True)
    result = db.Column(db.String(50), nullable = False)
-   submission_id = db.Column(db.Integer, nullable = True)
+   submission_id = db.Column(db.Integer, nullable = False)
    
 
 with app.app_context():
@@ -94,8 +94,6 @@ def login():
 
       if user and check_password_hash(user.hash_password, password):
 
-         session.clear()
-
          session["user_id"] = user.user_id
 
          return redirect(url_for("dashboard"))
@@ -122,31 +120,27 @@ def dashboard():
 @app.route('/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
 
+      if request.method == 'POST':
+
+         submission_form = request.form['submission']
+
+         user_id = session.get("user_id")
+
+         user_submission = Submission(submission = submission_form, user_id = int(user_id))
+
+         try:
+
+            db.session.add(user_submission)
+            db.session.commit()
+
+            return redirect('/dashboard')
+
+         except:
+            return 'There was a problem submitting your answer.'
+
       problem = Problem.query.get_or_404(problem_id)
 
       return render_template("solving_page.html", problem=problem)
    
-@app.route('/solving_page/submit', methods=['POST', 'GET'])
-def submit():
-
-   if request.method == 'POST':
-
-
-      submission_form = request.form["submission"]
-
-      user_submission = Submission(submission = submission_form)
-   
-      try:
-
-         db.session.add(user_submission)
-         db.session.commit()
-
-      except:
-         return redirect('/dashboard')
-
-
-   else:
-      return redirect('/dashboard')
-
 if __name__ == '__main__':
    app.run(debug=True)
