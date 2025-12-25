@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash 
 import pymysql
+from sqlalchemy import text
 
 app = Flask(__name__)
 
@@ -29,7 +30,13 @@ class User(db.Model):
    last_name = db.Column(db.String(200), nullable = False)   
    username = db.Column(db.String(200), nullable = False, unique= True)
    hash_password = db.Column(db.String(200), nullable = False)
-   
+
+class History(db.Model):
+   history_id = db.Column(db.Integer, nullable=False, primary_key=True)
+   user_id = db.Column(db.Integer, nullable=False)
+   problem_id = db.Column(db.Integer, nullable=False)
+   status = db.Column(db.String(50), nullable=False, default="unsolved")
+
 class Problem(db.Model):
    problem_id = db.Column(db.Integer, nullable = False, primary_key=True)
    problem_title = db.Column(db.String(200), nullable = False)
@@ -52,7 +59,6 @@ class Result(db.Model):
    result = db.Column(db.String(50), nullable = False)
    submission_id = db.Column(db.Integer, nullable = False)
    
-
 with app.app_context():
    db.create_all()
 
@@ -101,6 +107,8 @@ def login():
       else:
          return render_template('login.html')
       
+      
+      
    else:
       return render_template('login.html')
    
@@ -115,7 +123,22 @@ def dashboard():
 
    problems_list = Problem.query.all()
 
-   return render_template("dashboard.html", current_user=current_user, problems_list=problems_list) 
+   if not History.query.filter(History.user_id == user_id).first():
+
+      for problem in problems_list:
+
+         history = History(problem_id=problem.problem_id, user_id=int(user_id))
+
+         db.session.add(history)
+         db.session.commit()
+
+   status_list = []
+
+   for problem in problems_list:
+
+      status_list.append(db.session.query(History.status).filter(History.user_id == user_id, History.problem_id == problem.problem_id).scalar())
+   
+   return render_template("dashboard.html", current_user=current_user, problems_list=problems_list, status_list=status_list) 
 
 @app.route('/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
@@ -128,15 +151,30 @@ def problem(problem_id):
 
          user_submission = Submission(submission = submission_form, user_id = int(user_id))
 
+         problem = Problem.query.get_or_404(problem_id)
+
+         history = History.query.filter(History.user_id == user_id, History.problem_id == problem.problem_id).first()
+
          try:
 
             db.session.add(user_submission)
             db.session.commit()
 
-            return redirect('/dashboard')
 
          except:
+
             return 'There was a problem submitting your answer.'
+         
+         if problem.expected_output == submission_form:
+
+            history.status = "solved"
+
+            db.session.commit()
+
+            return redirect('/dashboard')
+            
+         
+
 
       problem = Problem.query.get_or_404(problem_id)
 
