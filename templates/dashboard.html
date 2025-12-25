@@ -15,12 +15,13 @@
     <div class="python_container">
 
         <ol>
-            
-            {% for problem in problems_list %}
+                      
+           {% for problem in problems_list %}
 
-            <li><a href="/solving_page/{{problem.problem_id}}">{{problem.problem_title}} - {{problem.difficulty}}</a></li>
+            <li><a href="/solving_page/{{problem.problem_id}}">{{problem.problem_title}}</a>- {{problem.difficulty}}- {{status_list[problem.problem_id - 1]}}</li>
         
-            {% endfor %}
+           {% endfor %}
+
         </ol>
 
     </div>
