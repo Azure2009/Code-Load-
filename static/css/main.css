@@ -23,3 +23,58 @@
     resize: none;
 
 }
+
+/* solving page layout for case problems */
+
+.mainContainer {
+
+
+    box-sizing: border-box;
+    display: flex;
+    height: 100vh;
+
+}
+
+.descriptionContainer {
+
+    max-width: 50%;
+    padding: 20px;
+    border-right: 2px solid #ddd;
+    overflow-y: auto;
+    overflow-x: clip;
+
+}
+
+.codingArea {
+
+    width: 50%;
+    padding: 20px;
+
+    
+
+}
+
+.codingArea textarea {
+
+    width: 100%;
+    height: 80%;
+    resize: none;
+    font-family: monospace;
+
+    }
+
+.codingArea form {
+
+    width: 100%;
+    height: 100%;
+
+}
+
+pre {
+
+    white-space: pre-wrap;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-x: hidden;
+
+}

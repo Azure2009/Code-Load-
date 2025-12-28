@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <h2>Case Problems</h2>
+
+    <h1>Python</h1>
+
+    <div class="case_problems_dashboard">
+
+        {% for case_problem in case_problems_list %}
+
+            <li><a href="/case_problems/solving-page/{{case_problem.id}}">{{case_problem.title}}</a> - {{case_problem.difficulty}}</li>
+
+        {% endfor %}
+
+    </div>
+
+{% endblock %}
