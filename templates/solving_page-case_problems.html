@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="mainContainer">
+
+    <div class="descriptionContainer">
+        <h2>{{case_problem.title}}</h2>
+        <br>
+        <pre>{{case_problem.instruction}}</pre>
+        <br>
+        <pre>{{case_problem.example}}</pre>
+        <br>
+        <pre>{{case_problem.constraints}}</pre>
+        <br>
+
+        {% if case_problem.follow_up != None %}
+
+        <pre>{{case_problem.follow_up}}</pre>
+        
+        {% endif %}
+
+        {% if case_problem.hint != None %}
+
+        <details class="hintContainer">
+
+            <summary>Hint</summary>
+
+            <pre>{{case_problem.hint}}</pre>
+
+        </details>
+        
+        {% endif %}
+
+    </div>
+
+    <div class="codingArea">
+
+        <form action="" method="post">
+
+        <textarea name="submission" placeholder="Write your code here..."></textarea>
+
+        <input type="submit" value="Submit">
+
+        </form>
+
+    </div>
+
+    </div>
+
+{% endblock %}

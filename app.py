@@ -44,6 +44,16 @@ class Problem(db.Model):
    expected_output = db.Column(db.Text, nullable = False)
    difficulty = db.Column(db.String(50), nullable = False)
 
+class CaseProblem(db.Model):
+   id = db.Column(db.Integer, nullable = False, primary_key=True)
+   title = db.Column(db.String(200), nullable = False)
+   instruction = db.Column(db.Text, nullable = False)
+   example = db.Column(db.Text, nullable = False)
+   constraints = db.Column(db.Text, nullable = False)
+   follow_up = db.Column(db.Text, nullable = True)
+   hint = db.Column(db.Text, nullable = True)
+   difficulty = db.Column(db.String(200), nullable = False)
+
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
    test_case = db.Column(db.Text, nullable = False)
@@ -102,7 +112,7 @@ def login():
 
          session["user_id"] = user.user_id
 
-         return redirect(url_for("dashboard"))
+         return redirect('/dashboard')
       
       else:
          return render_template('login.html')
@@ -119,8 +129,30 @@ def dashboard():
    if not user_id:
       return redirect('/login')
    
-   current_user = User.query.get_or_404(int(user_id))
+   return render_template('dashboard.html')
 
+@app.route('/case_problems', methods=['GET', 'POST'])
+def case():
+
+   case_problems_list = CaseProblem.query.all()
+
+   return render_template("case_problems.html", case_problems_list = case_problems_list)
+
+@app.route('/case_problems/solving-page/<int:id>', methods=['GET', 'POST'])
+def case_problem(id):
+
+   current_case_problem = CaseProblem.query.get(id) 
+
+   return render_template("solving_page-case_problems.html", case_problem = current_case_problem)
+
+@app.route('/output_problems', methods=['GET', 'POST'])
+def output():
+
+   user_id = session.get("user_id")
+  
+   if not user_id:
+      return redirect('/login')
+   
    problems_list = Problem.query.all()
 
    if not History.query.filter(History.user_id == user_id).first():
@@ -137,10 +169,10 @@ def dashboard():
    for problem in problems_list:
 
       status_list.append(db.session.query(History.status).filter(History.user_id == user_id, History.problem_id == problem.problem_id).scalar())
-   
-   return render_template("dashboard.html", current_user=current_user, problems_list=problems_list, status_list=status_list) 
 
-@app.route('/solving_page/<int:problem_id>', methods=['POST', 'GET'])
+   return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
+
+@app.route('/output_problems/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
 
       if request.method == 'POST':
@@ -171,14 +203,14 @@ def problem(problem_id):
 
             db.session.commit()
 
-            return redirect('/dashboard')
+            return redirect('/output_problems')
             
          
 
 
       problem = Problem.query.get_or_404(problem_id)
 
-      return render_template("solving_page.html", problem=problem)
+      return render_template("solving_page-output_problems.html", problem=problem)
    
 if __name__ == '__main__':
    app.run(debug=True)

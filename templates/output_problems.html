@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <h2>Output Problems</h2>
+
+    <h1>Python</h1>
+
+    <div class="python_container">
+
+        <ol>
+                      
+           {% for problem in problems_list %}
+
+            <li><a href="/output_problems/solving_page/{{problem.problem_id}}">{{problem.problem_title}}</a>- {{problem.difficulty}}- {{status_list[problem.problem_id - 1]}}</li>
+        
+           {% endfor %}
+
+        </ol>
+
+    </div>
+
+{% endblock %}
