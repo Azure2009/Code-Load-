@@ -1,0 +1,28 @@
+services:
+
+  backend:
+    build: .
+    ports:
+      - "5000:5000"
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_USER: root
+      DB_PASSWORD: REDACTED
+      DB_NAME: mydatabase
+      
+
+
+  db:
+    image: mysql:9.3
+    environment:
+      MYSQL_ROOT_PASSWORD: REDACTED
+      MYSQL_DATABASE: mydatabase
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+
+
+volumes:
+  mysql_data:
