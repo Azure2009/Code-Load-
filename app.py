@@ -1,28 +1,48 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash 
-import pymysql
-from sqlalchemy import text
+import time
+import os 
+import subprocess
+import uuid
 
 app = Flask(__name__)
-
 app.secret_key = "0920juancarlo"
-app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://root:0920juancarlo@localhost/mydatabase'
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
-conn = pymysql.connect(
 
-   host="localhost",
-   user="root",
-   password="0920juancarlo",
-   database="mydatabase",
-   cursorclass=pymysql.cursors.DictCursor
+# uncomment if you want to try docker compose
+
+# DB_USER = os.getenv("DB_USER")
+# DB_PASSWORD = os.getenv("DB_PASSWORD")
+# DB_NAME = os.getenv("DB_NAME")
+# DB_HOST = os.getenv("DB_HOST", "db")
+
+app.config['SQLALCHEMY_DATABASE_URI'] = (
+   
+   "mysql+pymysql://root:0920juancarlo@localhost/mydatabase"
+
 
 )
 
-cursor = conn.cursor()
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
+
+# Uncomment if you want to try docker compose
+
+# def wait_for_db():
+#    while True:
+#       try:
+#          with app.app_context():
+#             db.engine.connect()
+#             print("Database ready")
+#          break
+#       except Exception as e:
+#             print("Waiting for database...")
+#             time.sleep(3)
+
+# wait_for_db()
+
 
 class User(db.Model):
    user_id = db.Column(db.Integer, nullable = False, primary_key=True)
@@ -53,6 +73,12 @@ class CaseProblem(db.Model):
    follow_up = db.Column(db.Text, nullable = True)
    hint = db.Column(db.Text, nullable = True)
    difficulty = db.Column(db.String(200), nullable = False)
+
+class CaseProblem_History(db.Model):
+   id = db.Column(db.Integer, nullable = False, primary_key=True)
+   user_id = db.Column(db.Integer, nullable=False)
+   problem_id = db.Column(db.Integer, nullable=False)
+   status = db.Column(db.String(50), nullable=False, default="unsolved")
 
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
@@ -105,7 +131,7 @@ def login():
 
       username = request.form['username']
       password = request.form['password']
-
+      
       user = User.query.filter_by(username=username).first()
 
       if user and check_password_hash(user.hash_password, password):
@@ -125,11 +151,13 @@ def login():
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
    user_id = session.get("user_id")
+
+   user = User.query.get(user_id)
   
    if not user_id:
       return redirect('/login')
    
-   return render_template('dashboard.html')
+   return render_template('dashboard.html', user=user)
 
 @app.route('/case_problems', methods=['GET', 'POST'])
 def case():
@@ -144,6 +172,50 @@ def case_problem(id):
    current_case_problem = CaseProblem.query.get(id) 
 
    return render_template("solving_page-case_problems.html", case_problem = current_case_problem)
+
+@app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST'])
+def submit(id):
+
+   user_code = request.form['code']
+
+   submission_id = str(uuid.uuid4())
+
+   base_dir = os.path.abspath("submission")
+
+   submission_dir = os.path.join(base_dir, submission_id)
+
+   os.makedirs(submission_dir, exist_ok=True)
+
+   with open(os.path.join(submission_dir, "test_user.py"), "w") as f:
+      f.write(user_code)
+
+   open(os.path.join(submission_dir, "__init__.py"), "w").close()
+
+   #run a container using your docker image
+
+   try:
+
+      result = subprocess.run(
+
+         [
+            "docker", "run", "--rm",
+            "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
+            "python-test-runner-v2"
+
+         ], 
+               
+         capture_output=True, 
+         text=True,
+         timeout=10
+
+      )
+
+   except subprocess.TimeoutExpired:
+      render_template("result.html", output="", error="Time limit exceeded!")
+
+
+
+   return render_template("result.html", output=result.stdout, error=result.stderr)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
 def output():
@@ -213,4 +285,4 @@ def problem(problem_id):
       return render_template("solving_page-output_problems.html", problem=problem)
    
 if __name__ == '__main__':
-   app.run(debug=True)
+   app.run(host="0.0.0.0", port=5000, debug=True)
