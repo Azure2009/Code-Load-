@@ -51,6 +51,8 @@
     border-right: 2px solid #ddd;
     overflow-y: auto;
     overflow-x: clip;
+    background-color: black;
+    color: white;
 
 }
 
