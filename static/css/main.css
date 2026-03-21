@@ -89,3 +89,26 @@ pre {
     overflow-x: hidden;
 
 }
+
+#problem1 {
+
+    border-style: solid;
+
+
+
+}
+
+#problem2 {
+
+    border-style: solid;
+
+} 
+
+.dashboard {
+
+  display: flex;
+  justify-content: center; 
+  align-items: center;     
+  height: 100vh; 
+
+}
