@@ -92,23 +92,21 @@ pre {
 
 #problem1 {
 
+    display: flex;
     border-style: solid;
-
-
-
+    
 }
 
 #problem2 {
 
+    display: inline-flexbox;
     border-style: solid;
 
 } 
 
 .dashboard {
 
-  display: flex;
-  justify-content: center; 
-  align-items: center;     
-  height: 100vh; 
+  display: flexbox;
+  justify-content: center;      
 
 }
