@@ -93,20 +93,20 @@ pre {
 #problem1 {
 
     display: flex;
-    border-style: solid;
+    border-style: outset;
     
 }
 
 #problem2 {
 
     display: inline-flexbox;
-    border-style: solid;
+    border-style: outset;
 
 } 
 
 .dashboard {
 
-  display: flexbox;
+  
   justify-content: center;      
 
 }
