@@ -28,7 +28,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 
 db = SQLAlchemy(app)
 
-# Uncomment if you want to try docker compose
+
 
 # def wait_for_db():
 #    while True:
