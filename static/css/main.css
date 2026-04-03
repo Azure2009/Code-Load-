@@ -47,7 +47,7 @@
 .descriptionContainer {
 
     max-width: 50%;
-    padding: 20px;
+    padding: 30px;
     border-right: 2px solid #ddd;
     overflow-y: auto;
     overflow-x: clip;
