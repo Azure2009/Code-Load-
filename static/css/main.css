@@ -51,8 +51,7 @@
     border-right: 2px solid #ddd;
     overflow-y: auto;
     overflow-x: clip;
-    background-color: black;
-    color: blue;
+  
 
 }
 
@@ -68,7 +67,7 @@
 .codingArea textarea {
 
     width: 100%;
-    height: 80%;
+    height: 100%;
     resize: none;
     font-family: monospace;
 
@@ -76,8 +75,9 @@
 
 .codingArea form {
 
-    width: 50%;
-    height: 50%;
+    width: 100%;
+    height: 100%;
+    resize: none;
 
 }
 
