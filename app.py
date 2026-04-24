@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
+from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash 
 import time
 import os 
@@ -24,11 +25,11 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 
 )
 
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
 db = SQLAlchemy(app)
 
-
+migrate = Migrate(app, db)
 
 # def wait_for_db():
 #    while True:
@@ -72,7 +73,9 @@ class CaseProblem(db.Model):
    constraints = db.Column(db.Text, nullable = False)
    follow_up = db.Column(db.Text, nullable = True)
    hint = db.Column(db.Text, nullable = True)
+   expected_output = db.Column(db.Text, nullable = True)
    difficulty = db.Column(db.String(200), nullable = False)
+   function_name = db.Column(db.String(200), nullable = False)
 
 class CaseProblem_History(db.Model):
    id = db.Column(db.Integer, nullable = False, primary_key=True)
@@ -172,9 +175,11 @@ def case_problem(id):
    current_case_problem = CaseProblem.query.get(id) 
 
    return render_template("solving_page-case_problems.html", case_problem = current_case_problem)
-
+               
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST'])
 def submit(id):
+
+   current_case_problem = CaseProblem.query.get(id) 
 
    user_code = request.form['code']
 
@@ -200,6 +205,7 @@ def submit(id):
          [
             "docker", "run", "--rm",
             "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
+            "-e" f"EXPECTED_OUTPUT={current_case_problem.expected_output}", 
             "python-test-runner-v2"
 
          ], 
