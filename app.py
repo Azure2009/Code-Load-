@@ -73,10 +73,9 @@ class CaseProblem(db.Model):
    constraints = db.Column(db.Text, nullable = False)
    follow_up = db.Column(db.Text, nullable = True)
    hint = db.Column(db.Text, nullable = True)
-   expected_output = db.Column(db.Text, nullable = True)
    difficulty = db.Column(db.String(200), nullable = False)
    function_name = db.Column(db.String(200), nullable = False)
-
+   
 class CaseProblem_History(db.Model):
    id = db.Column(db.Integer, nullable = False, primary_key=True)
    user_id = db.Column(db.Integer, nullable=False)
@@ -85,8 +84,10 @@ class CaseProblem_History(db.Model):
 
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   test_case = db.Column(db.Text, nullable = False)
-
+   problem_id   = db.Column(db.Integer, nullable=False)
+   input_data   = db.Column(db.Text, nullable=False)      
+   expected_output = db.Column(db.Text, nullable=False)  
+   
 class Submission(db.Model):
    submission_id = db.Column(db.Integer, nullable = False, primary_key=True)
    submission = db.Column(db.Text, nullable = False)
@@ -179,8 +180,6 @@ def case_problem(id):
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST'])
 def submit(id):
 
-   current_case_problem = CaseProblem.query.get(id) 
-
    user_code = request.form['code']
 
    submission_id = str(uuid.uuid4())
@@ -197,6 +196,9 @@ def submit(id):
    open(os.path.join(submission_dir, "__init__.py"), "w").close()
 
    #run a container using your docker image
+   #use the current case problem
+   
+   current_case_problem = CaseProblem.query.get(id) 
 
    try:
 
@@ -217,7 +219,7 @@ def submit(id):
       )
 
    except subprocess.TimeoutExpired:
-      render_template("result.html", output="", error="Time limit exceeded!")
+      return render_template("result.html", output="", error="Time limit exceeded!")
 
 
 
