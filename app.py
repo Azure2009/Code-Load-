@@ -1,11 +1,13 @@
 from flask import Flask, render_template, request, redirect, session, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_migrate import Migrate
+from sqlalchemy import create_engine, text
 from werkzeug.security import generate_password_hash, check_password_hash 
 import time
 import os 
 import subprocess
 import uuid
+import json
 
 app = Flask(__name__)
 app.secret_key = "REDACTED"
@@ -26,6 +28,8 @@ app.config['SQLALCHEMY_DATABASE_URI'] = (
 )
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+engine = create_engine("mysql+pymysql://root:REDACTED@localhost/mydatabase")
 
 db = SQLAlchemy(app)
 
@@ -196,9 +200,17 @@ def submit(id):
    open(os.path.join(submission_dir, "__init__.py"), "w").close()
 
    #run a container using your docker image
-   #use the current case problem
+   #connect the case problem table and test case table and store it in a variable
    
    current_case_problem = CaseProblem.query.get(id) 
+
+   with engine.connect() as connection:
+      table = connection.execute(text("SELECT * FROM mydatabase.test_case WHERE problem_id = :id"), {"id": id})
+
+      connection.close()
+   
+   
+   test_cases_json = json.dumps([{"input": t.input_data, "expected": t.expected_output} for t in table])
 
    try:
 
@@ -207,7 +219,7 @@ def submit(id):
          [
             "docker", "run", "--rm",
             "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
-            "-e" f"EXPECTED_OUTPUT={current_case_problem.expected_output}", 
+            "-e" f"TEST_CASES={test_cases_json}", 
             "python-test-runner-v2"
 
          ], 
@@ -285,9 +297,6 @@ def problem(problem_id):
 
             return redirect('/output_problems')
             
-         
-
-
       problem = Problem.query.get_or_404(problem_id)
 
       return render_template("solving_page-output_problems.html", problem=problem)
