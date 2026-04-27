@@ -181,7 +181,7 @@ def case_problem(id):
 
    return render_template("solving_page-case_problems.html", case_problem = current_case_problem)
                
-@app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST'])
+@app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 def submit(id):
 
    user_code = request.form['code']
@@ -194,23 +194,19 @@ def submit(id):
 
    os.makedirs(submission_dir, exist_ok=True)
 
-   with open(os.path.join(submission_dir, "test_user.py"), "w") as f:
+   with open(os.path.join(submission_dir, "solution.py"), "w") as f:
       f.write(user_code)
 
-   open(os.path.join(submission_dir, "__init__.py"), "w").close()
-
-   #run a container using your docker image
-   #connect the case problem table and test case table and store it in a variable
+   current_problem = CaseProblem.query.get(id)
    
-   current_case_problem = CaseProblem.query.get(id) 
-
    with engine.connect() as connection:
       table = connection.execute(text("SELECT * FROM mydatabase.test_case WHERE problem_id = :id"), {"id": id})
 
       connection.close()
    
-   
    test_cases_json = json.dumps([{"input": t.input_data, "expected": t.expected_output} for t in table])
+
+   #run a container using your docker image
 
    try:
 
@@ -219,7 +215,8 @@ def submit(id):
          [
             "docker", "run", "--rm",
             "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
-            "-e" f"TEST_CASES={test_cases_json}", 
+            "-e" f"TEST_CASES={test_cases_json}",
+            "-e" f"FUNCTION_NAME={current_problem.function_name}", 
             "python-test-runner-v2"
 
          ], 
