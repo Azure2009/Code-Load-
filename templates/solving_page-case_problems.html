@@ -44,7 +44,11 @@
 
         <form action="/case_problems/solving-page/{{case_problem.id}}/submit" method="post">
 
-        <textarea name="code">def test_{{case_problem.function_name}}():</textarea>
+        <textarea id="code" name="code">class Test:
+    def test_{{case_problem.function_name}}(input_data):
+        # your code here
+
+        </textarea>
 
         <input type="submit" value="Submit">
 
