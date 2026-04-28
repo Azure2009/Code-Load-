@@ -217,7 +217,7 @@ def submit(id):
             "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
             "-e" f"TEST_CASES={test_cases_json}",
             "-e" f"FUNCTION_NAME={current_problem.function_name}", 
-            "python-test-runner-v2"
+            "python-test-runner"
 
          ], 
                

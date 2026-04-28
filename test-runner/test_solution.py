@@ -4,24 +4,36 @@ def test_all_cases():
 
     raw = os.environ.get("TEST_CASES", "[]")
     function_name = os.environ.get("FUNCTION_NAME", "")
-    actual = json.loads(raw)
+    test_cases = json.loads(raw)
 
     module = importlib.import_module("submission.solution")
-    user_func = getattr(module, function_name)
 
-    for i, case in enumerate(actual, start=1):
+    try:
 
-        input_data = case["input"]
-        expected = case["expected"]
-        actual = user_func(input_data)
+        user_func = getattr(module, f"test_{function_name}")
 
+        for i, case in enumerate(test_cases, start=1):
 
-        assert input_data == expected, (
+            input_data = case["input"]
+            expected = case["expected"]
+            actual = user_func(input_data)
 
-            f"Test case {i} FAILED\n"
-            f"  Input:    {input_data}\n"
-            f"  Expected: {expected}\n"
-            f"  Got:      {actual}"
+            assert actual == expected, (
+
+                f"Test case {i} FAILED\n"
+                f"  Input:    {input_data}\n"
+                f"  Expected: {expected}\n"
+                f"  Got:      {actual}"
+
+            )
+
+    except AttributeError:
+        raise AssertionError(
+
+            f"Function '{function_name} not found in your submission'"
+            f"Make sure to name your function exactly: {function_name}"
 
         )
+
+    
     
