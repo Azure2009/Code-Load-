@@ -12,7 +12,6 @@ import json
 app = Flask(__name__)
 app.secret_key = "REDACTED"
 
-
 # uncomment if you want to try docker compose
 
 # DB_USER = os.getenv("DB_USER")
@@ -102,7 +101,15 @@ class Result(db.Model):
    result_id = db.Column(db.Integer, nullable = False, primary_key=True)
    result = db.Column(db.String(50), nullable = False)
    submission_id = db.Column(db.Integer, nullable = False)
+
+class Administrator(db.Model):
+   admin_id = db.Column(db.Integer, nullable = False, primary_key=True)
+   admin_username = db.Column(db.String(200), nullable = False)
+   admin_password = db.Column(db.String(200), nullable = False)
    
+
+
+
 with app.app_context():
    db.create_all()
 

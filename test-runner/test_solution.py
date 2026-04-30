@@ -10,7 +10,11 @@ def test_all_cases():
 
     try:
 
-        user_func = getattr(module, f"test_{function_name}")
+        Test = getattr(module, "Test")
+
+        instance = Test()
+
+        user_func = getattr(instance, f"test_{function_name}")
 
         for i, case in enumerate(test_cases, start=1):
 
