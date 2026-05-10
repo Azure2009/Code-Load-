@@ -1,0 +1,57 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="output_problem_creation">
+
+        <form action="/admin/dashboard/new_output_problem" method="POST">
+
+            <h3>What is the difficulty of the coding problem?</h3>
+
+            <input type="hidden" name= "difficulty" id="selected_difficulty" value="">
+
+            <div class="difficulty-btn">
+
+            <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
+            <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
+            <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
+
+            </div>
+
+            <script>
+
+                function select_difficulty(btn) {
+
+                    document.querySelectorAll('[data-value]').forEach(b => b.classList.remove('active'));
+
+                    btn.classList.add('active')
+                    
+                    document.getElementById('selected_difficulty').value = btn.dataset.value
+
+                }
+
+
+            </script>
+
+            <label for="problem_title">Problem Title:</label>
+            <textarea name="problem_title" id="problem_title" required></textarea>
+                
+            <label for="coding_problem">Coding Problem</label>
+            <textarea name="coding_problem" id="coding_problem" required></textarea>
+
+            <label for="expected_output">Expected Output</label>
+            <textarea name="expected_output" id="expected_output" required></textarea>
+
+            <input type="submit" value="Submit">
+
+        </form>
+
+    </div>
+
+{% endblock %}

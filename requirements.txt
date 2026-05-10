@@ -2,3 +2,5 @@ flask
 flask_sqlalchemy
 pymysql
 cryptography
+Werkzeug==3.0.0
+Flask==3.0.0

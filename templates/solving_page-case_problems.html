@@ -45,7 +45,7 @@
         <form action="/case_problems/solving-page/{{case_problem.id}}/submit" method="post">
 
         <textarea id="code" name="code">class Test:    
-    def test_{{case_problem.function_name}}(self, input_data):
+    def test_{{case_problem.function_name}}(self, {{case_problem.args}}) -> {{case_problem.return_type}}:
         # your code here
         
         </textarea>

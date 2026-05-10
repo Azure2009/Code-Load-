@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="{{url_for('static', filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{url_for('static', filename='css/admin.css')}}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.js"></script>
@@ -11,11 +12,29 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/addon/selection/active-line.min.js"></script>
     <title>Neat Code</title>
-    {% block head %} {% endblock %}
+    {% block head %} 
+    
+    <script>
+
+       document.addEventListener("pageshow", function(event) {
+
+        if (event.persisted) {
+
+          window.location.reload()
+
+        }
+
+
+       })
+
+    </script>
+    
+    {% endblock %}
+
 </head>
 <body>
     {% block body %}{% endblock %}
-    <script>
+<script>
   var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     mode: "python",
     theme: "dracula",
@@ -31,10 +50,10 @@
     }
   });
 
-  // IMPORTANT: syncs editor content back to the textarea on form submit
   document.querySelector("form").addEventListener("submit", function() {
     editor.save();
   });
+
 </script>
 </body>
 </html>
