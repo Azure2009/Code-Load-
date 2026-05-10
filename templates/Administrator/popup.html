@@ -1,0 +1,21 @@
+{% if show_popup %}
+
+<div id="adminVoid_popup">
+
+    <h3>{{popup_message}}</h3>
+    <button onclick="closeAndRedirect()">Ok</button>
+
+
+</div>
+
+<script>
+
+    function closeAndRedirect() {
+
+        window.location.href = "{{redirect_url}}";
+
+    }
+
+</script>
+
+{% endif %}

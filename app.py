@@ -1,9 +1,10 @@
-from flask import Flask, render_template, request, redirect, session, url_for
-from flask_sqlalchemy import SQLAlchemy
+from flask import Flask, render_template, request, redirect, session, make_response
 from flask_migrate import Migrate
-from sqlalchemy import create_engine, text
-from werkzeug.security import generate_password_hash, check_password_hash 
-import time
+from sqlalchemy import text
+from werkzeug.security import generate_password_hash, check_password_hash
+from administrator import admin_bp
+from extensions import db, engine
+from datetime import datetime
 import os 
 import subprocess
 import uuid
@@ -19,20 +20,22 @@ app.secret_key = "0920juancarlo"
 # DB_NAME = os.getenv("DB_NAME")
 # DB_HOST = os.getenv("DB_HOST", "db")
 
-app.config['SQLALCHEMY_DATABASE_URI'] = (
-   
-   "mysql+pymysql://root:0920juancarlo@localhost/mydatabase"
+app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:0920juancarlo@localhost/mydatabase"
 
-
-)
 
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
-engine = create_engine("mysql+pymysql://root:0920juancarlo@localhost/mydatabase")
 
-db = SQLAlchemy(app)
+db.init_app(app)
 
 migrate = Migrate(app, db)
+
+with app.app_context():
+   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
+   #db.drop_all() uncomment if you will now deploy the app
+   db.create_all()
+
+app.register_blueprint(admin_bp)
 
 # def wait_for_db():
 #    while True:
@@ -47,75 +50,14 @@ migrate = Migrate(app, db)
 
 # wait_for_db()
 
-
-class User(db.Model):
-   user_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   first_name = db.Column(db.String(200), nullable = False)
-   last_name = db.Column(db.String(200), nullable = False)   
-   username = db.Column(db.String(200), nullable = False, unique= True)
-   hash_password = db.Column(db.String(200), nullable = False)
-
-class History(db.Model):
-   history_id = db.Column(db.Integer, nullable=False, primary_key=True)
-   user_id = db.Column(db.Integer, nullable=False)
-   problem_id = db.Column(db.Integer, nullable=False)
-   status = db.Column(db.String(50), nullable=False, default="unsolved")
-
-class Problem(db.Model):
-   problem_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   problem_title = db.Column(db.String(200), nullable = False)
-   problem_set = db.Column(db.Text, nullable = False)
-   expected_output = db.Column(db.Text, nullable = False)
-   difficulty = db.Column(db.String(50), nullable = False)
-
-class CaseProblem(db.Model):
-   id = db.Column(db.Integer, nullable = False, primary_key=True)
-   title = db.Column(db.String(200), nullable = False)
-   instruction = db.Column(db.Text, nullable = False)
-   example = db.Column(db.Text, nullable = False)
-   constraints = db.Column(db.Text, nullable = False)
-   follow_up = db.Column(db.Text, nullable = True)
-   hint = db.Column(db.Text, nullable = True)
-   difficulty = db.Column(db.String(200), nullable = False)
-   function_name = db.Column(db.String(200), nullable = False)
-   
-class CaseProblem_History(db.Model):
-   id = db.Column(db.Integer, nullable = False, primary_key=True)
-   user_id = db.Column(db.Integer, nullable=False)
-   problem_id = db.Column(db.Integer, nullable=False)
-   status = db.Column(db.String(50), nullable=False, default="unsolved")
-
-class TestCase(db.Model):
-   test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   problem_id   = db.Column(db.Integer, nullable=False)
-   input_data   = db.Column(db.Text, nullable=False)      
-   expected_output = db.Column(db.Text, nullable=False)  
-   
-class Submission(db.Model):
-   submission_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   submission = db.Column(db.Text, nullable = False)
-   user_id = db.Column(db.Integer, nullable = False)
-
-
-class Result(db.Model):
-   result_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   result = db.Column(db.String(50), nullable = False)
-   submission_id = db.Column(db.Integer, nullable = False)
-
-class Administrator(db.Model):
-   admin_id = db.Column(db.Integer, nullable = False, primary_key=True)
-   admin_username = db.Column(db.String(200), nullable = False)
-   admin_password = db.Column(db.String(200), nullable = False)
-   
-
-
-
-with app.app_context():
-   db.create_all()
-
 @app.route('/', methods=['GET', 'POST'])
 def index():
-   return render_template('index.html')
+
+   response = make_response(render_template('/index.html'))
+   response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
+   response.headers['Pragma'] = 'no-cache'
+   
+   return response
 
 @app.route('/register', methods=['POST', 'GET'])
 def register_user():
@@ -123,7 +65,7 @@ def register_user():
       first_name_form = request.form['first_name']
       last_name_form = request.form['last_name']   
       username_form = request.form['username']
-      password = generate_password_hash(request.form['password'])
+      password = generate_password_hash(request.form['password'], method="pbkdf2:sha256")
 
       registeredUser = User(first_name = first_name_form, last_name = last_name_form, username = username_form, hash_password = password)
 
@@ -156,9 +98,7 @@ def login():
          return redirect('/dashboard')
       
       else:
-         return render_template('login.html')
-      
-      
+         return render_template('popup_error.html', show_popup = True, redirect_url = "/login", popup_message = "The user does not exist")
       
    else:
       return render_template('login.html')
@@ -245,11 +185,19 @@ def submit(id):
 def output():
 
    user_id = session.get("user_id")
-  
+
+   visited_at = session.get('visited_at')
+
    if not user_id:
       return redirect('/login')
    
    problems_list = Problem.query.all()
+
+   # recents = RecentOutputProblems.query.all()
+
+   #Delete all records in a table so that the records that will be imported are recent
+  
+   #bug: if a user is already registered but a new problem has been added via admin access, the new problem will not be added to the history table
 
    if not History.query.filter(History.user_id == user_id).first():
 
@@ -266,7 +214,9 @@ def output():
 
       status_list.append(db.session.query(History.status).filter(History.user_id == user_id, History.problem_id == problem.problem_id).scalar())
 
-   return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
+   else:
+       
+      return render_template("output_problems.html", status_list=status_list, problems_list=problems_list, visited_at = visited_at)
 
 @app.route('/output_problems/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
