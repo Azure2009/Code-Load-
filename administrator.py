@@ -1,6 +1,6 @@
 from flask import Blueprint, request, session, render_template, redirect
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, tz_utc8
+from models import Administrator, Problem, TestCase, tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
@@ -68,7 +68,7 @@ def adminDashboard():
 @login_required
 def outputProblem_creation():
 
-   session['visited_at'] = datetime.now(tz_utc8)
+   session['visited_at'] = datetime.now(tz_utc8).isoformat()
    
    if request.method == 'POST':
 
@@ -93,9 +93,34 @@ def outputProblem_creation():
 
    return render_template('/Administrator/output_problem_creation.html')
 
-   
-   
+
+@admin_bp.route('/admin/dashboard/new_case_problem', methods= ['POST', 'GET'])
+@login_required
+def case_problem_creation():
+
+   new_TestCases = request.form.get('new_TestCases', '')
+
+   new_expected_output = request.form.get('new_expected_output', '')
+
+   lines_testCases = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
+
+   lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
    
 
+   return render_template('Administrator/case_problem_creation.html')
  
+@admin_bp.route('/admin/dashboard/new_test_case', methods= ['POST', 'GET'])
+@login_required
+def test_case_creation():
+
+   new_TestCases = request.form.get('new_TestCases', '')
+
+   new_expected_output = request.form.get('new_expected_output', '')
+
+   lines_testCases = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
+
+   lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
+   
+
+   return render_template('Administrator/test_case_creation.html')
 

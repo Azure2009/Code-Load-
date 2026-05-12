@@ -2,7 +2,7 @@ from flask import Flask, render_template, request, redirect, session, make_respo
 from flask_migrate import Migrate
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
-from administrator import admin_bp
+from administrator import admin_bp, tz_utc8
 from extensions import db, engine
 from datetime import datetime
 import os 
@@ -33,6 +33,8 @@ migrate = Migrate(app, db)
 with app.app_context():
    from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
    #db.drop_all() uncomment if you will now deploy the app
+   # Problem.__table__.drop(db.engine)
+   # Problem.__table__.create(db.engine)
    db.create_all()
 
 app.register_blueprint(admin_bp)
@@ -186,22 +188,25 @@ def output():
 
    user_id = session.get("user_id")
 
-   visited_at = session.get('visited_at')
-
    if not user_id:
       return redirect('/login')
    
    problems_list = Problem.query.all()
-
-   # recents = RecentOutputProblems.query.all()
-
-   #Delete all records in a table so that the records that will be imported are recent
   
    #bug: if a user is already registered but a new problem has been added via admin access, the new problem will not be added to the history table
 
-   if not History.query.filter(History.user_id == user_id).first():
+   for problem in problems_list:
 
-      for problem in problems_list:
+      if not History.query.filter(History.user_id == user_id).first():
+
+         for problem in problems_list:
+
+            history = History(problem_id=problem.problem_id, user_id=int(user_id))
+
+            db.session.add(history)
+            db.session.commit()
+
+      elif not History.query.filter(History.problem_id == problem.problem_id).first():
 
          history = History(problem_id=problem.problem_id, user_id=int(user_id))
 
@@ -216,7 +221,7 @@ def output():
 
    else:
        
-      return render_template("output_problems.html", status_list=status_list, problems_list=problems_list, visited_at = visited_at)
+      return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
 
 @app.route('/output_problems/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
