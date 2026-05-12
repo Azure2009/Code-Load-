@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block head %} 
+
+
+
+{% endblock %}
+
+{% block body %}
+
+    <div class="case_problem_creation">
+
+        <form action="/admin/dashboard/new_case_problem" method="POST">
+
+            <label for="problem_title">Problem Title:</label>
+            <textarea name="problem_title" id="problem_title" required></textarea>
+            <br>
+            <br>    
+            <label for="coding_problem">Coding Problem</label>
+            <textarea name="coding_problem" id="coding_problem" required></textarea>
+            <br>
+            <br>
+
+            <p>You can submit multiple test cases at the same time. A new line would be considered as a new test case.</p>
+            <label for="new_TestCases">Test Cases</label>
+            <li><textarea name="new_TestCases" id="new_TestCases" required></textarea></li>
+
+            <p>A new line would be considered as a new expected output.Test case and expected output are partnered based on their number in the number line.</p>
+            <label for="new_expected_output">Expected output</label>
+            <li><textarea name="new_expected_output" id="new_expected_output" required></textarea></li>
+
+            <input type="submit" value="Submit">
+
+        </form>
+
+    </div>
+
+{% endblock %}

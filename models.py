@@ -22,7 +22,7 @@ class Problem(db.Model):
    problem_set = db.Column(db.Text, nullable = False)
    expected_output = db.Column(db.Text, nullable = False)
    difficulty = db.Column(db.String(50), nullable = False)
-   created_at = db.Column(db.DateTime, default=lambda: datetime.now(tz_utc8), nullable= False)
+   created_at = db.Column(db.DateTime(timezone=True), default=lambda: datetime.now(tz_utc8), nullable= False)
 
 class CaseProblem(db.Model):
    id = db.Column(db.Integer, nullable = False, primary_key=True)
