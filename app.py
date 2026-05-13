@@ -2,9 +2,8 @@ from flask import Flask, render_template, request, redirect, session, make_respo
 from flask_migrate import Migrate
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
-from administrator import admin_bp, tz_utc8
+from admin import admin_bp
 from extensions import db, engine
-from datetime import datetime
 import os 
 import subprocess
 import uuid
@@ -37,7 +36,7 @@ with app.app_context():
    # Problem.__table__.create(db.engine)
    db.create_all()
 
-app.register_blueprint(admin_bp)
+app.register_blueprint(admin_bp, url_prefix='/admin')
 
 # def wait_for_db():
 #    while True:
