@@ -1,13 +1,13 @@
-from flask import Blueprint, request, session, render_template, redirect
+from flask import request, session, render_template, redirect
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, TestCase, tz_utc8
+from models import Administrator, Problem, tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
 from extensions import db
+from admin import admin_bp
 
-admin_bp = Blueprint("Administrator",__name__)
-
+# My decorator for security
 def login_required(f):
    @wraps(f)
    def decorated(*args, **kwargs):
@@ -25,7 +25,7 @@ def login_required(f):
    
    return decorated
 
-@admin_bp.route('/admin', methods=['POST', 'GET'])
+@admin_bp.route('/', methods=['POST', 'GET'])
 def administrator():
 
    if request.method == 'POST':
@@ -40,17 +40,17 @@ def administrator():
          
          session["admin_id"] = admin.admin_id
 
-         return redirect('/admin/dashboard')
+         return redirect('/dashboard')
       
       else: 
 
-         return render_template("Administrator/popup.html", show_popup = True, redirect_url = "/admin", popup_message = "The admin does not exist")
+         return render_template("popup.html", show_popup = True, redirect_url = "/", popup_message = "The admin does not exist")
          
    else:
 
-      return render_template("/Administrator/login.html")
+      return render_template("login.html")
 
-@admin_bp.route('/admin/dashboard', methods=['POST', 'GET'])
+@admin_bp.route('/dashboard', methods=['POST', 'GET'])
 @login_required
 def adminDashboard():
 
@@ -64,7 +64,7 @@ def adminDashboard():
    
    return render_template("/Administrator/dashboard.html", admin = current_admin)
 
-@admin_bp.route('/admin/dashboard/new_output_problem', methods=['POST', 'GET'])
+@admin_bp.route('/dashboard/new_output_problem', methods=['POST', 'GET'])
 @login_required
 def outputProblem_creation():
 
@@ -94,7 +94,7 @@ def outputProblem_creation():
    return render_template('/Administrator/output_problem_creation.html')
 
 
-@admin_bp.route('/admin/dashboard/new_case_problem', methods= ['POST', 'GET'])
+@admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
 @login_required
 def case_problem_creation():
 
@@ -109,7 +109,7 @@ def case_problem_creation():
 
    return render_template('Administrator/case_problem_creation.html')
  
-@admin_bp.route('/admin/dashboard/new_test_case', methods= ['POST', 'GET'])
+@admin_bp.route('/dashboard/new_test_case', methods= ['POST', 'GET'])
 @login_required
 def test_case_creation():
 
