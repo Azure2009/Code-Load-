@@ -1,13 +1,26 @@
-.difficulty-btn {
+.admin {
 
-    size: 20px;
+
+    text-align: center;    
+
 }
 
-.difficulty-btn.active {
+.difficulty-btn {
 
+    display: flex;
+    gap: 8px;
 
-    background-color: blue;
-    color: brown;
+}
 
+.difficulty-btn button {
+
+    font-size: 20px;
+
+}
+
+.difficulty-btn button.active {
+
+    background: blue;
+    color: white;
 
 }

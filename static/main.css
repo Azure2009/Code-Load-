@@ -111,23 +111,3 @@ pre {
 
 }
 
-.admin {
-
-
-    text-align: center;    
-
-}
-
-.difficulty-btn {
-
-    size: 20px;
-    display: flexbox;
-
-}
-
-.difficulty-btn.active {
-
-    background: blue;
-    color: white;
-
-}
