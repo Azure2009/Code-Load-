@@ -1,4 +1,4 @@
-from flask import request, session, render_template, redirect
+from flask import request, session, render_template, redirect, url_for
 from werkzeug.security import check_password_hash
 from models import Administrator, Problem, tz_utc8
 from functools import wraps
@@ -14,7 +14,7 @@ def login_required(f):
 
       if not session.get('admin_id'):
 
-         return redirect('/admin')
+         return redirect('/admin/')
 
       response = make_response(f(*args, **kwargs))
       
@@ -40,15 +40,15 @@ def administrator():
          
          session["admin_id"] = admin.admin_id
 
-         return redirect('/dashboard')
+         return redirect('/admin/dashboard')
       
       else: 
 
-         return render_template("popup.html", show_popup = True, redirect_url = "/", popup_message = "The admin does not exist")
+         return render_template("admin/popup.html", show_popup = True, redirect_url = "/admin", popup_message = "The admin does not exist")
          
    else:
 
-      return render_template("login.html")
+      return render_template("admin/login.html")
 
 @admin_bp.route('/dashboard', methods=['POST', 'GET'])
 @login_required
@@ -60,9 +60,9 @@ def adminDashboard():
 
    if not id:
 
-      return redirect("/admin")
+      return redirect("/admin/")
    
-   return render_template("/Administrator/dashboard.html", admin = current_admin)
+   return render_template("admin/dashboard.html", admin = current_admin)
 
 @admin_bp.route('/dashboard/new_output_problem', methods=['POST', 'GET'])
 @login_required
@@ -82,7 +82,7 @@ def outputProblem_creation():
 
       if difficulty == "":
 
-         return render_template('administrator/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
+         return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
          
       else: 
 
@@ -91,8 +91,7 @@ def outputProblem_creation():
          db.session.add(new_output_problem)
          db.session.commit()
 
-   return render_template('/Administrator/output_problem_creation.html')
-
+   return render_template('admin/output_problem_creation.html')
 
 @admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
 @login_required
@@ -107,7 +106,7 @@ def case_problem_creation():
    lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
    
 
-   return render_template('Administrator/case_problem_creation.html')
+   return render_template('admin/case_problem_creation.html')
  
 @admin_bp.route('/dashboard/new_test_case', methods= ['POST', 'GET'])
 @login_required
@@ -122,5 +121,5 @@ def test_case_creation():
    lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
    
 
-   return render_template('Administrator/test_case_creation.html')
+   return render_template('admin/test_case_creation.html')
 

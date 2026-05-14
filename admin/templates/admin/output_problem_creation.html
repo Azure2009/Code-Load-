@@ -1,14 +1,15 @@
-{% extends 'base.html' %}
+{% extends 'admin/base.html' %}
 
 {% block head %} 
 
+{{ super() }} <!-- keeps the CSS link from base.html -->
 
 
 {% endblock %}
 
 {% block body %}
 
-    <div class="output_problem_creation">
+    
 
         <form action="/admin/dashboard/new_output_problem" method="POST">
 
@@ -52,6 +53,6 @@
 
         </form>
 
-    </div>
+    
 
 {% endblock %}
