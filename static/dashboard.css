@@ -1,0 +1,52 @@
+.cya-section {
+
+    padding: 2.5rem 1rem;
+    text-align: center;
+    background: #0f130f;
+
+
+}
+
+.cya-title {
+
+    font-size: 2rem;
+    font-weight: 500;
+    color: #f0f0f0;
+    margin: 0 0 0.5rem;
+    
+
+
+}
+
+.cya-title span {
+
+    color: #4ade80;
+
+
+}
+
+.cya-subtitle {
+
+  font-size: 15px;
+  color: #9aab9a;
+  margin: 0 0 2rem;
+  line-height: 1.6;
+
+}
+
+.cya-grid {
+
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 720px;
+    margin: 0 auto;
+}
+
+.cya-card {
+
+    background: #1a1f1a;
+    border-radius: 12px;
+
+
+}
