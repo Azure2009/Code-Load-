@@ -1,5 +1,6 @@
 from flask import Flask, render_template, request, redirect, session, make_response
 from flask_migrate import Migrate
+from flask_cors import CORS
 from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 from admin import admin_bp
@@ -10,6 +11,7 @@ import uuid
 import json
 
 app = Flask(__name__)
+CORS(app)
 app.secret_key = "REDACTED"
 
 # uncomment if you want to try docker compose
@@ -50,6 +52,36 @@ app.register_blueprint(admin_bp, url_prefix='/admin')
 #             time.sleep(3)
 
 # wait_for_db()
+
+def run_secure_container(image:str, docker_flags:list[str] = None ):
+         
+      base_command = [
+
+         "docker", "run",
+         "--rm",
+         "--user", "5000:5000",
+         "--network", "none",
+         "--cap-drop", "ALL",
+         "--tmpfs", "/app/.pytest_cache:rw,noexec,nosuid"
+
+      ]
+
+      if docker_flags:
+
+         base_command.extend(docker_flags)
+
+      base_command.append(image)
+
+      result  = subprocess.run(
+
+         base_command,
+         capture_output=True,
+         timeout=15,
+         text=True
+
+      )
+
+      return result.stdout, result.stderr, result.returncode
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -154,33 +186,43 @@ def submit(id):
    
    test_cases_json = json.dumps([{"input": t.input_data, "expected": t.expected_output} for t in table])
 
-   #run a container using your docker image
+   #run a container using my docker image
 
-   try:
+   result = run_secure_container("python-test-runner:latest", docker_flags=[
 
-      result = subprocess.run(
+   "--env", f"TEST_CASES={test_cases_json}",
+   "--env", f"FUNCTION_NAME={current_problem.function_name}",
+   "-v", f"{os.path.abspath(submission_dir)}:/app/submission"
 
-         [
-            "docker", "run", "--rm",
-            "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
-            "-e" f"TEST_CASES={test_cases_json}",
-            "-e" f"FUNCTION_NAME={current_problem.function_name}", 
-            "python-test-runner:latest"
-
-         ], 
-               
-         capture_output=True, 
-         text=True,
-         timeout=10
-
-      )
-
-   except subprocess.TimeoutExpired:
-      return render_template("result.html", output="", error="Time limit exceeded!")
+   ])
+                                                   
 
 
+   # try:
 
-   return render_template("result.html", output=result.stdout, error=result.stderr)
+   #    result = subprocess.run(
+
+   #       [
+   #          "docker", "run", "--rm",
+   #          "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
+   #          "-e" f"TEST_CASES={test_cases_json}",
+   #          "-e" f"FUNCTION_NAME={current_problem.function_name}", 
+   #          "python-test-runner:latest"
+
+   #       ], 
+            
+   #       capture_output=True, 
+   #       text=True,
+   #       timeout=10
+
+   #    )
+
+   # except subprocess.TimeoutExpired:
+   #    return render_template("result.html", output="", error="Time limit exceeded!")
+
+
+
+   return render_template("result.html", result = result)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
 def output():
@@ -192,8 +234,6 @@ def output():
    
    problems_list = Problem.query.all()
   
-   #bug: if a user is already registered but a new problem has been added via admin access, the new problem will not be added to the history table
-
    for problem in problems_list:
 
       if not History.query.filter(History.user_id == user_id).first():
