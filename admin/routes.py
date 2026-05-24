@@ -1,11 +1,14 @@
-from flask import request, session, render_template, redirect, url_for
+from flask import request, session, render_template, redirect, url_for, jsonify
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, tz_utc8
+from models import Administrator, Problem, CaseProblem,tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
 from extensions import db
 from admin import admin_bp
+from trie_data_structure import trie, TrieNode
+
+trie_obj = trie()
 
 # My decorator for security
 def login_required(f):
@@ -97,29 +100,31 @@ def outputProblem_creation():
 @login_required
 def case_problem_creation():
 
-   new_TestCases = request.form.get('new_TestCases', '')
-
-   new_expected_output = request.form.get('new_expected_output', '')
-
-   lines_testCases = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
-
-   lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
-   
-
    return render_template('admin/case_problem_creation.html')
  
 @admin_bp.route('/dashboard/new_test_case', methods= ['POST', 'GET'])
 @login_required
 def test_case_creation():
 
-   new_TestCases = request.form.get('new_TestCases', '')
+   outputProblem_titles = [row[0] for row in db.session.query(Problem.problem_title).all()]
 
-   new_expected_output = request.form.get('new_expected_output', '')
+   for title in outputProblem_titles:
+      
+      trie_obj.insert(title)
 
-   lines_testCases = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
+   if request.method == 'POST':
 
-   lines_expectedOutput = [line.strip() for line in new_TestCases.splitlines() if line.strip()]
-   
+      new_testCases = request.form.get('new_TestCases', '')
+
+      lines_testCases = [line.strip() for line in new_testCases.splitlines() if line.strip()]
 
    return render_template('admin/test_case_creation.html')
 
+@admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
+def query_handler():
+
+   query = request.args.get('q', '')
+
+   response = trie_obj.getWordsWithPrefix(query)
+
+   return jsonify(response)
