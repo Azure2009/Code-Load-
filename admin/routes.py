@@ -7,6 +7,7 @@ from datetime import datetime
 from extensions import db
 from admin import admin_bp
 from trie_data_structure import trie, TrieNode
+import json
 
 trie_obj = trie()
 
@@ -108,8 +109,16 @@ def test_case_creation():
 
    outputProblem_titles = [row[0] for row in db.session.query(Problem.problem_title).all()]
 
+   #New task: Add two buttons at the side of the search bar. An output problem button and a case problem button. This will serve as a filter system.
+
+   #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
+
+   #New task: Add toggle check for each search result. The new test case inputs and new expected results will be added to toggled search result. 
+
+   #New task: Add a number line each for test case input and expected result text areas 
+
    for title in outputProblem_titles:
-      
+
       trie_obj.insert(title)
 
    if request.method == 'POST':
@@ -125,6 +134,16 @@ def query_handler():
 
    query = request.args.get('q', '')
 
-   response = trie_obj.getWordsWithPrefix(query)
+   matching_titles = trie_obj.getWordsWithPrefix(query)
 
-   return jsonify(response)
+   results = []
+
+   for title in matching_titles:
+
+      problem = db.session.query(Problem.problem_id, Problem.problem_title).filter(Problem.problem_title == title).first()
+
+      if problem:
+
+         results.append({'id': problem[0], 'title':problem[1]})
+
+   return jsonify(results)
