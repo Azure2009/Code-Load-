@@ -125,7 +125,15 @@ def test_case_creation():
 
       new_testCases = request.form.get('new_TestCases', '')
 
+      new_expected_output = request.form.get('new_expected_output', '')
+
+      problem_id = request.form.get('problem_id', '')
+
       lines_testCases = [line.strip() for line in new_testCases.splitlines() if line.strip()]
+
+      lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
+
+      
 
    return render_template('admin/test_case_creation.html')
 

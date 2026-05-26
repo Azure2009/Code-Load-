@@ -12,9 +12,12 @@
 
        <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem"> 
 
+       <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
+
         <form action="/admin/dashboard/new_test_case" method="POST">
+
+            <input type="hidden" name="problem_id" id="problem_id" value="">
             
-            <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
             <p>You can submit multiple test cases at the same time. A new line would be considered as a new test case.</p>
             <label for="new_TestCases">Test Cases</label>
             <li><textarea name="new_TestCases" id="new_TestCases" required></textarea></li>
@@ -30,6 +33,8 @@
 
     <script>
 
+        let selectedProblemId = null
+
         function render(results) {
 
             const panel = document.getElementById('results_panel');
@@ -43,7 +48,30 @@
 
             panel.style.display = 'block';
 
-            panel.innerHTML = results.map(item => `<div id="${item.id}">${item.title}</input></div>`).join('');
+            panel.innerHTML = results.map(item => 
+                `<div 
+                id="${item.id}" 
+                onclick="toggle(this)"
+                style="padding: 8px; cursor: pointer;">
+                ${item.title}
+                </div>`
+            ).join('');
+
+        }
+
+        function toggle(div) {
+
+            document.querySelectorAll('#results_panel div').forEach(d => {
+
+                d.style.backgroundColor = '';
+
+            });
+
+            div.style.backgroundColor = '#d0ebff';
+
+            selectedProblemId = div.id;
+
+            document.getElementById('selectedProblemId').value = selectedProblemId;
 
         }
 
