@@ -109,8 +109,6 @@ def test_case_creation():
 
    case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
 
-   print(case_problem_titles)
-
    #New task: Add two buttons at the side of the search bar. An output problem button and a case problem button. This will serve as a filter system.
 
    #New task: If admin choose output problem. Then the first text area must be hidden. 
@@ -123,23 +121,40 @@ def test_case_creation():
 
       trie_obj.insert(title)
 
-   if request.method == 'POST':
+   if request.method == "POST":
 
-      new_testCases = request.form.get('new_TestCases', '')
+      new_testCases = request.form["new_TestCases"]
 
-      new_expected_output = request.form.get('new_expected_output', '')
+      new_expected_output = request.form["new_expected_output"]
 
-      problem_id = request.form.get('problem_id', '')
+      problem_id_raw = request.form.get('problem_id')
+
+      if not problem_id_raw:
+
+         return 'Please select a problem first'
+      
+      problem_id = int(problem_id_raw)
 
       lines_testCases = [line.strip() for line in new_testCases.splitlines() if line.strip()]
 
       lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
 
       #insert every submitted test case and expected output to its designated problem record
+      try:
 
-      for test_case, expected_output in zip(lines_testCases, lines_expected_output):
+         for test_case, expected_output in zip(lines_testCases, lines_expected_output):
 
-         TestCase(problem_id, test_case, expected_output)
+            tc = TestCase(problem_id = problem_id, input_data = test_case, expected_output = expected_output)
+
+            db.session.add(tc)
+
+            db.session.commit()
+
+      except Exception as e:
+
+         db.session.rollback()
+         print(f"Error: {e}")
+         return f"There was a problem: {e}"
 
    return render_template('admin/test_case_creation.html')
 
