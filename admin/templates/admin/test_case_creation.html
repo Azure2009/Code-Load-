@@ -86,6 +86,41 @@
             render(result);
         })
 
+        var text_area_1 = CodeMirror.fromTextArea(document.getElementById("new_TestCases"), {
+            mode: "python",
+            theme: "dracula",
+            lineNumbers: true,
+            autoCloseBrackets: true,
+            styleActiveLine: true,
+            indentUnit: 4,
+            tabSize: 4,
+            extraKeys: {
+            "Tab": function(cm) {
+                    cm.replaceSelection("    "); // 4 spaces
+                }
+            }
+        });
+
+        var text_area_2 = CodeMirror.fromTextArea(document.getElementById("new_expected_output"), {
+            mode: "python",
+            theme: "dracula",
+            lineNumbers: true,
+            autoCloseBrackets: true,
+            styleActiveLine: true,
+            indentUnit: 4,
+            tabSize: 4,
+            extraKeys: {
+            "Tab": function(cm) {
+                    cm.replaceSelection("    "); // 4 spaces
+                }
+            }
+        });
+
+        document.querySelector("form").addEventListener("submit", function() {
+            text_area_1.save();
+            text_area_2.save();
+        });
+
     </script>
 
 {% endblock %}

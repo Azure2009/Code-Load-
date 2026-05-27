@@ -6,13 +6,13 @@ class trie:
 
         self.root = TrieNode()
 
-    def insert(self, titles: str):
+    def insert(self, title: str):
 
         node = self.root 
 
-        for title in titles:
+        for char in title:
 
-            node = node.children.setdefault(title, TrieNode())
+            node = node.children.setdefault(char, TrieNode())
 
         node.is_end = True
 
