@@ -1,6 +1,6 @@
 from flask import request, session, render_template, redirect, url_for, jsonify
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, CaseProblem,tz_utc8
+from models import Administrator, Problem, CaseProblem, TestCase, tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
@@ -107,17 +107,19 @@ def case_problem_creation():
 @login_required
 def test_case_creation():
 
-   outputProblem_titles = [row[0] for row in db.session.query(Problem.problem_title).all()]
+   case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
+
+   print(case_problem_titles)
 
    #New task: Add two buttons at the side of the search bar. An output problem button and a case problem button. This will serve as a filter system.
 
-   #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
+   #New task: If admin choose output problem. Then the first text area must be hidden. 
 
-   #New task: Add toggle check for each search result. The new test case inputs and new expected results will be added to toggled search result. 
+   #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
 
    #New task: Add a number line each for test case input and expected result text areas 
 
-   for title in outputProblem_titles:
+   for title in case_problem_titles:
 
       trie_obj.insert(title)
 
@@ -133,7 +135,11 @@ def test_case_creation():
 
       lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
 
-      
+      #insert every submitted test case and expected output to its designated problem record
+
+      for test_case, expected_output in zip(lines_testCases, lines_expected_output):
+
+         TestCase(problem_id, test_case, expected_output)
 
    return render_template('admin/test_case_creation.html')
 
@@ -148,7 +154,7 @@ def query_handler():
 
    for title in matching_titles:
 
-      problem = db.session.query(Problem.problem_id, Problem.problem_title).filter(Problem.problem_title == title).first()
+      problem = db.session.query(CaseProblem.id, CaseProblem.title).filter(CaseProblem.title == title).first()
 
       if problem:
 
