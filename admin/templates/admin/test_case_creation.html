@@ -52,7 +52,7 @@
                 `<div 
                 id="${item.id}" 
                 onclick="toggle(this)"
-                style="padding: 8px; cursor: pointer;">
+                style="padding: 8px; cursor: pointer; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
                 ${item.title}
                 </div>`
             ).join('');
@@ -71,9 +71,21 @@
 
             selectedProblemId = div.id;
 
-            document.getElementById('selectedProblemId').value = selectedProblemId;
+            document.getElementById('problem_id').value = selectedProblemId;
 
         }
+
+        document.querySelector('form').addEventListener('submit', function(e) {
+
+            if (!selectedProblemId) {
+
+                e.preventDefault()
+                alert('Please select a problem first.')
+
+            }
+
+
+        })
 
         document.getElementById('search_bar').addEventListener('input', async i => {
 
@@ -86,40 +98,40 @@
             render(result);
         })
 
-        var text_area_1 = CodeMirror.fromTextArea(document.getElementById("new_TestCases"), {
-            mode: "python",
-            theme: "dracula",
-            lineNumbers: true,
-            autoCloseBrackets: true,
-            styleActiveLine: true,
-            indentUnit: 4,
-            tabSize: 4,
-            extraKeys: {
-            "Tab": function(cm) {
-                    cm.replaceSelection("    "); // 4 spaces
-                }
-            }
-        });
+        // var text_area_1 = CodeMirror.fromTextArea(document.getElementById("new_TestCases"), {
+        //     mode: "python",
+        //     theme: "dracula",
+        //     lineNumbers: true,
+        //     autoCloseBrackets: true,
+        //     styleActiveLine: true,
+        //     indentUnit: 4,
+        //     tabSize: 4,
+        //     extraKeys: {
+        //     "Tab": function(cm) {
+        //             cm.replaceSelection("    "); // 4 spaces
+        //         }
+        //     }
+        // });
 
-        var text_area_2 = CodeMirror.fromTextArea(document.getElementById("new_expected_output"), {
-            mode: "python",
-            theme: "dracula",
-            lineNumbers: true,
-            autoCloseBrackets: true,
-            styleActiveLine: true,
-            indentUnit: 4,
-            tabSize: 4,
-            extraKeys: {
-            "Tab": function(cm) {
-                    cm.replaceSelection("    "); // 4 spaces
-                }
-            }
-        });
+        // var text_area_2 = CodeMirror.fromTextArea(document.getElementById("new_expected_output"), {
+        //     mode: "python",
+        //     theme: "dracula",
+        //     lineNumbers: true,
+        //     autoCloseBrackets: true,
+        //     styleActiveLine: true,
+        //     indentUnit: 4,
+        //     tabSize: 4,
+        //     extraKeys: {
+        //     "Tab": function(cm) {
+        //             cm.replaceSelection("    "); // 4 spaces
+        //         }
+        //     }
+        // });
 
-        document.querySelector("form").addEventListener("submit", function() {
-            text_area_1.save();
-            text_area_2.save();
-        });
+        // document.querySelector("form").addEventListener("submit", function() {
+        //     text_area_1.save();
+        //     text_area_2.save();
+        // });
 
     </script>
 
