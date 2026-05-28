@@ -164,6 +164,22 @@ def case_problem(id):
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 def submit(id):
 
+   type_map = {
+
+      "int": int, 
+      "bool": bool,
+      "float": float,
+      "str": str,
+   }
+
+   def safe_cast(value: str, return_type):
+
+      if return_type == "bool":
+
+         return value.strip() == "True"
+
+      return type_map[return_type](value)
+
    user_code = request.form['code']
 
    submission_id = str(uuid.uuid4())
@@ -178,13 +194,12 @@ def submit(id):
       f.write(user_code)
 
    current_problem = CaseProblem.query.get(id)
-   
-   with engine.connect() as connection:
-      table = connection.execute(text("SELECT * FROM mydatabase.test_case WHERE problem_id = :id"), {"id": id})
 
-      connection.close()
+   return_type = current_problem.return_type
    
-   test_cases_json = json.dumps([{"input": t.input_data, "expected": t.expected_output} for t in table])
+   table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
+   
+   test_cases_json = json.dumps([{"input": t.input_data, "expected": safe_cast(t.expected_output, return_type)} for t in table])
 
    #run a container using my docker image
 
@@ -196,32 +211,6 @@ def submit(id):
 
    ])
                                                    
-
-
-   # try:
-
-   #    result = subprocess.run(
-
-   #       [
-   #          "docker", "run", "--rm",
-   #          "-v", f"{os.path.abspath(submission_dir)}:/app/submission",
-   #          "-e" f"TEST_CASES={test_cases_json}",
-   #          "-e" f"FUNCTION_NAME={current_problem.function_name}", 
-   #          "python-test-runner:latest"
-
-   #       ], 
-            
-   #       capture_output=True, 
-   #       text=True,
-   #       timeout=10
-
-   #    )
-
-   # except subprocess.TimeoutExpired:
-   #    return render_template("result.html", output="", error="Time limit exceeded!")
-
-
-
    return render_template("result.html", result = result)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
