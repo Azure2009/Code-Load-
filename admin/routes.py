@@ -139,6 +139,10 @@ def test_case_creation():
 
       lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
 
+      # Use a for loop to convert the strings to their return type
+
+
+
       #insert every submitted test case and expected output to its designated problem record
       try:
 
