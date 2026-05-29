@@ -12,6 +12,18 @@
 
         <form action="/admin/dashboard/new_case_problem" method="POST">
 
+            <h3>What is the difficulty of the coding problem?</h3>
+
+            <input type="hidden" name= "difficulty" id="selected_difficulty" value="">
+
+            <div class="difficulty-btn">
+
+            <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
+            <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
+            <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
+
+            </div>
+
             <label for="problem_title">Problem Title:</label>
             <textarea name="problem_title" id="problem_title" required></textarea>
             <br>
@@ -27,16 +39,40 @@
             <label for="constraints">Constraints</label>
             <li><textarea name="constraints" id="constraints" required></textarea></li>
 
-            <label for="follow-ups">Follow-ups (Optional)</label>
-            <li><textarea name="follow-ups" id="follow-ups" ></textarea></li>
+            <label for="follow_ups">follow-ups (Optional)</label>
+            <li><textarea name="follow_ups" id="follow_ups" ></textarea></li>
 
             <label for="hints">Hints (Optional)</label>
             <li><textarea name="hints" id="hints" ></textarea></li>
+
+            <label for="function_name">Function name</label>
+            <li><textarea name="function_name" id="function_name" ></textarea></li>
+
+            <label for="args">Arguments/Parameters</label>
+            <li><textarea name="args" id="args" ></textarea></li>
+
+            <label for="return_type">Return value's datatype</label>
+            <li><textarea name="return_type" id="return_type" ></textarea></li>
 
             <input type="submit" value="Submit">
 
         </form>
 
     </div>
+
+    <script>
+
+                function select_difficulty(btn) {
+
+                    document.querySelectorAll('[data-value]').forEach(b => b.classList.remove('active'));
+
+                    btn.classList.add('active')
+                    
+                    document.getElementById('selected_difficulty').value = btn.dataset.value
+
+                }
+
+
+            </script>
 
 {% endblock %}
