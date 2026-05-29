@@ -84,22 +84,83 @@ def outputProblem_creation():
 
       difficulty = request.form.get('difficulty')
 
-      if difficulty == "":
+      try:
 
-         return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
-         
-      else: 
+         converted = bool(difficulty)
+
+         assert True == converted
 
          new_output_problem = Problem(problem_title = problem_title, problem_set = coding_problem, expected_output = expected_output, difficulty = difficulty)
 
          db.session.add(new_output_problem)
          db.session.commit()
 
+      except AssertionError:
+
+         return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
+
+      except Exception as e:
+
+         return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = f"{e}")
+
    return render_template('admin/output_problem_creation.html')
 
 @admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
 @login_required
 def case_problem_creation():
+
+   if request.method == "POST":
+
+      problem_title = request.form['problem_title']
+      coding_problem = request.form['coding_problem']
+      examples = request.form['examples']
+      constraints = request.form['constraints']
+      follow_ups = request.form['follow_ups']
+      hints = request.form['hints']
+      difficulty = request.form.get('difficulty')
+      function_name = request.form['function_name']
+      args = request.form['args']
+      return_type = request.form['return_type']
+
+      if request.form['follow_ups'] == "":
+
+         follow_ups = None
+
+      if request.form['hints'] == "":
+
+         hints = None
+   
+      try:
+
+         converted = bool(difficulty)
+
+         assert True == converted 
+
+         new_case_problem = CaseProblem(
+
+         title = problem_title, 
+         instruction = coding_problem, 
+         example = examples, 
+         constraints = constraints, 
+         follow_up = follow_ups, 
+         hint = hints,
+         difficulty = difficulty,
+         function_name = function_name,
+         args = args,
+         return_type = return_type
+         
+         )
+
+         db.session.add(new_case_problem)
+         db.session.commit()
+
+      except AssertionError:
+
+         return render_template("admin/popup.html", show_popup = True, popup_message = "A difficulty must be selected.", redirect_url = "/admin/dashboard/new_case_problem")
+
+      except Exception as e:
+
+         return render_template("admin/popup.html", show_popup = True, popup_message = f"{e}", redirect_url = "/admin/dashboard/new_case_problem")
 
    return render_template('admin/case_problem_creation.html')
  
@@ -112,6 +173,8 @@ def test_case_creation():
    #New task: Add two buttons at the side of the search bar. An output problem button and a case problem button. This will serve as a filter system.
 
    #New task: If admin choose output problem. Then the first text area must be hidden. 
+
+   #Implement a feature where admin can delete a problem record via search result (There will be a trash symbol on the side of the search result)
 
    #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
 
@@ -141,8 +204,6 @@ def test_case_creation():
 
       # Use a for loop to convert the strings to their return type
 
-
-
       #insert every submitted test case and expected output to its designated problem record
       try:
 
@@ -161,6 +222,16 @@ def test_case_creation():
          return f"There was a problem: {e}"
 
    return render_template('admin/test_case_creation.html')
+
+@admin_bp.route('/dashboard/new_test_case/delete-<int:id>', methods= ['POST', 'GET'])
+@login_required
+def test_case_deletion():
+
+   query = request.args.get("id", 0)
+
+
+
+   pass
 
 @admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
 def query_handler():

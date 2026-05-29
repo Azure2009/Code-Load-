@@ -35,6 +35,15 @@
 
         let selectedProblemId = null
 
+        // Work in progress
+
+        // if you click the delete button, the input tag hidden type's value also gets changed.
+
+        function delete_problem() {
+            
+
+        }
+
         function render(results) {
 
             const panel = document.getElementById('results_panel');
@@ -54,6 +63,7 @@
                 onclick="toggle(this)"
                 style="padding: 8px; cursor: pointer; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
                 ${item.title}
+                <input type="button" onclick="delete_problem(${item.id})" value="Delete"></input>
                 </div>`
             ).join('');
 
