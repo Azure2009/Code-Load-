@@ -223,15 +223,28 @@ def test_case_creation():
 
    return render_template('admin/test_case_creation.html')
 
-@admin_bp.route('/dashboard/new_test_case/delete-<int:id>', methods= ['POST', 'GET'])
-@login_required
-def test_case_deletion():
+@admin_bp.route('/dashboard/new_test_case/delete/<id>', methods= ['POST', 'GET'])
+def test_case_deletion(id):
 
-   query = request.args.get("id", 0)
+   parsed_id = str(id)
+
+   try:
+
+      record = db.session.query(CaseProblem).filter(CaseProblem.id == int(parsed_id)).first()
+
+      db.session.delete(record)
+
+      db.session.commit()
 
 
 
-   pass
+      return redirect('/admin/dashboard/new_test_case')
+
+   except Exception:
+
+      return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_test_case")
+
+
 
 @admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
 def query_handler():
