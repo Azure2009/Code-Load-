@@ -10,7 +10,11 @@
 
     <div class="test_case_creation">
 
-       <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem"> 
+       <input type="search" name="search_bar" id="search_bar" style="margin-right: 85%;" placeholder="Search for problem" autocomplete="off">
+       
+       <input type="hidden" value="" name="problem_id_proxy" id="problem_id_proxy">
+
+       <input type="button" onclick="delete_problem()" value="Delete" style="display: inline-block"></input>
 
        <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
 
@@ -40,7 +44,12 @@
         // if you click the delete button, the input tag hidden type's value also gets changed.
 
         function delete_problem() {
-            
+
+            document.getElementById("problem_id_proxy").value = document.getElementById("problem_id").value
+
+            const problem_id_raw = document.getElementById("problem_id_proxy").value 
+
+            window.location.href = `/admin/dashboard/new_test_case/delete/${problem_id_raw}`
 
         }
 
@@ -57,14 +66,15 @@
 
             panel.style.display = 'block';
 
-            panel.innerHTML = results.map(item => 
+            panel.innerHTML = results.map(item =>
+
                 `<div 
                 id="${item.id}" 
                 onclick="toggle(this)"
-                style="padding: 8px; cursor: pointer; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
+                style="padding: 8px; cursor: pointer; display: block; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
                 ${item.title}
-                <input type="button" onclick="delete_problem(${item.id})" value="Delete"></input>
                 </div>`
+
             ).join('');
 
         }
