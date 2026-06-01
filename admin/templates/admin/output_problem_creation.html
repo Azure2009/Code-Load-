@@ -11,9 +11,9 @@
 
         <form action="/admin/dashboard/new_output_problem" method="POST">
 
-            <h3>What is the difficulty of the coding problem?</h3>
+            <label for="difficulty">What is the difficulty of the coding problem?</label>
 
-            <input type="hidden" name= "difficulty" id="selected_difficulty" value="">
+            <input type="hidden" name= "difficulty" id="difficulty" value="">
 
             <div class="difficulty-btn">
 
@@ -22,21 +22,6 @@
             <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
 
             </div>
-
-            <script>
-
-                function select_difficulty(btn) {
-
-                    document.querySelectorAll('[data-value]').forEach(b => b.classList.remove('active'));
-
-                    btn.classList.add('active')
-                    
-                    document.getElementById('selected_difficulty').value = btn.dataset.value
-
-                }
-
-
-            </script>
 
             <label for="problem_title">Problem Title:</label>
             <textarea name="problem_title" id="problem_title" required></textarea>
@@ -51,4 +36,101 @@
 
         </form>
 
+        <br>
+        <br>
+
+        <h4>You can search, select, and delete a problem here.</h4>
+        <input type="search" name="search_bar" id="search_bar" style="margin-right: 85%;" placeholder="Search for problem" autocomplete="off">
+        
+        <input type="hidden" value="" name="problem_id" id="problem_id">
+
+        <input type="button" onclick="delete_problem()" value="Delete" style="display: inline-block"></input>
+
+        <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
+
+        <script>
+
+        let selectedProblemId = null
+
+        function select_difficulty(btn) {
+
+            document.querySelectorAll(".difficulty-btn button").forEach(b => {
+
+                b.classList.remove('active')
+
+            })
+
+            btn.classList.add('active')
+
+            document.getElementById("difficulty").value = btn.dataset.value
+
+
+        }
+
+        function delete_problem() {
+
+            const problem_id_raw = document.getElementById("problem_id").value 
+
+            window.location.href = `/admin/dashboard/new_output_problem/delete/${problem_id_raw}`
+
+        }
+
+        function render(results) {
+
+            const panel = document.getElementById('results_panel');
+
+            if (results.length === 0) {
+
+                panel.style.display = 'none';
+                return;
+
+            }
+
+            panel.style.display = 'block';
+
+            panel.innerHTML = results.map(item =>
+
+                `<div 
+                id="${item.id}" 
+                onclick="toggle(this)"
+                style="padding: 8px; cursor: pointer; display: block; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
+                ${item.title}
+                </div>`
+
+            ).join('');
+
+        }
+
+        function toggle(div) {
+
+            document.querySelectorAll('#results_panel div').forEach(d => {
+
+                d.style.backgroundColor = '';
+
+            });
+
+            div.style.backgroundColor = '#d0ebff';
+
+            selectedProblemId = div.id;
+
+            document.getElementById('problem_id').value = selectedProblemId;
+
+        }
+
+        
+
+        document.getElementById('search_bar').addEventListener('input', async i => {
+
+            const query = i.target.value;
+
+            const response = await fetch(`http://127.0.0.1:5000/admin/dashboard/new_output_problem/search?q=${query}`);
+
+            const result = await response.json();
+
+            render(result);
+        })
+
+        </script>
+
 {% endblock %}
+

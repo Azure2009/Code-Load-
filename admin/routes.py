@@ -11,6 +11,8 @@ import json
 
 trie_obj = trie()
 
+trie_obj_2 = trie()
+
 # My decorator for security
 def login_required(f):
    @wraps(f)
@@ -69,11 +71,16 @@ def adminDashboard():
    return render_template("admin/dashboard.html", admin = current_admin)
 
 @admin_bp.route('/dashboard/new_output_problem', methods=['POST', 'GET'])
-@login_required
 def outputProblem_creation():
 
    session['visited_at'] = datetime.now(tz_utc8).isoformat()
-   
+
+   titles = [row[0] for row in db.session.query(Problem.problem_title).all()] 
+
+   for title in titles:
+
+      trie_obj_2.insert(title)
+
    if request.method == 'POST':
 
       problem_title = request.form["problem_title"]
@@ -104,6 +111,47 @@ def outputProblem_creation():
          return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = f"{e}")
 
    return render_template('admin/output_problem_creation.html')
+
+@admin_bp.route('/dashboard/new_output_problem/search', methods=['POST', 'GET'])
+def search_handler():
+
+   query = request.args.get('q', '')
+
+   matching_titles = trie_obj_2.getWordsWithPrefix(query)
+
+   results = []
+
+   for title in matching_titles:
+
+      problem = db.session.query(Problem.problem_id, Problem.problem_title).filter(Problem.problem_title == title).first()
+
+      if problem:
+
+         results.append({'id': problem[0], 'title':problem[1]})
+
+   return jsonify(results)
+
+@admin_bp.route('/dashboard/new_output_problem/delete/<id>', methods=['POST', 'GET'])
+def delete_output_problem(id):
+
+   parsed_id = str(id)
+
+   try:
+
+      record = db.session.query(Problem).filter(Problem.problem_id == int(parsed_id)).first()
+
+      db.session.delete(record)
+
+      db.session.commit()
+
+
+
+      return redirect('/admin/dashboard/new_output_problem')
+
+   except Exception:
+
+      return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_output_problem")
+
 
 @admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
 @login_required
@@ -170,11 +218,7 @@ def test_case_creation():
 
    case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
 
-   #New task: Add two buttons at the side of the search bar. An output problem button and a case problem button. This will serve as a filter system.
-
-   #New task: If admin choose output problem. Then the first text area must be hidden. 
-
-   #Implement a feature where admin can delete a problem record via search result (There will be a trash symbol on the side of the search result)
+   #New task: Create another trie object which will serve as search engine for output problem search bar
 
    #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
 
@@ -243,8 +287,6 @@ def test_case_deletion(id):
    except Exception:
 
       return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_test_case")
-
-
 
 @admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
 def query_handler():
