@@ -1,56 +1,67 @@
 {% extends 'base.html' %}
 
-{% block head %} 
-
-
-
-{% endblock %}
-
 {% block body %}
 
-    <section class="cya-section">
-        <p class="cya-title">Choose your <span>path</span>, {{user.username}}!</p>
-        <p class="cya-subtitle">We help users sharpen their coding skills<br>with 2 types of coding exercise.</p>
-        <div class="cya-grid">
-
-            <div class="cya-card">
-                <p class="cya-card-title">Warm-ups</p>
-                <p class="cya-card-desc">For those looking to make their feet HOT. Determine the expected outputs of each problem.</p>
-                <svg class="cya-deco" viewbox="0 0 90 70" fill="none">
-                    <rect x="4" y="4" width="82" height="62" rx="6" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="12" y1="18" x2="50" y2="18" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="12" y1="28" x2="42" y2="28" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="12" y1="38" x2="55" y2="38" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="12" y1="48" x2="36" y2="48" stroke="#4ade80" stroke-width="1.5"/>
-                </svg>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <a href="/output_problems"><button class="cya-btn cya-btn-green">Do output problems</button></a>
-            </div>
+<div class="dashboard-hero">
 
 
-            <div class="cya-card">
-                <p class="cya-card-title">Hot-shots</p>
-                <p class="cya-card-desc">For those sweaty solvers who want to take challenges. Write your own code and pass every test case!</p>
-                <svg class="cya-deco" viewbox="0 0 90 70" fill="none">
-                    <rect x="8" y="20" width="30" height="42" rx="4" stroke="#4ade80" stroke-width="1.5"/>
-                    <rect x="44" y="8" width="38" height="54" rx="4" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="16" y1="32" x2="30" y2="32" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="16" y1="40" x2="30" y2="40" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="52" y1="20" x2="74" y2="20" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="52" y1="30" x2="74" y2="30" stroke="#4ade80" stroke-width="1.5"/>
-                    <line x1="52" y1="40" x2="68" y2="40" stroke="#4ade80" stroke-width="1.5"/>
-                </svg>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <div class="cya-feature"><span class="icon">&#10003;</span>Lorem ipsum dolor sit</div>
-                <a href="/case_problems"><button class="cya-btn cya-btn-dark" href="/case_problems">Do case problems</button></a>
-            </div>
+<p class="dashboard-eyebrow">Code Load</p>
+
+<h1 class="dashboard-title">
+    Choose your path,
+    <span>{{ user.username }}</span>
+</h1>
+
+<p class="dashboard-subtitle">
+    Build confidence through guided exercises or
+    challenge yourself with real coding problems.
+</p>
 
 
-        </div>
+</div>
 
-    </section>
-        
+<div class="dashboard-grid">
+
+
+<div class="dashboard-card">
+
+    <div class="card-icon">
+        💡
+    </div>
+
+    <h2>Warm-ups</h2>
+
+    <p>
+        Practice reading and understanding code by
+        predicting program output.
+    </p>
+
+    <a href="/output_problems" class="card-button">
+        Start Warm-ups →
+    </a>
+
+</div>
+
+<div class="dashboard-card">
+
+    <div class="card-icon">
+        🚀
+    </div>
+
+    <h2>Hot-shots</h2>
+
+    <p>
+        Solve complete coding challenges and
+        pass every test case with your own solution.
+    </p>
+
+    <a href="/case_problems" class="card-button">
+        Start Hot-shots →
+    </a>
+
+</div>
+
+
+</div>
+
 {% endblock %}

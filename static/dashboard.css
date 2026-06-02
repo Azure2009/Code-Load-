@@ -1,52 +1,302 @@
-.cya-section {
+:root{
+    --bg:#f5f5f7;
+    --card:#ffffff;
+    --text:#1d1d1f;
+    --secondary:#86868b;
+    --border:#e8e8ed;
+    --accent:#0071e3;
+    --success:#34c759;
+}
 
-    padding: 2.5rem 1rem;
-    text-align: center;
-    background: #0f130f;
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
+
+body{
+    background:var(--bg);
+    font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "SF Pro Display",
+        sans-serif;
+    color:var(--text);
+}
+
+a{
+    text-decoration:none;
+    color:inherit;
+}
+
+.app-shell{
+    max-width:1200px;
+    margin:auto;
+    padding:40px 24px;
+}
+
+h1{
+    font-size:48px;
+    font-weight:700;
+}
+
+h2{
+    font-size:36px;
+    font-weight:700;
+}
+
+h3{
+    font-size:24px;
+}
+
+button,
+input[type="submit"]{
+    border:none;
+    background:var(--accent);
+    color:white;
+    padding:14px 24px;
+    border-radius:14px;
+    font-size:15px;
+    cursor:pointer;
+    transition:.25s;
+}
+
+button:hover,
+input[type="submit"]:hover{
+    transform:translateY(-2px);
+    opacity:.92;
+}
+
+.hero{
+    min-height:80vh;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    gap:24px;
+}
+
+.hero h3{
+    font-size:60px;
+    font-weight:700;
+}
+
+.hero button{
+    width:220px;
+}
+
+.login,
+.registration{
+    max-width:450px;
+    margin:60px auto;
+    background:white;
+    padding:40px;
+    border-radius:24px;
+    box-shadow:
+        0 10px 40px rgba(0,0,0,.05);
+}
+
+.login h1,
+.registration h1{
+    margin-bottom:30px;
+}
+
+.login form,
+.registration form{
+    display:flex;
+    flex-direction:column;
+    gap:16px;
+}
+
+input[type="text"],
+input[type="password"]{
+    padding:14px;
+    border:1px solid var(--border);
+    border-radius:12px;
+    font-size:15px;
+}   
+
+.problem-card{
+    background:white;
+    border-radius:18px;
+    padding:24px;
+    margin-bottom:16px;
+
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.04);
+
+    transition:.25s;
+}
+
+.problem-card:hover{
+    transform:translateY(-4px);
+}
+
+
+.mainContainer{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:24px;
+}
+
+.descriptionContainer{
+    background:white;
+    border-radius:24px;
+    padding:30px;
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.05);
+}
+
+.codingArea{
+    background:white;
+    border-radius:24px;
+    padding:20px;
+    box-shadow:
+        0 8px 30px rgba(0,0,0,.05);
+}
+
+.CodeMirror{
+    height:650px;
+    border-radius:18px;
+    font-size:15px;
+}
+
+#userVoid_popup{
+    position:fixed;
+    top:50%;
+    left:50%;
+    transform:translate(-50%,-50%);
+    background:white;
+    padding:32px;
+    border-radius:24px;
+    box-shadow:
+        0 15px 50px rgba(0,0,0,.15);
+    z-index:999;
+}
+
+.cya-wrap,
+.dashboard-hero {
+text-align: center;
+padding: 5rem 1rem 3rem;
+}
+
+.dashboard-eyebrow{
+font-size:14px;
+font-weight:600;
+letter-spacing:.12em;
+text-transform:uppercase;
+color:#86868b;
+margin-bottom:1rem;
+}
+
+.dashboard-title{
+font-size:clamp(3rem,7vw,5rem);
+font-weight:700;
+line-height:1.05;
+color:#1d1d1f;
+margin-bottom:1rem;
+}
+
+.dashboard-title span{
+color:#0071e3;
+}
+
+.dashboard-subtitle{
+max-width:650px;
+margin:auto;
+font-size:1.25rem;
+line-height:1.6;
+color:#6e6e73;
+}
+
+.dashboard-grid{
+max-width:1100px;
+margin:3rem auto;
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(320px,1fr));
+gap:2rem;
+}
+
+.dashboard-card{
+background:#ffffff;
+border-radius:28px;
+padding:3rem;
+text-align:left;
+
+
+box-shadow:
+    0 10px 40px rgba(0,0,0,.05);
+
+transition:
+    transform .3s ease,
+    box-shadow .3s ease;
 
 
 }
 
-.cya-title {
-
-    font-size: 2rem;
-    font-weight: 500;
-    color: #f0f0f0;
-    margin: 0 0 0.5rem;
-    
+.dashboard-card:hover{
+transform:translateY(-8px);
 
 
-}
-
-.cya-title span {
-
-    color: #4ade80;
+box-shadow:
+    0 20px 60px rgba(0,0,0,.08);
 
 
 }
 
-.cya-subtitle {
+.card-icon{
+font-size:3rem;
+margin-bottom:1.5rem;
+}
 
-  font-size: 15px;
-  color: #9aab9a;
-  margin: 0 0 2rem;
-  line-height: 1.6;
+.dashboard-card h2{
+font-size:2rem;
+margin-bottom:1rem;
+color:#1d1d1f;
+}
+
+.dashboard-card p{
+color:#6e6e73;
+line-height:1.7;
+margin-bottom:2rem;
+}
+
+.card-button{
+display:inline-flex;
+align-items:center;
+justify-content:center;
+
+
+background:#0071e3;
+color:white;
+
+padding:14px 24px;
+border-radius:999px;
+
+text-decoration:none;
+font-weight:600;
+
+transition:.25s ease;
+
 
 }
 
-.cya-grid {
-
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 16px;
-    max-width: 720px;
-    margin: 0 auto;
+.card-button:hover{
+background:#0077ed;
+transform:scale(1.03);
 }
 
-.cya-card {
-
-    background: #1a1f1a;
-    border-radius: 12px;
-
-
+.python-logo {
+  width: 48px;
+  height: 40px;
+  background-image: url('https://s3.dualstack.us-east-2.amazonaws.com/pythondotorg-assets/media/files/python-logo-only.svg');
+  background-size: contain;
+  background-repeat: no-repeat;
+  display: inline-block;
 }
+

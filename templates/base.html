@@ -10,7 +10,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/mode/python/python.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/addon/edit/closebrackets.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/addon/selection/active-line.min.js"></script>
-    <title>Neat Code</title>
+    <title>Code Load</title>
     {% block head %} 
     
     <script>
@@ -32,7 +32,9 @@
 
 </head>
 <body>
-    {% block body %}{% endblock %}
+    <div class="app-shell">
+        {% block body %}{% endblock %}
+    </div>
 <script>
   var editor = CodeMirror.fromTextArea(document.getElementById("code"), {
     mode: "python",
