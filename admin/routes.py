@@ -7,7 +7,6 @@ from datetime import datetime
 from extensions import db
 from admin import admin_bp
 from trie_data_structure import trie, TrieNode
-import json
 
 trie_obj = trie()
 
@@ -279,8 +278,6 @@ def test_case_deletion(id):
       db.session.delete(record)
 
       db.session.commit()
-
-
 
       return redirect('/admin/dashboard/new_test_case')
 
