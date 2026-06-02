@@ -221,35 +221,27 @@ def output():
    if not user_id:
       return redirect('/login')
    
-   problems_list = Problem.query.all()
-  
-   for problem in problems_list:
+   problems_list = [record for record in db.session.query(Problem).all()]
 
-      if not History.query.filter(History.user_id == user_id).first():
-
-         for problem in problems_list:
-
-            history = History(problem_id=problem.problem_id, user_id=int(user_id))
-
-            db.session.add(history)
-            db.session.commit()
-
-      elif not History.query.filter(History.problem_id == problem.problem_id).first():
-
-         history = History(problem_id=problem.problem_id, user_id=int(user_id))
-
-         db.session.add(history)
-         db.session.commit()
-
-   status_list = []
+   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == user_id).all()}
 
    for problem in problems_list:
 
-      status_list.append(db.session.query(History.status).filter(History.user_id == user_id, History.problem_id == problem.problem_id).scalar())
+      if problem.problem_id not in user_histories:
 
-   else:
-       
-      return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
+         new_record = History(user_id = int(user_id), problem_id = problem.problem_id)
+
+         db.session.add(new_record)
+
+         db.session.flush()
+
+         user_histories[problem.problem_id] = new_record.status
+
+   db.session.commit()
+
+   status_list = [user_histories[problem.problem_id] for problem in problems_list] 
+
+   return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
 
 @app.route('/output_problems/solving_page/<int:problem_id>', methods=['POST', 'GET'])
 def problem(problem_id):
