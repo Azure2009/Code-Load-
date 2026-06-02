@@ -9,9 +9,14 @@
 
 {% block body %}
 
+        <div class="admin-card large-card">
+
         <form action="/admin/dashboard/new_output_problem" method="POST">
 
-            <label for="difficulty">What is the difficulty of the coding problem?</label>
+            <h2>Create Output Problem</h2>
+            <p class="section-subtitle">
+            Create a new output prediction exercise.
+            </p>
 
             <input type="hidden" name= "difficulty" id="difficulty" value="">
 
@@ -36,17 +41,25 @@
 
         </form>
 
+        </div>
+
         <br>
         <br>
 
-        <h4>You can search, select, and delete a problem here.</h4>
-        <input type="search" name="search_bar" id="search_bar" style="margin-right: 85%;" placeholder="Search for problem" autocomplete="off">
+        <div class="search-card">
+
+        <h4>Manage Existing Problems</h4>
+        <input type="search" name="search_bar" id="search_bar" placeholder="Search problems..." autocomplete="off">
         
         <input type="hidden" value="" name="problem_id" id="problem_id">
 
-        <input type="button" onclick="delete_problem()" value="Delete" style="display: inline-block"></input>
+        <div id="results_panel"></div>
 
-        <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
+        <input type="button" onclick="delete_problem()" value="Delete Selected Problem" class="danger-btn"></input>
+
+        
+
+        </div>
 
         <script>
 

@@ -8,7 +8,9 @@
 
 {% block body %}
 
-    <div class="test_case_creation">
+    <div class="testcase-layout">
+
+        <div class="search-card">
 
        <input type="search" name="search_bar" id="search_bar" style="margin-right: 85%;" placeholder="Search for problem" autocomplete="off">
        
@@ -18,20 +20,26 @@
 
        <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
 
+       </div>
+
+       <div class="admin-card">
+
         <form action="/admin/dashboard/new_test_case" method="POST">
 
             <input type="hidden" name="problem_id" id="problem_id" value="">
             
             <p>You can submit multiple test cases at the same time. A new line would be considered as a new test case.</p>
             <label for="new_TestCases">Test Case</label>
-            <li><textarea name="new_TestCases" id="new_TestCases" required></textarea></li>
+            <textarea name="new_TestCases" id="new_TestCases" required></textarea>
             <p>A new line would be considered as a new expected output.Test case and expected output are partnered based on their number in the number line.</p>
             <label for="new_expected_output">Expected output</label>
-            <li><textarea name="new_expected_output" id="new_expected_output" required></textarea></li>
+            <textarea name="new_expected_output" id="new_expected_output" required></textarea>
 
             <input type="submit" value="Submit">
 
         </form>
+
+        </div>
 
     </div>
 
@@ -117,41 +125,6 @@
 
             render(result);
         })
-
-        // var text_area_1 = CodeMirror.fromTextArea(document.getElementById("new_TestCases"), {
-        //     mode: "python",
-        //     theme: "dracula",
-        //     lineNumbers: true,
-        //     autoCloseBrackets: true,
-        //     styleActiveLine: true,
-        //     indentUnit: 4,
-        //     tabSize: 4,
-        //     extraKeys: {
-        //     "Tab": function(cm) {
-        //             cm.replaceSelection("    "); // 4 spaces
-        //         }
-        //     }
-        // });
-
-        // var text_area_2 = CodeMirror.fromTextArea(document.getElementById("new_expected_output"), {
-        //     mode: "python",
-        //     theme: "dracula",
-        //     lineNumbers: true,
-        //     autoCloseBrackets: true,
-        //     styleActiveLine: true,
-        //     indentUnit: 4,
-        //     tabSize: 4,
-        //     extraKeys: {
-        //     "Tab": function(cm) {
-        //             cm.replaceSelection("    "); // 4 spaces
-        //         }
-        //     }
-        // });
-
-        // document.querySelector("form").addEventListener("submit", function() {
-        //     text_area_1.save();
-        //     text_area_2.save();
-        // });
 
     </script>
 

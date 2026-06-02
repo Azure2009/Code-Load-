@@ -8,13 +8,41 @@
 
 {% block body %}
 
-    <div class="admin_dashboard">
+    <div class="admin dashboard-page">
 
-        <h2>Welcome Administrator {{admin.admin_username}}.</h2>
+    <div class="hero-card">
 
-        <button><a href="/admin/dashboard/new_output_problem">Add a new output problem</a></button>
-        <button><a href="/admin/dashboard/new_case_problem">Add a new case problem</a></button>
-        <button><a href="/admin/dashboard/new_test_case">Add a new test case</a></button>
-            
-    </div>    
+        <p class="page-eyebrow">Administrator Console</p>
+
+        <h1 class="page-title">
+            Welcome,
+            <span>{{admin.admin_username}}</span>
+        </h1>
+
+        <p class="page-subtitle">
+            Manage coding challenges, output problems, and test cases.
+        </p>
+
+    </div>
+
+    <div class="admin-action-grid">
+
+        <a href="/admin/dashboard/new_output_problem" class="admin-action-card">
+            <h3>Output Problems</h3>
+            <p>Create and manage output prediction exercises.</p>
+        </a>
+
+        <a href="/admin/dashboard/new_case_problem" class="admin-action-card">
+            <h3>Case Problems</h3>
+            <p>Create algorithmic coding challenges.</p>
+        </a>
+
+        <a href="/admin/dashboard/new_test_case" class="admin-action-card">
+            <h3>Test Cases</h3>
+            <p>Add and maintain automated test cases.</p>
+        </a>
+
+    </div>
+
+</div>  
 {% endblock %}
