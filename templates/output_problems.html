@@ -14,10 +14,10 @@
 
     <div class="python_container">
 
+        {% for problem in problems_list %}
+
         <ol>
                       
-           {% for problem in problems_list %}
-
             <div class="problem-card">
 
                 <div>
@@ -27,7 +27,7 @@
                     <p>
                         {{problem.difficulty}}
                         •
-                        {{status_list[problem.problem_id - 1]}}
+                        {{status_list[loop.index0]}}
                     </p>
 
                 </div>
@@ -38,10 +38,9 @@
 
             </div>
 
-       
-           {% endfor %}
-
         </ol>
+
+        {% endfor %}
 
     </div>
 
