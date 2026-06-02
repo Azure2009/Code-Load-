@@ -1,6 +1,6 @@
 from flask import request, session, render_template, redirect, url_for, jsonify
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, CaseProblem, TestCase, tz_utc8
+from models import Administrator, Problem, CaseProblem, TestCase, History,tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
@@ -139,11 +139,13 @@ def delete_output_problem(id):
 
       record = db.session.query(Problem).filter(Problem.problem_id == int(parsed_id)).first()
 
+      if record:
+
+         db.session.delete(db.session.query(History).filter(History.problem_id == int(parsed_id)).first())   
+
       db.session.delete(record)
 
       db.session.commit()
-
-
 
       return redirect('/admin/dashboard/new_output_problem')
 

@@ -8,9 +8,18 @@
 
 {% block body %}
 
-    <div class="case_problem_creation">
+    <div class="admin-card">
+
+    <h1>Create Case Problem</h1>
+
+    <p class="section-subtitle">
+        Build a coding challenge with examples,
+        constraints and optional hints.
+    </p>
 
         <form action="/admin/dashboard/new_case_problem" method="POST">
+
+            <section class="form-section">
 
             <h3>What is the difficulty of the coding problem?</h3>
 
@@ -24,35 +33,48 @@
 
             </div>
 
+            </section>
+
+            <section class="form-section">
+
             <label for="problem_title">Problem Title:</label>
             <textarea name="problem_title" id="problem_title" required></textarea>
             <br>
             <br>    
             <label for="coding_problem">Coding Problem</label>
             <textarea name="coding_problem" id="coding_problem" required></textarea>
-            <br>
-            <br>
+            
+            </section>
+
+            <section class="form-section">
+
             <p>Provide some examples for input and expected output.</p>
             <label for="examples">Give examples</label>
-            <li><textarea name="examples" id="examples" required></textarea></li>
+            <textarea name="examples" id="examples" required></textarea>
 
             <label for="constraints">Constraints</label>
-            <li><textarea name="constraints" id="constraints" required></textarea></li>
+            <textarea name="constraints" id="constraints" required></textarea>
+
+            </section>
+
+            <section class="form-section">
 
             <label for="follow_ups">follow-ups (Optional)</label>
-            <li><textarea name="follow_ups" id="follow_ups" ></textarea></li>
+            <textarea name="follow_ups" id="follow_ups" ></textarea>
 
             <label for="hints">Hints (Optional)</label>
-            <li><textarea name="hints" id="hints" ></textarea></li>
+            <textarea name="hints" id="hints" ></textarea>
 
             <label for="function_name">Function name</label>
-            <li><textarea name="function_name" id="function_name" ></textarea></li>
+            <textarea name="function_name" id="function_name" ></textarea>
 
             <label for="args">Arguments/Parameters</label>
-            <li><textarea name="args" id="args" ></textarea></li>
+            <textarea name="args" id="args" ></textarea>
 
             <label for="return_type">Return value's datatype</label>
-            <li><textarea name="return_type" id="return_type" ></textarea></li>
+            <textarea name="return_type" id="return_type" ></textarea>
+
+            </section>
 
             <input type="submit" value="Submit">
 
