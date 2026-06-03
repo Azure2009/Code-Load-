@@ -219,12 +219,8 @@ def test_case_creation():
 
    case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
 
-   #New task: Create another trie object which will serve as search engine for output problem search bar
-
    #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
-
-   #New task: Add a number line each for test case input and expected result text areas 
-
+ 
    for title in case_problem_titles:
 
       trie_obj.insert(title)

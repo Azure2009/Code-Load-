@@ -2,10 +2,12 @@ import os, json, importlib
 
 def test_all_cases():
 
-    raw = os.environ.get("TEST_CASES", "[]")
-    function_name = os.environ.get("FUNCTION_NAME", "")
-    test_cases = json.loads(raw)
+    with open("/app/submission/test_cases.json") as f:
 
+       test_cases = json.load(f)
+
+    function_name = os.environ.get("FUNCTION_NAME", "")
+    
     module = importlib.import_module("submission.solution")
 
     try:
