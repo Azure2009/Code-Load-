@@ -140,30 +140,90 @@ input[type="password"]{
 
 .mainContainer{
     display:grid;
-    grid-template-columns:1fr 1fr;
+    grid-template-columns:minmax(400px, 42%) minmax(500px, 58%);
     gap:24px;
+
+    height:calc(100vh - 48px);
+    padding:24px;
+
+    overflow:hidden;
 }
 
 .descriptionContainer{
     background:white;
     border-radius:24px;
     padding:30px;
+
     box-shadow:
         0 8px 30px rgba(0,0,0,.05);
+
+    overflow-y:auto;
+    overflow-x:hidden;
+}
+
+.descriptionContainer pre{
+    white-space:pre-wrap;
+    word-break:break-word;
+    overflow-wrap:anywhere;
+
+    font-family:
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        monospace;
+
+    line-height:1.6;
 }
 
 .codingArea{
     background:white;
     border-radius:24px;
     padding:20px;
+
     box-shadow:
         0 8px 30px rgba(0,0,0,.05);
+
+    display:flex;
+    flex-direction:column;
+
+    overflow:hidden;
+}
+
+.codingArea form{
+    display:flex;
+    flex-direction:column;
+    height:100%;
 }
 
 .CodeMirror{
-    height:650px;
+    flex:1;
+    height:auto !important;
+    min-height:0;
+
     border-radius:18px;
     font-size:15px;
+}
+
+.codingArea input[type="submit"]{
+    margin-top:16px;
+    align-self:flex-end;
+}
+
+@media (max-width: 1000px){
+
+    .mainContainer{
+        grid-template-columns:1fr;
+        height:auto;
+    }
+
+    .descriptionContainer{
+        max-height:none;
+    }
+
+    .codingArea{
+        min-height:700px;
+    }
+
 }
 
 #userVoid_popup{

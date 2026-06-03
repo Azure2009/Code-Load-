@@ -9,6 +9,7 @@ import os
 import subprocess
 import uuid
 import json
+import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -62,7 +63,9 @@ def run_secure_container(image:str, docker_flags:list[str] = None ):
          "--user", "5000:5000",
          "--network", "none",
          "--cap-drop", "ALL",
-         "--tmpfs", "/app/.pytest_cache:rw,noexec,nosuid"
+         "--read-only",
+         "--tmpfs", "/tmp:rw,noexec,nosuid",
+         "--tmpfs", "/app/.pytest_cache:rw,noexec,nosuid",
 
       ]
 
@@ -72,16 +75,28 @@ def run_secure_container(image:str, docker_flags:list[str] = None ):
 
       base_command.append(image)
 
-      result  = subprocess.run(
+      try:
 
-         base_command,
-         capture_output=True,
-         timeout=15,
-         text=True
+         result  = subprocess.run(
 
-      )
+            base_command,
+            capture_output=True,
+            timeout=15,
+            text=True
 
-      return result.stdout, result.stderr, result.returncode
+         )
+
+         return result.stdout, result.stderr, result.returncode
+      
+      except subprocess.TimeoutExpired:
+
+         return "", "Time limit exceeded: your code ran too long.", -1
+      
+      except subprocess.CalledProcessError as e:
+        return "", f"Container error: {e}", -1
+
+      except Exception as e:
+        return "", f"Unexpected error: {e}", -1  
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -211,28 +226,42 @@ def submit(id):
 
    submission_dir = os.path.join(base_dir, submission_id)
 
-   os.makedirs(submission_dir, exist_ok=True)
+   try:
 
-   with open(os.path.join(submission_dir, "solution.py"), "w") as f:
-      f.write(user_code)
+      os.makedirs(submission_dir, exist_ok=True)
 
-   current_problem = CaseProblem.query.get(id)
+      with open(os.path.join(submission_dir, "solution.py"), "w") as f:
+         f.write(user_code)
 
-   return_type = current_problem.return_type
-   
-   table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
-   
-   test_cases_json = json.dumps([{"input": t.input_data, "expected": safe_cast(t.expected_output, return_type)} for t in table])
+      current_problem = CaseProblem.query.get(id)
 
-   #run a container using my docker image
+      return_type = current_problem.return_type
+      
+      table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
+      
+      test_cases_list = [{"input": t.input_data, "expected": safe_cast(t.expected_output, return_type)} for t in table]
 
-   result = run_secure_container("python-test-runner:latest", docker_flags=[
+      with open(os.path.join(submission_dir, "test_cases.json"), "w") as f:
 
-   "--env", f"TEST_CASES={test_cases_json}",
-   "--env", f"FUNCTION_NAME={current_problem.function_name}",
-   "-v", f"{os.path.abspath(submission_dir)}:/app/submission"
+         json.dump(test_cases_list, f)
 
-   ])
+      #run a container using my docker image
+
+      result = run_secure_container("python-test-runner:latest", docker_flags=[
+
+      "--memory", "128m",
+      "--memory-swap", "128m",
+      "--cpus", "0.5",
+      "--pids-limit", "50",
+      "--stop-timeout", "10",
+      "--env", f"FUNCTION_NAME={current_problem.function_name}",
+      "-v", f"{os.path.abspath(submission_dir)}:/app/submission:ro",
+
+      ])
+
+   finally:
+
+      shutil.rmtree(submission_dir, ignore_errors=True)
                                                    
    return render_template("result.html", result = result)
 
