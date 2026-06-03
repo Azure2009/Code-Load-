@@ -150,16 +150,39 @@ def dashboard():
 @app.route('/case_problems', methods=['GET', 'POST'])
 def case():
 
+   user_id = session["user_id"]
+
+   if not user_id:
+
+      redirect("/login")
+
+   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == user_id).all()}   
+
    case_problems_list = CaseProblem.query.all()
 
-   return render_template("case_problems.html", case_problems_list = case_problems_list)
+   for case in case_problems_list:
+
+      if case.id not in user_histories:
+
+         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id)
+
+         db.session.add(new_record)
+         db.session.flush()
+
+         user_histories[case.id] = new_record.status
+
+   db.session.commit()
+
+   status_list = [user_histories[case.id] for case in case_problems_list]
+
+   return render_template("case_problems.html", case_problems_list = case_problems_list, status_list = status_list)
 
 @app.route('/case_problems/solving-page/<int:id>', methods=['GET', 'POST'])
 def case_problem(id):
 
-   current_case_problem = CaseProblem.query.get(id) 
+   case_problem = CaseProblem.query.get(id)
 
-   return render_template("solving_page-case_problems.html", case_problem = current_case_problem)
+   return render_template("solving_page-case_problems.html", case_problem = case_problem)
                
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 def submit(id):
