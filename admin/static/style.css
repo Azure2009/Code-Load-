@@ -226,3 +226,73 @@ textarea{
     }
 
 }
+
+.editor-container{
+display:flex;
+background:white;
+border:1px solid var(--border);
+border-radius:18px;
+overflow:hidden;
+margin-top:10px;
+margin-bottom:24px;
+}
+
+.line-numbers{
+    min-width:50px;
+
+    padding-top:16px;
+    padding-right:10px;
+
+    background:#f7f7f8;
+    color:#8e8e93;
+
+    text-align:right;
+
+    font-family:
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        monospace;
+
+    line-height:24px;
+
+    user-select:none;
+
+    border-right:1px solid var(--border);
+}
+
+.line-numbers div {
+
+    height:24px;
+    line-height:24px;
+
+}
+
+.editor-container textarea{
+flex:1;
+
+
+border:none;
+
+resize:vertical;
+
+min-height:220px;
+
+padding-top:16px;
+
+font-family:
+    SFMono-Regular,
+    Menlo,
+    Monaco,
+    monospace;
+
+line-height:24px;
+
+outline:none;
+
+
+}
+
+
+
+

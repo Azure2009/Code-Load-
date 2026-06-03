@@ -30,11 +30,23 @@
             
             <p>You can submit multiple test cases at the same time. A new line would be considered as a new test case.</p>
             <label for="new_TestCases">Test Case</label>
-            <textarea name="new_TestCases" id="new_TestCases" required></textarea>
+
+            <div class="editor-container">
+            <div class="line-numbers" id="tc-lines">1</div>
+            <textarea name="new_TestCases" id="new_TestCases" placeholder="Write testcase.." required></textarea>
+            </div>
+
+            <br>
+            <br>
+            <br>
             <p>A new line would be considered as a new expected output.Test case and expected output are partnered based on their number in the number line.</p>
             <label for="new_expected_output">Expected output</label>
-            <textarea name="new_expected_output" id="new_expected_output" required></textarea>
 
+            <div class="editor-container">
+            <div class="line-numbers" id="eo-lines">1</div>
+            <textarea name="new_expected_output" id="new_expected_output" placeholder="Write expected output.." required></textarea>
+            </div>
+            
             <input type="submit" value="Submit">
 
         </form>
@@ -46,10 +58,6 @@
     <script>
 
         let selectedProblemId = null
-
-        // Work in progress
-
-        // if you click the delete button, the input tag hidden type's value also gets changed.
 
         function delete_problem() {
 
@@ -125,6 +133,45 @@
 
             render(result);
         })
+
+        function updateLineNumbers(textareaId, linesId) {
+
+            const textarea = document.getElementById(textareaId);
+            const lines = document.getElementById(linesId);
+
+            function refresh() {
+
+                const count =
+                    textarea.value.split('\n').length;
+
+                lines.innerHTML =
+                    Array.from(
+                        { length: count },
+                        (_, i) => i + 1
+                    ).join('<br>');
+
+            }
+
+            textarea.addEventListener('input', refresh);
+
+            textarea.addEventListener('scroll', () => {
+
+                lines.scrollTop = textarea.scrollTop;
+
+            });
+
+            refresh();
+        }
+
+        updateLineNumbers(
+            'new_TestCases',
+            'tc-lines'
+        );
+
+        updateLineNumbers(
+            'new_expected_output',
+            'eo-lines'
+        );
 
     </script>
 
