@@ -2,38 +2,127 @@
 
 {% block body %}
 
-<!-- A profile display box on left with username below-->
+<div class="profile-dashboard">
 
-<!-- 
-On the right side we have:
+    <div class="profile-card">
 
-Total problems solved: number
+        <div class="profile-avatar">
+            ?
+        </div>
 
-Total problems unsolved: number
+        <div class="profile-info">
+            <h2>{{ user.username }}</h2>
+            <p>Keep building your coding skills.</p>
+        </div>
 
+    </div>
 
--->
+    <div class="stats-card">
 
-<h1>Output Problems</h1>
+        <div class="stat-item">
+            <span class="stat-number">{{total_unsolved_op}}</span>
+            <span class="stat-label">Output Problems Unsolved</span>
+        </div>
 
-<!-- <p>Number here</p> -->
-<p>Total Easy problems: {{totalEasy_op}}</p>
+        <div class="stat-item">
+            <span class="stat-number">{{total_unsolved_cp}}</span>
+            <span class="stat-label">Case Problems Unsolved</span>
+        </div>
 
-<!-- <p>Number here</p> -->
-<p>Total Medium problems: {{totalMedium_op}}</p>
+    </div>
 
-<!-- <p>Number here</p> -->
-<p>Hard</p>
+</div>
 
-<h1>Case Problems</h1>
+<section class="progress-section">
 
-<!-- <p>Number here</p> -->
-<p>Easy</p>
+    <h1>Output Problems</h1>
 
-<!-- <p>Number here</p> -->
-<p>Medium</p>
+    <div class="progress-grid">
 
-<!-- <p>Number here</p> -->
-<p>Hard</p>
+        <div class="difficulty-card easy">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_op_hashmap['Easy']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_op_hashmap['Easy']}}</span>
+            </div>
+
+            <p>Easy</p>
+
+        </div>
+
+        <div class="difficulty-card medium">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_op_hashmap['Medium']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_op_hashmap['Medium']}}</span>
+            </div>
+
+            <p>Medium</p>
+
+        </div>
+
+        <div class="difficulty-card hard">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_op_hashmap['Hard']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_op_hashmap['Hard']}}</span>
+            </div>
+
+            <p>Hard</p>
+
+        </div>
+
+    </div>
+
+</section>
+
+<section class="progress-section">
+
+    <h1>Case Problems</h1>
+
+    <div class="progress-grid">
+
+        <div class="difficulty-card easy">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_cp_hashmap['Easy']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_cp_hashmap['Easy']}}</span>
+            </div>
+
+            <p>Easy</p>
+
+        </div>
+
+        <div class="difficulty-card medium">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_cp_hashmap['Medium']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_cp_hashmap['Medium']}}</span>
+            </div>
+
+            <p>Medium</p>
+
+        </div>
+
+        <div class="difficulty-card hard">
+
+            <div class="fraction">
+                <span class="numerator">{{solved_cp_hashmap['Hard']}}</span>
+                <span class="separator">/</span>
+                <span class="denominator">{{total_cp_hashmap['Hard']}}</span>
+            </div>
+
+            <p>Hard</p>
+
+        </div>
+
+    </div>
+
+</section>
 
 {% endblock %}
