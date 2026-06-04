@@ -289,7 +289,11 @@ def submit(id):
       "int": int, 
       "bool": bool,
       "float": float,
-      "str": str,
+      "str": str
+
+      #work in progress
+
+      # "list[str]":
    }
 
    def safe_cast(value: str, return_type):
