@@ -96,7 +96,54 @@ def run_secure_container(image:str, docker_flags:list[str] = None ):
         return "", f"Container error: {e}", -1
 
       except Exception as e:
-        return "", f"Unexpected error: {e}", -1  
+        return "", f"Unexpected error: {e}", -1
+
+def sync_cp_history(user_id: str):
+
+   case_problems_list = [record for record in db.session.query(CaseProblem).all()]
+
+   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == user_id).all()}   
+
+   for case in case_problems_list:
+
+      if case.id not in user_histories:
+
+         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id)
+
+         db.session.add(new_record)
+         db.session.flush()
+
+         user_histories[case.id] = new_record.status
+
+   db.session.commit()
+
+   status_list = [user_histories[case.id] for case in case_problems_list]
+
+   return status_list
+
+def sync_op_history(user_id: str):
+
+   problems_list = [record for record in db.session.query(Problem).all()]
+
+   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == user_id).all()}
+
+   for problem in problems_list:
+
+      if problem.problem_id not in user_histories:
+
+         new_record = History(user_id = int(user_id), problem_id = problem.problem_id, difficulty = problem.difficulty)
+
+         db.session.add(new_record)
+
+         db.session.flush()
+
+         user_histories[problem.problem_id] = new_record.status
+
+   db.session.commit()
+
+   status_list = [user_histories[problem.problem_id] for problem in problems_list]
+
+   return status_list
 
 @app.route('/', methods=['GET', 'POST'])
 def index():
@@ -146,9 +193,11 @@ def login():
          return redirect('/dashboard')
       
       else:
+
          return render_template('popup_error.html', show_popup = True, redirect_url = "/login", popup_message = "The user does not exist")
       
    else:
+
       return render_template('login.html')
    
 @app.route('/dashboard', methods=['GET', 'POST'])
@@ -160,7 +209,20 @@ def dashboard():
    if not user_id:
       return redirect('/login')
    
+   session["cp_statusList"] = sync_cp_history(user_id)
+
+   session["op_statusList"] = sync_op_history(user_id)
+   
    return render_template('dashboard.html', user=user)
+
+@app.route('/dashboard/account', methods=['GET', 'POST'])
+def user_account():
+
+   hash_map = {}
+
+   difficulties = ["Easy", "Medium", "Hard"]
+
+   return render_template("user_account.html")
 
 @app.route('/case_problems', methods=['GET', 'POST'])
 def case():
@@ -171,24 +233,9 @@ def case():
 
       redirect("/login")
 
-   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == user_id).all()}   
-
    case_problems_list = CaseProblem.query.all()
 
-   for case in case_problems_list:
-
-      if case.id not in user_histories:
-
-         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id)
-
-         db.session.add(new_record)
-         db.session.flush()
-
-         user_histories[case.id] = new_record.status
-
-   db.session.commit()
-
-   status_list = [user_histories[case.id] for case in case_problems_list]
+   status_list = session["cp_statusList"]
 
    return render_template("case_problems.html", case_problems_list = case_problems_list, status_list = status_list)
 
@@ -273,25 +320,9 @@ def output():
    if not user_id:
       return redirect('/login')
    
-   problems_list = [record for record in db.session.query(Problem).all()]
+   problems_list = Problem.query.all()
 
-   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == user_id).all()}
-
-   for problem in problems_list:
-
-      if problem.problem_id not in user_histories:
-
-         new_record = History(user_id = int(user_id), problem_id = problem.problem_id)
-
-         db.session.add(new_record)
-
-         db.session.flush()
-
-         user_histories[problem.problem_id] = new_record.status
-
-   db.session.commit()
-
-   status_list = [user_histories[problem.problem_id] for problem in problems_list] 
+   status_list = session["op_statusList"]
 
    return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
 

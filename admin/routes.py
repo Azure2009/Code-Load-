@@ -101,6 +101,8 @@ def outputProblem_creation():
          db.session.add(new_output_problem)
          db.session.commit()
 
+         trie_obj_2.insert(new_output_problem.problem_title)
+
       except AssertionError:
 
          return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
