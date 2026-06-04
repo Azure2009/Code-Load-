@@ -108,7 +108,7 @@ def sync_cp_history(user_id: str):
 
       if case.id not in user_histories:
 
-         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id)
+         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id, difficulty = case.difficulty)
 
          db.session.add(new_record)
          db.session.flush()
@@ -218,11 +218,46 @@ def dashboard():
 @app.route('/dashboard/account', methods=['GET', 'POST'])
 def user_account():
 
-   hash_map = {}
+   user_id = session.get("user_id")
+
+   user = User.query.get(user_id)
+  
+   if not user_id:
+      return redirect('/login')
+
+   total_unsolved_op = History.query.filter(History.status == "unsolved").count()
+
+   total_unsolved_cp = CaseProblem_History.query.filter(CaseProblem_History.status == "unsolved").count()
+
+   solved_op_hashmap = {}
+   total_op_hashmap = {}
+
+   solved_cp_hashmap = {}
+   total_cp_hashmap = {}
 
    difficulties = ["Easy", "Medium", "Hard"]
 
-   return render_template("user_account.html")
+   for d in difficulties:
+
+      # Get all solved and total output problems for each difficulty category
+      solved_op_hashmap.setdefault(d, History.query.filter(History.status == "solved", History.difficulty == d).count())   
+      total_op_hashmap.setdefault(d, History.query.filter(History.difficulty == d).count())
+
+      # Get all solved and total case problems for each difficulty category
+      solved_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.status == "solved", CaseProblem_History.difficulty == d).count())
+      total_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.difficulty == d).count())
+
+   return render_template(
+
+      "user_account.html",
+      user = user,
+      total_unsolved_op = total_unsolved_op,
+      total_unsolved_cp = total_unsolved_cp,
+      solved_op_hashmap = solved_op_hashmap,
+      solved_cp_hashmap = solved_cp_hashmap,
+      total_op_hashmap = total_op_hashmap,
+      total_cp_hashmap = total_cp_hashmap                             
+   )
 
 @app.route('/case_problems', methods=['GET', 'POST'])
 def case():
@@ -235,7 +270,7 @@ def case():
 
    case_problems_list = CaseProblem.query.all()
 
-   status_list = session["cp_statusList"]
+   status_list = sync_cp_history(user_id)
 
    return render_template("case_problems.html", case_problems_list = case_problems_list, status_list = status_list)
 
@@ -322,7 +357,7 @@ def output():
    
    problems_list = Problem.query.all()
 
-   status_list = session["op_statusList"]
+   status_list = sync_op_history(user_id)
 
    return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
 

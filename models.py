@@ -43,6 +43,7 @@ class CaseProblem_History(db.Model):
    user_id = db.Column(db.Integer, nullable=False)
    problem_id = db.Column(db.Integer, nullable=False)
    status = db.Column(db.String(50), nullable=False, default="unsolved")
+   difficulty = db.Column(db.String(50), nullable=False)
 
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)
