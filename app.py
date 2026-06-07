@@ -10,6 +10,8 @@ import subprocess
 import uuid
 import json
 import shutil
+import re
+import ast
 
 app = Flask(__name__)
 CORS(app)
@@ -33,7 +35,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 with app.app_context():
-   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
+   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator, SpecialDataTypes
    #db.drop_all() uncomment if you will now deploy the app
    # Problem.__table__.drop(db.engine)
    # Problem.__table__.create(db.engine)
@@ -279,30 +281,81 @@ def case_problem(id):
 
    case_problem = CaseProblem.query.get(id)
 
+   for row in db.session.query(SpecialDataTypes.type).filter():
+
+      if row == case_problem.return_type:
+
+         return render_template(f'{row}.html', case_problem = case_problem)
+
+      else:
+
+         continue
+
    return render_template("solving_page-case_problems.html", case_problem = case_problem)
                
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 def submit(id):
 
-   type_map = {
+   # new problem: what if the functions on case problems takes a data type that is not a string?, and what if there was more than one argument? 
+
+   def safe_cast(value: str):
+          
+      try:
+
+         return ast.literal_eval(value)
+
+      except (ValueError, SyntaxError):
+
+         return value
+      
+   def safe_cast_input(value: str , id: int):
+
+      primitiveType_map = {
 
       "int": int, 
       "bool": bool,
       "float": float,
       "str": str
-
-      #work in progress
-
-      # "list[str]":
+       
    }
 
-   def safe_cast(value: str, return_type):
+      problem = CaseProblem.query.get(id)
 
-      if return_type == "bool":
+      arguments = str(problem.args).split(',')
 
-         return value.strip() == "True"
+      for arg in arguments:
 
-      return type_map[return_type](value)
+         splitted_parameter = arg.split(':')
+
+         for key in primitiveType_map:
+
+            if splitted_parameter[1].strip() == key:
+
+               return primitiveType_map[key](value)
+            
+            else:
+
+               continue
+
+         # if keys in primitive types does not work then use literal eval method since it might be a collection data structure
+
+         return ast.literal_eval(splitted_parameter[1])
+
+         
+
+   #work in progress; a function that separates all input datas and convert them based on input type hints
+
+   # def manage_inputs(input_data, id: int):
+
+   #    result = []
+      
+   #    input_lines = str(input_data).split(',')
+
+   #    for line in input_lines:
+
+   #       result.append(safe_cast(line, id))
+
+   #    return result
 
    user_code = request.form['code']
 
@@ -321,11 +374,9 @@ def submit(id):
 
       current_problem = CaseProblem.query.get(id)
 
-      return_type = current_problem.return_type
-      
       table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
       
-      test_cases_list = [{"input": t.input_data, "expected": safe_cast(t.expected_output, return_type)} for t in table]
+      test_cases_list = [{"input": safe_cast_input(t.input_data, id), "expected": safe_cast(t.expected_output)} for t in table]
 
       with open(os.path.join(submission_dir, "test_cases.json"), "w") as f:
 
@@ -348,8 +399,12 @@ def submit(id):
    finally:
 
       shutil.rmtree(submission_dir, ignore_errors=True)
-                                                   
+                                                
    return render_template("result.html", result = result)
+
+   # return str(test_cases_list[0])
+
+   
 
 @app.route('/output_problems', methods=['GET', 'POST'])
 def output():

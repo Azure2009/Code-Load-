@@ -2,8 +2,6 @@
 
 {% block head %} 
 
-
-
 {% endblock %}
 
 {% block body %}
@@ -46,7 +44,11 @@
 
         
 
-        <textarea id="code" name="code">class Test:    
+        <textarea id="code" name="code">#class TreeNode:
+    #def __init__(self, val=0, left=None, right=None):
+        #self.val = val
+        #self.left = left
+        #self.right = right    class Test:    
     def test_{{case_problem.function_name}}(self, {{case_problem.args}}) -> {{case_problem.return_type}}:
         # your code here
         

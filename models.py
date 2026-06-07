@@ -67,4 +67,11 @@ class Administrator(db.Model):
    admin_username = db.Column(db.Text, nullable = False)
    admin_password = db.Column(db.Text, nullable = False)
 
+class SpecialDataTypes(db.Model):
+
+   id = db.Column(db.Integer, nullable = False, primary_key=True)
+   type = db.Column(db.String(50), nullable = False)
+   code = db.Column(db.Text, nullable = False)   
+
+
 
