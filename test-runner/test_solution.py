@@ -1,13 +1,17 @@
-import os, json, importlib
+import os, json, importlib, pytest
 
-def test_all_cases():
+@pytest.fixture(scope="session")
+def test_data():
 
     with open("/app/submission/test_cases.json") as f:
 
-       test_cases = json.load(f)
+        return json.load(f)
+
+
+@pytest.fixture(scope="session")
+def user_func():
 
     function_name = os.environ.get("FUNCTION_NAME", "")
-    
     module = importlib.import_module("submission.solution")
 
     try:
@@ -16,22 +20,7 @@ def test_all_cases():
 
         instance = Test()
 
-        user_func = getattr(instance, f"test_{function_name}")
-
-        for i, case in enumerate(test_cases, start=1):
-
-            input_data = case["input"]
-            expected = case["expected"]
-            actual = user_func(input_data)
-
-            assert actual == expected, (
-
-                f"Test case {i} FAILED\n"
-                f"  Input:    {input_data}\n"
-                f"  Expected: {expected}\n"
-                f"  Got:      {actual}"
-
-            )
+        return getattr(instance, f"test_{function_name}")
 
     except AttributeError:
         raise AssertionError(
@@ -41,5 +30,23 @@ def test_all_cases():
 
         )
 
+def test_all_cases(test_data, user_func):
+
+    for i, case in enumerate(test_data, start=1):
+
+        input_data = case["input"]
+        expected = case["expected"]
+        actual = user_func(*input_data)
+
+        assert actual == expected, (
+
+            f"Test case {i} FAILED\n"
+            f"  Input:    {input_data}\n"
+            f"  Expected: {expected}\n"
+            f"  Got:      {actual}"
+
+        )
+
+    
     
     

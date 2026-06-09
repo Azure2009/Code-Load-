@@ -1,13 +1,57 @@
 {% extends 'base.html' %}
 
-{% block head %} 
-
-
-
-{% endblock %}
-
 {% block body %}
 
-   <p>{{result}}</p>
+<div class="result-page">
+
+    <div class="result-card">
+
+        <button
+            class="return-btn"
+            onclick="window.location.href='/dashboard'"
+        >
+            ← Return to Dashboard
+        </button>
+        
+        {% if verdict == "Accepted" %}
+            <div class="verdict accepted">
+                <div class="verdict-icon">✓</div>
+                <h1>{{ verdict }}</h1>
+            </div>
+
+        {% elif verdict == "Wrong Answer" %}
+            <div class="verdict wrong">
+                <div class="verdict-icon">✕</div>
+                <h1>{{ verdict }}</h1>
+            </div>
+
+        {% elif verdict == "Syntax Error" or verdict == "Runtime Error" %}
+            <div class="verdict warning">
+                <div class="verdict-icon">!</div>
+                <h1>{{ verdict }}</h1>
+            </div>
+
+        {% elif verdict == "Time Limit Exceeded" %}
+            <div class="verdict warning">
+                <div class="verdict-icon">⏱</div>
+                <h1>{{ verdict }}</h1>
+            </div>
+        {% endif %}
+
+        <div class="output-card">
+
+            <p class="output-label">
+                Program Output
+            </p>
+
+            <pre>{{ output }}</pre>
+
+        </div>
+
+        
+
+    </div>
+
+</div>
 
 {% endblock %}
