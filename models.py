@@ -1,10 +1,11 @@
 from extensions import db
 from datetime import datetime, timezone, timedelta
+from flask_login import UserMixin
 
 tz_utc8 = timezone(timedelta(hours=8))
 
-class User(db.Model):
-   user_id = db.Column(db.Integer, nullable = False, primary_key=True)
+class User(db.Model, UserMixin):
+   id = db.Column(db.Integer, nullable = False, primary_key=True)
    first_name = db.Column(db.String(200), nullable = False)
    last_name = db.Column(db.String(200), nullable = False)   
    username = db.Column(db.String(200), nullable = False, unique= True)

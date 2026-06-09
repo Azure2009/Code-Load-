@@ -6,14 +6,25 @@
 
     <div class="profile-card">
 
+    <div class="profile-left">
+
         <div class="profile-avatar">
-            ?
+            {{ user.username[0]|upper }}
         </div>
 
         <div class="profile-info">
             <h2>{{ user.username }}</h2>
             <p>Keep building your coding skills.</p>
         </div>
+
+    </div>
+
+    <button
+        class="logout-btn"
+        onclick="window.location.href='/logout'"
+    >
+        ⎋ Logout
+    </button>
 
     </div>
 
