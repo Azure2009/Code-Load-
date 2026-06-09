@@ -381,6 +381,13 @@ transform:scale(1.03);
     display:flex;
     align-items:center;
     gap:24px;
+    justify-content:space-between;
+}
+
+.profile-left{
+    display:flex;
+    align-items:center;
+    gap:24px;
 }
 
 .profile-avatar{
@@ -407,6 +414,30 @@ transform:scale(1.03);
 
 .profile-info p{
     color:#86868b;
+}
+
+.logout-btn{
+
+    background:#fff5f5;
+    color:#ff3b30;
+
+    border:1px solid #ffd9d6;
+
+    padding:12px 20px;
+
+    border-radius:999px;
+
+    font-weight:600;
+
+    transition:.25s;
+}
+
+.logout-btn:hover{
+
+    background:#ff3b30;
+    color:white;
+
+    transform:translateY(-2px);
 }
 
 .stats-card{

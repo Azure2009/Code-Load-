@@ -1,9 +1,11 @@
-from flask import Flask, render_template, request, redirect, session, make_response
+from flask import Flask, render_template, request, redirect, session, make_response, url_for
+from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask_cors import CORS
+from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from admin import admin_bp
 from extensions import db
-from flask_cors import CORS
-from flask_migrate import Migrate
+from functools import wraps
 import os 
 import subprocess
 import uuid
@@ -13,6 +15,10 @@ import ast
 
 app = Flask(__name__)
 CORS(app)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
+
 app.secret_key = "REDACTED"
 
 # uncomment if you want to try docker compose
@@ -34,9 +40,6 @@ migrate = Migrate(app, db)
 
 with app.app_context():
    from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
-   #db.drop_all() uncomment if you will now deploy the app
-   # Problem.__table__.drop(db.engine)
-   # Problem.__table__.create(db.engine)
    db.create_all()
 
 app.register_blueprint(admin_bp, url_prefix='/admin')
@@ -103,7 +106,7 @@ def sync_cp_history(user_id: str):
 
    case_problems_list = [record for record in db.session.query(CaseProblem).all()]
 
-   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == user_id).all()}   
+   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == int(user_id)).all()}   
 
    for case in case_problems_list:
 
@@ -126,7 +129,7 @@ def sync_op_history(user_id: str):
 
    problems_list = [record for record in db.session.query(Problem).all()]
 
-   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == user_id).all()}
+   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == int(user_id)).all()}
 
    for problem in problems_list:
 
@@ -146,18 +149,30 @@ def sync_op_history(user_id: str):
 
    return status_list
 
-@app.route('/', methods=['GET', 'POST'])
-def index():
+def nocache(f):
+    @wraps(f)
+    def decorated(*args, **kwargs):
+        response = make_response(f(*args, **kwargs))
+        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
+        response.headers['Pragma'] = 'no-cache'
+        response.headers['Expires'] = '0'
+        return response
+    return decorated
 
-   response = make_response(render_template('/index.html'))
-   response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate'
-   response.headers['Pragma'] = 'no-cache'
+@login_manager.user_loader
+def load_user(user):
+   return User.query.get(int(user))
+
+@app.route('/', methods=['GET', 'POST'])
+@nocache
+def index():
    
-   return response
+   return render_template('index.html')
 
 @app.route('/register', methods=['POST', 'GET'])
 def register_user():
    if request.method == 'POST':
+
       first_name_form = request.form['first_name']
       last_name_form = request.form['last_name']   
       username_form = request.form['username']
@@ -170,12 +185,14 @@ def register_user():
          db.session.add(registeredUser)
          db.session.commit()
          
-         return redirect('/')
+         return redirect(url_for('index'))
 
-      except:
-         return 'There was a problem in your registration'
+      except Exception:
+
+         return render_template('popup_error.html', show_popup = True, redirect_url = "/login", popup_message = "There was a problem with your registration. Please try again.")
 
    else:
+      
       return render_template('register.html')
 
 @app.route('/login', methods=['POST', 'GET'])
@@ -189,9 +206,11 @@ def login():
 
       if user and check_password_hash(user.hash_password, password):
 
-         session["user_id"] = user.user_id
+         login_user(user)
 
-         return redirect('/dashboard')
+         session['user_id'] = user.id
+
+         return redirect(url_for('dashboard'))
       
       else:
 
@@ -201,16 +220,21 @@ def login():
 
       return render_template('login.html')
    
+@app.route('/logout')
+@login_required
+def logout():
+   logout_user()
+   return redirect(url_for('login'))
+   
 @app.route('/dashboard', methods=['GET', 'POST'])
+@login_required
+@nocache
 def dashboard():
 
    user_id = session.get("user_id")
 
-   user = User.query.get(user_id)
-  
-   if not user_id:
-      return redirect('/login')
-   
+   user = User.query.get(int(user_id))
+    
    sync_cp_history(user_id)
 
    sync_op_history(user_id)
@@ -218,15 +242,14 @@ def dashboard():
    return render_template('dashboard.html', user=user)
 
 @app.route('/dashboard/account', methods=['GET', 'POST'])
+@login_required
+@nocache
 def user_account():
 
    user_id = session.get("user_id")
 
    user = User.query.get(user_id)
   
-   if not user_id:
-      return redirect('/login')
-
    total_unsolved_op = History.query.filter(History.status == "unsolved").count()
 
    total_unsolved_cp = CaseProblem_History.query.filter(CaseProblem_History.status == "unsolved").count()
@@ -262,6 +285,8 @@ def user_account():
    )
 
 @app.route('/case_problems', methods=['GET', 'POST'])
+@login_required
+@nocache
 def case():
 
    user_id = session["user_id"]
@@ -277,6 +302,8 @@ def case():
    return render_template("case_problems.html", case_problems_list = case_problems_list, status_list = status_list)
 
 @app.route('/case_problems/solving-page/<int:id>', methods=['GET', 'POST'])
+@login_required
+@nocache
 def case_problem(id):
 
    case_problem = CaseProblem.query.get(id)
@@ -284,6 +311,8 @@ def case_problem(id):
    return render_template("solving_page-case_problems.html", case_problem = case_problem)
                
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
+@login_required
+@nocache
 def submit(id):
 
    def safe_cast(value: str):
@@ -372,6 +401,8 @@ def submit(id):
    return render_template("result.html", verdict = verdict, output = output)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
+@login_required
+@nocache
 def output():
 
    user_id = session.get("user_id")
@@ -386,6 +417,8 @@ def output():
    return render_template("output_problems.html", status_list=status_list, problems_list=problems_list)
 
 @app.route('/output_problems/solving_page/<int:problem_id>', methods=['POST', 'GET'])
+@login_required
+@nocache
 def problem(problem_id):
 
       if request.method == 'POST':
