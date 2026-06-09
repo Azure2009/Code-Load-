@@ -170,6 +170,7 @@ def index():
    return render_template('index.html')
 
 @app.route('/register', methods=['POST', 'GET'])
+@nocache
 def register_user():
    if request.method == 'POST':
 
@@ -196,6 +197,7 @@ def register_user():
       return render_template('register.html')
 
 @app.route('/login', methods=['POST', 'GET'])
+@nocache
 def login():
    if request.method == 'POST':
 
