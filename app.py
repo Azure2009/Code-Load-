@@ -1,8 +1,7 @@
 from flask import Flask, render_template, request, redirect, session, make_response
-from sqlalchemy import text
 from werkzeug.security import generate_password_hash, check_password_hash
 from admin import admin_bp
-from extensions import db, engine
+from extensions import db
 from flask_cors import CORS
 from flask_migrate import Migrate
 import os 
@@ -10,7 +9,6 @@ import subprocess
 import uuid
 import json
 import shutil
-import re
 import ast
 
 app = Flask(__name__)
@@ -35,7 +33,7 @@ db.init_app(app)
 migrate = Migrate(app, db)
 
 with app.app_context():
-   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator, SpecialDataTypes
+   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
    #db.drop_all() uncomment if you will now deploy the app
    # Problem.__table__.drop(db.engine)
    # Problem.__table__.create(db.engine)
@@ -84,7 +82,8 @@ def run_secure_container(image:str, docker_flags:list[str] = None ):
             base_command,
             capture_output=True,
             timeout=15,
-            text=True
+            text=True,
+            
 
          )
 
@@ -204,6 +203,7 @@ def login():
    
 @app.route('/dashboard', methods=['GET', 'POST'])
 def dashboard():
+
    user_id = session.get("user_id")
 
    user = User.query.get(user_id)
@@ -211,9 +211,9 @@ def dashboard():
    if not user_id:
       return redirect('/login')
    
-   session["cp_statusList"] = sync_cp_history(user_id)
+   sync_cp_history(user_id)
 
-   session["op_statusList"] = sync_op_history(user_id)
+   sync_op_history(user_id)
    
    return render_template('dashboard.html', user=user)
 
@@ -281,22 +281,10 @@ def case_problem(id):
 
    case_problem = CaseProblem.query.get(id)
 
-   for row in db.session.query(SpecialDataTypes.type).filter():
-
-      if row == case_problem.return_type:
-
-         return render_template(f'{row}.html', case_problem = case_problem)
-
-      else:
-
-         continue
-
    return render_template("solving_page-case_problems.html", case_problem = case_problem)
                
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 def submit(id):
-
-   # new problem: what if the functions on case problems takes a data type that is not a string?, and what if there was more than one argument? 
 
    def safe_cast(value: str):
           
@@ -308,54 +296,15 @@ def submit(id):
 
          return value
       
-   def safe_cast_input(value: str , id: int):
-
-      primitiveType_map = {
-
-      "int": int, 
-      "bool": bool,
-      "float": float,
-      "str": str
-       
-   }
-
-      problem = CaseProblem.query.get(id)
-
-      arguments = str(problem.args).split(',')
-
-      for arg in arguments:
-
-         splitted_parameter = arg.split(':')
-
-         for key in primitiveType_map:
-
-            if splitted_parameter[1].strip() == key:
-
-               return primitiveType_map[key](value)
-            
-            else:
-
-               continue
-
-         # if keys in primitive types does not work then use literal eval method since it might be a collection data structure
-
-         return ast.literal_eval(splitted_parameter[1])
-
-         
-
-   #work in progress; a function that separates all input datas and convert them based on input type hints
-
-   # def manage_inputs(input_data, id: int):
-
-   #    result = []
-      
-   #    input_lines = str(input_data).split(',')
-
-   #    for line in input_lines:
-
-   #       result.append(safe_cast(line, id))
-
-   #    return result
+   def deserialize_input(raw: str) -> list:
+    try:
+        result = json.loads(raw)
+        if not isinstance(result, list):
+            result = [result]  # safety fallback
+        return result
+    except json.JSONDecodeError:
+        # fallback for old bare-value rows during migration
+        return [ast.literal_eval(raw)]
 
    user_code = request.form['code']
 
@@ -372,11 +321,11 @@ def submit(id):
       with open(os.path.join(submission_dir, "solution.py"), "w") as f:
          f.write(user_code)
 
-      current_problem = CaseProblem.query.get(id)
+      function_name = db.session.get(CaseProblem, id).function_name
 
       table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
       
-      test_cases_list = [{"input": safe_cast_input(t.input_data, id), "expected": safe_cast(t.expected_output)} for t in table]
+      test_cases_list = [{"input": deserialize_input(t.input_data), "expected": safe_cast(t.expected_output)} for t in table]
 
       with open(os.path.join(submission_dir, "test_cases.json"), "w") as f:
 
@@ -384,27 +333,43 @@ def submit(id):
 
       #run a container using my docker image
 
-      result = run_secure_container("python-test-runner:latest", docker_flags=[
+      stdout, stderr, exit_code = run_secure_container("python-test-runner:latest", docker_flags=[
 
       "--memory", "128m",
       "--memory-swap", "128m",
       "--cpus", "0.5",
       "--pids-limit", "50",
       "--stop-timeout", "10",
-      "--env", f"FUNCTION_NAME={current_problem.function_name}",
+      "--env", f"FUNCTION_NAME={function_name}",
       "-v", f"{os.path.abspath(submission_dir)}:/app/submission:ro",
 
       ])
+
+      output = stdout + stderr
+
+      # Check output content first, before exit_code
+      if exit_code == 0:
+         verdict = "Accepted"
+         db.session.query(CaseProblem_History).filter(CaseProblem_History.problem_id == id).update({CaseProblem_History.status: "solved"})
+         db.session.commit()
+
+      elif exit_code == -1:
+         verdict = "Time Limit Exceeded" if "Time limit exceeded" in output else "System Error"
+      else:
+         if "TabError" in output or "SyntaxError" in output or "IndentationError" in output:
+            verdict = "Syntax Error"
+         elif "NameError" in output or "TypeError" in output or "AttributeError" in output:
+            verdict = "Runtime Error"
+         elif "AssertionError" in output:
+            verdict = "Wrong Answer"
+         else:
+            verdict = "Runtime Error"
 
    finally:
 
       shutil.rmtree(submission_dir, ignore_errors=True)
                                                 
-   return render_template("result.html", result = result)
-
-   # return str(test_cases_list[0])
-
-   
+   return render_template("result.html", verdict = verdict, output = output)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
 def output():

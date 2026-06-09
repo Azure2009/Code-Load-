@@ -1,12 +1,13 @@
 from flask import request, session, render_template, redirect, url_for, jsonify
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, CaseProblem, TestCase, History,tz_utc8
+from models import Administrator, Problem, CaseProblem, TestCase, History, CaseProblem_History, tz_utc8
 from functools import wraps
 from flask import make_response
 from datetime import datetime
 from extensions import db
 from admin import admin_bp
 from trie_data_structure import trie, TrieNode
+import json, ast
 
 trie_obj = trie()
 
@@ -218,53 +219,79 @@ def case_problem_creation():
 @admin_bp.route('/dashboard/new_test_case', methods= ['POST', 'GET'])
 @login_required
 def test_case_creation():
-
-   case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
-
-   #New task: Add new algo where it only shows 10 words and if you want to see the other results, you must scroll (Scrolls only the div)
- 
-   for title in case_problem_titles:
-
-      trie_obj.insert(title)
-
-   if request.method == "POST":
-
-      new_testCases = request.form["new_TestCases"]
-
-      new_expected_output = request.form["new_expected_output"]
-
-      problem_id_raw = request.form.get('problem_id')
-
-      if not problem_id_raw:
-
-         return 'Please select a problem first'
       
-      problem_id = int(problem_id_raw)
+      def split_top_level(s: str) -> list[str]:
+         
+         args = []
+         depth = 0
+         current = []
+         for ch in s:
+            if ch in '([{':
+                  depth += 1
+            elif ch in ')]}':
+                  depth -= 1
+            if ch == ',' and depth == 0:
+                  args.append(''.join(current))
+                  current = []
+            else:
+                  current.append(ch)
+         if current:
+            args.append(''.join(current))
+         return args
+   
+      def parse_input_line_to_json(line: str) -> str:
+         
+         # Split by top-level commas only (not commas inside brackets)
+         args = split_top_level(line)
+         parsed_args = [ast.literal_eval(arg.strip()) for arg in args]
+         return json.dumps(parsed_args)
 
-      lines_testCases = [line.strip() for line in new_testCases.splitlines() if line.strip()]
+      # insert all case problem titles in trie object
 
-      lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
+      case_problem_titles = [row[0] for row in db.session.query(CaseProblem.title).all()]
+   
+      for title in case_problem_titles:
 
-      # Use a for loop to convert the strings to their return type
+         trie_obj.insert(title)
 
-      #insert every submitted test case and expected output to its designated problem record
-      try:
+      if request.method == "POST":
 
-         for test_case, expected_output in zip(lines_testCases, lines_expected_output):
+         new_testCases = request.form["new_TestCases"]
 
-            tc = TestCase(problem_id = problem_id, input_data = test_case, expected_output = expected_output)
+         new_expected_output = request.form["new_expected_output"]
 
-            db.session.add(tc)
+         problem_id_raw = request.form.get('problem_id')
+
+         if not problem_id_raw:
+
+            return 'Please select a problem first'
+         
+         problem_id = int(problem_id_raw)
+
+         lines_testCases = [line.strip() for line in new_testCases.splitlines() if line.strip()]
+
+         lines_expected_output = [line.strip() for line in new_expected_output.splitlines() if line.strip()]
+
+         #insert every submitted test case and expected output to its designated problem record
+         try:
+
+            for test_case, expected_output in zip(lines_testCases, lines_expected_output):
+
+               serialized_input = parse_input_line_to_json(test_case)
+
+               tc = TestCase(problem_id = problem_id, input_data = serialized_input, expected_output = expected_output)
+
+               db.session.add(tc)
 
             db.session.commit()
 
-      except Exception as e:
+         except Exception as e:
 
-         db.session.rollback()
-         print(f"Error: {e}")
-         return f"There was a problem: {e}"
+            db.session.rollback()
+            print(f"Error: {e}")
+            return f"There was a problem: {e}"
 
-   return render_template('admin/test_case_creation.html')
+      return render_template('admin/test_case_creation.html')
 
 @admin_bp.route('/dashboard/new_test_case/delete/<id>', methods= ['POST', 'GET'])
 def test_case_deletion(id):
@@ -275,7 +302,17 @@ def test_case_deletion(id):
 
       record = db.session.query(CaseProblem).filter(CaseProblem.id == int(parsed_id)).first()
 
+      history = db.session.query(CaseProblem_History).filter(CaseProblem_History.id == int(parsed_id)).first()
+
+      test_cases = db.session.query(TestCase).filter(TestCase.problem_id == int(parsed_id)).all()
+
       db.session.delete(record)
+
+      db.session.delete(history)
+
+      for test_case in test_cases:
+
+         db.session.delete(test_case)
 
       db.session.commit()
 

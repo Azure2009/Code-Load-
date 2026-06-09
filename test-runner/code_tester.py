@@ -1,8 +1,8 @@
-import subprocess
+import subprocess, sys
 
 result = subprocess.run(
 
-    ["pytest", "-q", "--tb=short"],
+    ["pytest", "-v", "--tb=short"],
     capture_output=True,
     text=True
 
@@ -10,4 +10,5 @@ result = subprocess.run(
 
 print(result.stdout)
 print(result.stderr)
-print(result.returncode)
+
+sys.exit(result.returncode) 
