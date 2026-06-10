@@ -115,7 +115,47 @@ input[type="password"]{
     border:1px solid var(--border);
     border-radius:12px;
     font-size:15px;
-}   
+}
+
+.home-btn{
+    position:fixed;
+    top:24px;
+    right:24px;
+
+    width:52px;
+    height:52px;
+
+    display:flex;
+    align-items:center;
+    justify-content:center;
+
+    text-decoration:none;
+    color:#1d1d1f;
+    font-size:24px;
+
+    background:rgba(255,255,255,0.75);
+    backdrop-filter:blur(20px);
+    -webkit-backdrop-filter:blur(20px);
+
+    border:1px solid rgba(255,255,255,0.6);
+    border-radius:50%;
+
+    box-shadow:
+        0 4px 20px rgba(0,0,0,0.08);
+
+    transition:all 0.2s ease;
+    z-index:1000;
+}
+
+.home-btn:hover{
+    transform:translateY(-2px);
+    box-shadow:
+        0 8px 25px rgba(0,0,0,0.12);
+}
+
+.home-btn:active{
+    transform:scale(0.96);
+}
 
 .problem-card{
     background:white;

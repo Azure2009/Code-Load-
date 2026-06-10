@@ -1,11 +1,11 @@
-from flask import Flask, render_template, request, redirect, session, make_response, url_for
-from flask_login import LoginManager, login_required, login_user, logout_user, current_user
+from flask import Flask, render_template, request, redirect, session, url_for
+from flask_login import login_required, login_user, logout_user
 from flask_cors import CORS
 from flask_migrate import Migrate
 from werkzeug.security import generate_password_hash, check_password_hash
 from admin import admin_bp
-from extensions import db
-from functools import wraps
+from extensions import db, nocache
+from init_login_manager import login_manager
 import os 
 import subprocess
 import uuid
@@ -15,9 +15,6 @@ import ast
 
 app = Flask(__name__)
 CORS(app)
-login_manager = LoginManager()
-login_manager.init_app(app)
-login_manager.login_view = 'login'
 
 app.secret_key = "REDACTED"
 
@@ -149,19 +146,7 @@ def sync_op_history(user_id: str):
 
    return status_list
 
-def nocache(f):
-    @wraps(f)
-    def decorated(*args, **kwargs):
-        response = make_response(f(*args, **kwargs))
-        response.headers['Cache-Control'] = 'no-store, no-cache, must-revalidate, max-age=0'
-        response.headers['Pragma'] = 'no-cache'
-        response.headers['Expires'] = '0'
-        return response
-    return decorated
-
-@login_manager.user_loader
-def load_user(user):
-   return User.query.get(int(user))
+login_manager.init_app(app)
 
 @app.route('/', methods=['GET', 'POST'])
 @nocache
@@ -233,7 +218,7 @@ def logout():
 @nocache
 def dashboard():
 
-   user_id = session.get("user_id")
+   user_id = session.get('user_id')
 
    user = User.query.get(int(user_id))
     
