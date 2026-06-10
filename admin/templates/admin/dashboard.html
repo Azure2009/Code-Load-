@@ -8,6 +8,14 @@
 
 {% block body %}
 
+    <button
+    id="admin_logout"
+    onclick="window.location.href='/admin/logout'"
+    title="Log Out"
+    >
+    Logout
+    </button>
+
     <div class="admin dashboard-page">
 
     <div class="hero-card">
@@ -16,7 +24,7 @@
 
         <h1 class="page-title">
             Welcome,
-            <span>{{admin.admin_username}}</span>
+            <span>{{admin.username}}</span>
         </h1>
 
         <p class="page-subtitle">

@@ -1,37 +1,20 @@
 from flask import request, session, render_template, redirect, url_for, jsonify
+from flask_login import logout_user, login_user, login_required, current_user
 from werkzeug.security import check_password_hash
 from models import Administrator, Problem, CaseProblem, TestCase, History, CaseProblem_History, tz_utc8
-from functools import wraps
-from flask import make_response
+from extensions import nocache
 from datetime import datetime
 from extensions import db
 from admin import admin_bp
-from trie_data_structure import trie, TrieNode
+from trie_data_structure import trie
 import json, ast
 
 trie_obj = trie()
-
 trie_obj_2 = trie()
 
-# My decorator for security
-def login_required(f):
-   @wraps(f)
-   def decorated(*args, **kwargs):
-
-      if not session.get('admin_id'):
-
-         return redirect('/admin/')
-
-      response = make_response(f(*args, **kwargs))
-      
-      response.headers['Cache-Control'] = 'no-store, no-cache, make-revalidate'
-      response.headers['Pragma'] = 'no-cache'
-
-      return response
-   
-   return decorated
 
 @admin_bp.route('/', methods=['POST', 'GET'])
+@nocache
 def administrator():
 
    if request.method == 'POST':
@@ -40,23 +23,31 @@ def administrator():
 
       password = request.form['password']
 
-      admin = Administrator.query.filter_by(admin_username = username).first()     
+      admin = Administrator.query.filter_by(username = username).first()     
 
-      if admin and check_password_hash(admin.admin_password, password):
+      if admin and check_password_hash(admin.password, password):
          
-         session["admin_id"] = admin.admin_id
+         session["admin_id"] = admin.id
 
-         return redirect('/admin/dashboard')
+         login_user(admin)
+
+         return redirect(url_for('admin.adminDashboard'))
       
       else: 
 
          return render_template("admin/popup.html", show_popup = True, redirect_url = "/admin", popup_message = "The admin does not exist")
          
-   else:
+   return render_template("admin/login.html")
 
-      return render_template("admin/login.html")
+@admin_bp.route('/logout')
+@login_required
+def admin_logout():
+
+   logout_user()
+   return redirect(url_for('admin.administrator'))
 
 @admin_bp.route('/dashboard', methods=['POST', 'GET'])
+@nocache
 @login_required
 def adminDashboard():
 
@@ -71,6 +62,8 @@ def adminDashboard():
    return render_template("admin/dashboard.html", admin = current_admin)
 
 @admin_bp.route('/dashboard/new_output_problem', methods=['POST', 'GET'])
+@nocache
+@login_required
 def outputProblem_creation():
 
    session['visited_at'] = datetime.now(tz_utc8).isoformat()
@@ -115,6 +108,8 @@ def outputProblem_creation():
    return render_template('admin/output_problem_creation.html')
 
 @admin_bp.route('/dashboard/new_output_problem/search', methods=['POST', 'GET'])
+@nocache
+@login_required
 def search_handler():
 
    query = request.args.get('q', '')
@@ -134,6 +129,8 @@ def search_handler():
    return jsonify(results)
 
 @admin_bp.route('/dashboard/new_output_problem/delete/<id>', methods=['POST', 'GET'])
+@nocache
+@login_required
 def delete_output_problem(id):
 
    parsed_id = str(id)
@@ -158,6 +155,7 @@ def delete_output_problem(id):
 
 
 @admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
+@nocache
 @login_required
 def case_problem_creation():
 
@@ -217,6 +215,7 @@ def case_problem_creation():
    return render_template('admin/case_problem_creation.html')
  
 @admin_bp.route('/dashboard/new_test_case', methods= ['POST', 'GET'])
+@nocache
 @login_required
 def test_case_creation():
       
@@ -294,6 +293,8 @@ def test_case_creation():
       return render_template('admin/test_case_creation.html')
 
 @admin_bp.route('/dashboard/new_test_case/delete/<id>', methods= ['POST', 'GET'])
+@nocache
+@login_required
 def test_case_deletion(id):
 
    parsed_id = str(id)
@@ -323,6 +324,8 @@ def test_case_deletion(id):
       return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_test_case")
 
 @admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
+@nocache
+@login_required
 def query_handler():
 
    query = request.args.get('q', '')
