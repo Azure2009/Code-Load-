@@ -1,7 +1,7 @@
 from flask import request, session, render_template, redirect, url_for, jsonify
-from flask_login import logout_user, login_user, login_required, current_user
+from flask_login import logout_user, login_user, login_required
 from werkzeug.security import check_password_hash
-from models import Administrator, Problem, CaseProblem, TestCase, History, CaseProblem_History, tz_utc8
+from models import Administrator, Problem, CaseProblem, TestCase, History, CaseProblem_History
 from extensions import nocache
 from datetime import datetime
 from extensions import db
@@ -65,8 +65,6 @@ def adminDashboard():
 @nocache
 @login_required
 def outputProblem_creation():
-
-   session['visited_at'] = datetime.now(tz_utc8).isoformat()
 
    titles = [row[0] for row in db.session.query(Problem.problem_title).all()] 
 

@@ -7,22 +7,17 @@ services:
     depends_on:
       - db
     environment:
-      DB_HOST: db
-      DB_USER: root
-      DB_PASSWORD: REDACTED
-      DB_NAME: mydatabase
+      - DATABASE_URL=${DATABASE_URL}
       
 
 
   db:
-    image: mysql:9.3
+    image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: REDACTED
-      MYSQL_DATABASE: mydatabase
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
-
-
 
 volumes:
   mysql_data:

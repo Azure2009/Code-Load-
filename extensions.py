@@ -1,11 +1,9 @@
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import create_engine
 from functools import wraps
 from flask import make_response
+import subprocess
 
 db = SQLAlchemy()
-
-engine = create_engine("mysql+pymysql://root:REDACTED@localhost/mydatabase")
 
 def nocache(f):
     @wraps(f)
@@ -16,3 +14,48 @@ def nocache(f):
         response.headers['Expires'] = '0'
         return response
     return decorated
+
+def run_secure_container(image:str, docker_flags:list[str] = None ):
+         
+      base_command = [
+
+         "docker", "run",
+         "--rm",
+         "--user", "5000:5000",
+         "--network", "none",
+         "--cap-drop", "ALL",
+         "--read-only",
+         "--tmpfs", "/tmp:rw,noexec,nosuid",
+         "--tmpfs", "/app/.pytest_cache:rw,noexec,nosuid",
+
+      ]
+
+      if docker_flags:
+
+         base_command.extend(docker_flags)
+
+      base_command.append(image)
+
+      try:
+
+         result  = subprocess.run(
+
+            base_command,
+            capture_output=True,
+            timeout=15,
+            text=True,
+            
+
+         )
+
+         return result.stdout, result.stderr, result.returncode
+      
+      except subprocess.TimeoutExpired:
+
+         return "", "Time limit exceeded: your code ran too long.", -1
+      
+      except subprocess.CalledProcessError as e:
+        return "", f"Container error: {e}", -1
+
+      except Exception as e:
+        return "", f"Unexpected error: {e}", -1

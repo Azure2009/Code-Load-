@@ -1,0 +1,6 @@
+env/
+__pycache__/
+admin/__pycache__/
+*.pyc
+.env
+submission/

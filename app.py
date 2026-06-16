@@ -2,151 +2,36 @@ from flask import Flask, render_template, request, redirect, session, url_for
 from flask_login import login_required, login_user, logout_user
 from flask_cors import CORS
 from flask_migrate import Migrate
+from dotenv import load_dotenv
 from werkzeug.security import generate_password_hash, check_password_hash
 from admin import admin_bp
-from extensions import db, nocache
+from sync import sync_cp_history, sync_op_history
+from extensions import db, nocache, run_secure_container
 from init_login_manager import login_manager
 import os 
-import subprocess
 import uuid
 import json
 import shutil
 import ast
 
+load_dotenv()
+
 app = Flask(__name__)
-CORS(app)
 
-app.secret_key = "REDACTED"
-
-# uncomment if you want to try docker compose
-
-# DB_USER = os.getenv("DB_USER")
-# DB_PASSWORD = os.getenv("DB_PASSWORD")
-# DB_NAME = os.getenv("DB_NAME")
-# DB_HOST = os.getenv("DB_HOST", "db")
-
-app.config['SQLALCHEMY_DATABASE_URI'] = "mysql+pymysql://root:REDACTED@localhost/mydatabase"
-
-
-app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
-
-
-db.init_app(app)
-
-migrate = Migrate(app, db)
-
-with app.app_context():
-   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Result, Administrator
-   db.create_all()
-
+app.secret_key = os.getenv('SECRET_KEY')
+app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DATABASE_URL')
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.register_blueprint(admin_bp, url_prefix='/admin')
 
-# def wait_for_db():
-#    while True:
-#       try:
-#          with app.app_context():
-#             db.engine.connect()
-#             print("Database ready")
-#          break
-#       except Exception as e:
-#             print("Waiting for database...")
-#             time.sleep(3)
-
-# wait_for_db()
-
-def run_secure_container(image:str, docker_flags:list[str] = None ):
-         
-      base_command = [
-
-         "docker", "run",
-         "--rm",
-         "--user", "5000:5000",
-         "--network", "none",
-         "--cap-drop", "ALL",
-         "--read-only",
-         "--tmpfs", "/tmp:rw,noexec,nosuid",
-         "--tmpfs", "/app/.pytest_cache:rw,noexec,nosuid",
-
-      ]
-
-      if docker_flags:
-
-         base_command.extend(docker_flags)
-
-      base_command.append(image)
-
-      try:
-
-         result  = subprocess.run(
-
-            base_command,
-            capture_output=True,
-            timeout=15,
-            text=True,
-            
-
-         )
-
-         return result.stdout, result.stderr, result.returncode
-      
-      except subprocess.TimeoutExpired:
-
-         return "", "Time limit exceeded: your code ran too long.", -1
-      
-      except subprocess.CalledProcessError as e:
-        return "", f"Container error: {e}", -1
-
-      except Exception as e:
-        return "", f"Unexpected error: {e}", -1
-
-def sync_cp_history(user_id: str):
-
-   case_problems_list = [record for record in db.session.query(CaseProblem).all()]
-
-   user_histories = {row.problem_id:row.status for row in CaseProblem_History.query.filter(CaseProblem_History.user_id == int(user_id)).all()}   
-
-   for case in case_problems_list:
-
-      if case.id not in user_histories:
-
-         new_record = CaseProblem_History(user_id = int(user_id), problem_id = case.id, difficulty = case.difficulty)
-
-         db.session.add(new_record)
-         db.session.flush()
-
-         user_histories[case.id] = new_record.status
-
-   db.session.commit()
-
-   status_list = [user_histories[case.id] for case in case_problems_list]
-
-   return status_list
-
-def sync_op_history(user_id: str):
-
-   problems_list = [record for record in db.session.query(Problem).all()]
-
-   user_histories = {history.problem_id : history.status  for history in History.query.filter(History.user_id == int(user_id)).all()}
-
-   for problem in problems_list:
-
-      if problem.problem_id not in user_histories:
-
-         new_record = History(user_id = int(user_id), problem_id = problem.problem_id, difficulty = problem.difficulty)
-
-         db.session.add(new_record)
-
-         db.session.flush()
-
-         user_histories[problem.problem_id] = new_record.status
-
-   db.session.commit()
-
-   status_list = [user_histories[problem.problem_id] for problem in problems_list]
-
-   return status_list
-
+db.init_app(app)
 login_manager.init_app(app)
+
+CORS(app)
+Migrate(app, db)
+
+with app.app_context():
+   from models import User, History, Problem, CaseProblem, CaseProblem_History, TestCase, Submission, Administrator
+   db.create_all()
 
 @app.route('/', methods=['GET', 'POST'])
 @nocache
