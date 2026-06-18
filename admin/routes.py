@@ -3,7 +3,6 @@ from flask_login import logout_user, login_user, login_required
 from werkzeug.security import check_password_hash
 from models import Administrator, Problem, CaseProblem, TestCase, History, CaseProblem_History
 from extensions import nocache
-from datetime import datetime
 from extensions import db
 from admin import admin_bp
 from trie_data_structure import trie
@@ -137,9 +136,13 @@ def delete_output_problem(id):
 
       record = db.session.query(Problem).filter(Problem.problem_id == int(parsed_id)).first()
 
-      if record:
+      if not record:
+         raise Exception("Problem not found")
 
-         db.session.delete(db.session.query(History).filter(History.problem_id == int(parsed_id)).first())   
+      histories = db.session.query(History).filter(History.problem_id == int(parsed_id)).all()
+
+      for history in histories:
+         db.session.delete(history)
 
       db.session.delete(record)
 
@@ -149,7 +152,7 @@ def delete_output_problem(id):
 
    except Exception:
 
-      return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_output_problem")
+      return render_template("admin/popup.html", show_popup=True, popup_message="A problem from search results must be selected.", redirect_url="/admin/dashboard/new_output_problem")
 
 
 @admin_bp.route('/dashboard/new_case_problem', methods= ['POST', 'GET'])
@@ -290,36 +293,26 @@ def test_case_creation():
 
       return render_template('admin/test_case_creation.html')
 
-@admin_bp.route('/dashboard/new_test_case/delete/<id>', methods= ['POST', 'GET'])
+@admin_bp.route('/dashboard/new_test_case/delete/<id>', methods=['POST', 'GET'])
 @nocache
 @login_required
 def test_case_deletion(id):
-
    parsed_id = str(id)
-
    try:
-
       record = db.session.query(CaseProblem).filter(CaseProblem.id == int(parsed_id)).first()
-
-      history = db.session.query(CaseProblem_History).filter(CaseProblem_History.id == int(parsed_id)).first()
-
+      if not record:
+         raise Exception("Problem not found")
+      histories = db.session.query(CaseProblem_History).filter(CaseProblem_History.problem_id == int(parsed_id)).all()
       test_cases = db.session.query(TestCase).filter(TestCase.problem_id == int(parsed_id)).all()
-
-      db.session.delete(record)
-
-      db.session.delete(history)
-
+      for history in histories:
+         db.session.delete(history)
       for test_case in test_cases:
-
          db.session.delete(test_case)
-
+      db.session.delete(record)
       db.session.commit()
-
       return redirect('/admin/dashboard/new_test_case')
-
    except Exception:
-
-      return render_template("admin/popup.html", show_popup = True, popup_message = "A problem from search results must be selected.", redirect_url = "/admin/dashboard/new_test_case")
+      return render_template("admin/popup.html", show_popup=True, popup_message="A problem from search results must be selected.", redirect_url="/admin/dashboard/new_test_case")
 
 @admin_bp.route('/dashboard/new_test_case/query', methods= ['GET'])
 @nocache

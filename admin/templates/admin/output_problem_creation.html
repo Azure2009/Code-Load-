@@ -136,7 +136,7 @@
 
             const query = i.target.value;
 
-            const response = await fetch(`http://127.0.0.1:5000/admin/dashboard/new_output_problem/search?q=${query}`);
+            const response = await fetch(`/admin/dashboard/new_output_problem/search?q=${query}`);
 
             const result = await response.json();
 
