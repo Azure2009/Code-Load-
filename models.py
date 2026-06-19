@@ -21,6 +21,7 @@ class History(db.Model):
 class Problem(db.Model):
    problem_id = db.Column(db.Integer, primary_key=True)
    problem_title = db.Column(db.String(200), nullable = False)
+   problem_description = db.Column(db.Text, nullable = False)
    problem_set = db.Column(db.Text, nullable = False)
    expected_output = db.Column(db.Text, nullable = False)
    difficulty = db.Column(db.String(50), nullable = False)

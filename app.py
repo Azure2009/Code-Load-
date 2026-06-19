@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, session, url_for
+from flask import Flask, render_template, request, redirect, session, url_for, flash
 from flask_login import login_required, login_user, logout_user
 from flask_cors import CORS
 from flask_migrate import Migrate
@@ -122,9 +122,9 @@ def user_account():
 
    user = User.query.get(user_id)
   
-   total_unsolved_op = History.query.filter(History.status == "unsolved").count()
+   total_unsolved_op = History.query.filter(History.status == "unsolved", History.user_id == int(user_id)).count()
 
-   total_unsolved_cp = CaseProblem_History.query.filter(CaseProblem_History.status == "unsolved").count()
+   total_unsolved_cp = CaseProblem_History.query.filter(CaseProblem_History.status == "unsolved", CaseProblem_History.user_id == int(user_id)).count()
 
    solved_op_hashmap = {}
    total_op_hashmap = {}
@@ -137,12 +137,12 @@ def user_account():
    for d in difficulties:
 
       # Get all solved and total output problems for each difficulty category
-      solved_op_hashmap.setdefault(d, History.query.filter(History.status == "solved", History.difficulty == d).count())   
-      total_op_hashmap.setdefault(d, History.query.filter(History.difficulty == d).count())
+      solved_op_hashmap.setdefault(d, History.query.filter(History.status == "solved", History.difficulty == d, History.user_id == int(user_id)).count())   
+      total_op_hashmap.setdefault(d, History.query.filter(History.difficulty == d, History.user_id == int(user_id)).count())
 
       # Get all solved and total case problems for each difficulty category
-      solved_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.status == "solved", CaseProblem_History.difficulty == d).count())
-      total_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.difficulty == d).count())
+      solved_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.status == "solved", CaseProblem_History.difficulty == d, CaseProblem_History.user_id == int(user_id)).count())
+      total_cp_hashmap.setdefault(d, CaseProblem_History.query.filter(CaseProblem_History.difficulty == d, CaseProblem_History.user_id == int(user_id)).count())
 
    return render_template(
 
@@ -321,7 +321,13 @@ def problem(problem_id):
 
             db.session.commit()
 
-            return redirect('/output_problems')
+            flash('Accepted', 'accepted')
+
+         else:
+
+            flash('Wrong Answer', 'wrong')
+
+         return redirect('/output_problems')
             
       problem = Problem.query.get_or_404(problem_id)
 

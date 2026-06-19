@@ -75,6 +75,8 @@ def outputProblem_creation():
 
       problem_title = request.form["problem_title"]
 
+      problem_description = request.form["problem_description"]
+
       coding_problem = request.form["coding_problem"]
 
       expected_output = request.form["expected_output"]
@@ -87,7 +89,7 @@ def outputProblem_creation():
 
          assert True == converted
 
-         new_output_problem = Problem(problem_title = problem_title, problem_set = coding_problem, expected_output = expected_output, difficulty = difficulty)
+         new_output_problem = Problem(problem_title = problem_title, problem_description = problem_description,problem_set = coding_problem, expected_output = expected_output, difficulty = difficulty)
 
          db.session.add(new_output_problem)
          db.session.commit()

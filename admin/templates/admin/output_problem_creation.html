@@ -9,6 +9,10 @@
 
 {% block body %}
 
+        <a href="/admin/dashboard" class="home-btn" aria-label="Home">
+        <span>←</span>
+        </a>
+
         <div class="admin-card large-card">
 
         <form action="/admin/dashboard/new_output_problem" method="POST">
@@ -30,6 +34,9 @@
 
             <label for="problem_title">Problem Title:</label>
             <textarea name="problem_title" id="problem_title" required></textarea>
+
+            <label for="problem_title">Problem Description:</label>
+            <textarea name="problem_description" id="problem_description" required></textarea>
                 
             <label for="coding_problem">Coding Problem</label>
             <textarea name="coding_problem" id="coding_problem" required></textarea>
