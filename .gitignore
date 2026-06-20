@@ -4,3 +4,4 @@ admin/__pycache__/
 *.pyc
 .env
 submission/
+*.md
