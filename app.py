@@ -8,6 +8,7 @@ from admin import admin_bp
 from sync import sync_cp_history, sync_op_history
 from extensions import db, nocache, run_secure_container
 from init_login_manager import login_manager
+import re
 import os 
 import uuid
 import json
@@ -74,9 +75,9 @@ def login():
       username = request.form['username']
       password = request.form['password']
       
-      user = User.query.filter_by(username=username).first()
+      user = User.query.filter(username == username).first()
 
-      if user and check_password_hash(user.hash_password, password):
+      if re.search(username, user.username) and check_password_hash(user.hash_password, password):
 
          login_user(user)
 
