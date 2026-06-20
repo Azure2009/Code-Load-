@@ -38,6 +38,7 @@ class CaseProblem(db.Model):
    function_name = db.Column(db.String(200), nullable = False)
    args = db.Column(db.Text, nullable = False)
    return_type = db.Column(db.String(200), nullable = False)
+   unordered = db.Column(db.Boolean, default=False, nullable=False)
    
 class CaseProblem_History(db.Model):
    id = db.Column(db.Integer, nullable = False, primary_key=True)
@@ -45,6 +46,7 @@ class CaseProblem_History(db.Model):
    problem_id = db.Column(db.Integer, nullable=False)
    status = db.Column(db.String(50), nullable=False, default="unsolved")
    difficulty = db.Column(db.String(50), nullable=False)
+   last_submission = db.Column(db.Text, nullable=True)
 
 class TestCase(db.Model):
    test_case_id = db.Column(db.Integer, nullable = False, primary_key=True)

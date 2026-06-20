@@ -2,16 +2,24 @@
 
 {% block body %}
 
+<a href="/case_problems/solving-page/{{id}}" class="home-btn" aria-label="Home">
+        <span>←</span>
+    </a>
+
 <div class="result-page">
 
     <div class="result-card">
 
         <button
             class="return-btn"
-            onclick="window.location.href='/dashboard'"
+            onclick="window.location.href='/dashboard?fresh=true'"
         >
             ← Return to Dashboard
         </button>
+
+        <p class="dashboard-subtitle">
+    Note: Once you return to dashboard, solving page will be reset. Use back arrow to try again.
+</p>
         
         {% if verdict == "Accepted" %}
             <div class="verdict accepted">

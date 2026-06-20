@@ -71,6 +71,19 @@ input[type="submit"]:hover{
 transform:translateY(-2px);
 }
 
+.delete-btn {
+    background: white;
+    color: var(--danger);
+    border: 1px solid #ffd9d6;
+    transition: .25s;
+}
+
+.delete-btn:hover {
+    background: var(--danger);
+    color: white;
+    transform: translateY(-2px);
+}
+
 input,
 textarea,
 select{
@@ -79,6 +92,10 @@ padding:14px;
 border:1px solid var(--border);
 border-radius:12px;
 background:white;
+}
+
+input[type="checkbox"] {
+    width: auto;
 }
 
 .home-btn{

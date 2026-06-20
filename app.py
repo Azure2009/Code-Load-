@@ -180,8 +180,16 @@ def case():
 def case_problem(id):
 
    case_problem = CaseProblem.query.get(id)
+   user_id = session.get("user_id")
+   fresh = request.args.get('fresh') == 'true'
+    
+   saved_code = None
 
-   return render_template("solving_page-case_problems.html", case_problem = case_problem)
+   if not fresh:
+      history = CaseProblem_History.query.filter_by(user_id=int(user_id), problem_id=id).first()
+      saved_code = history.last_submission if history and history.last_submission else None
+
+   return render_template("solving_page-case_problems.html", case_problem = case_problem, saved_code = saved_code)
                
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 @login_required
@@ -216,6 +224,8 @@ def submit(id):
 
    submission_dir = os.path.join(base_dir, submission_id)
 
+   current_problem = CaseProblem.query.get(id)
+
    try:
 
       os.makedirs(submission_dir, exist_ok=True)
@@ -223,11 +233,27 @@ def submit(id):
       with open(os.path.join(submission_dir, "solution.py"), "w") as f:
          f.write(user_code)
 
+      history = db.session.query(CaseProblem_History).filter(
+      CaseProblem_History.user_id == int(session.get("user_id")),
+      CaseProblem_History.problem_id == id
+      ).first()
+
+      if history:
+         history.last_submission = user_code
+         db.session.commit()
+
       function_name = db.session.get(CaseProblem, id).function_name
 
       table = db.session.query(TestCase).filter(TestCase.problem_id == id).all()
       
-      test_cases_list = [{"input": deserialize_input(t.input_data), "expected": safe_cast(t.expected_output)} for t in table]
+      test_cases_list = [
+         {
+
+         "input": deserialize_input(t.input_data), 
+         "expected": safe_cast(t.expected_output),
+         "unordered": current_problem.unordered
+          
+         } for t in table]
 
       with open(os.path.join(submission_dir, "test_cases.json"), "w") as f:
 
@@ -271,7 +297,7 @@ def submit(id):
 
       shutil.rmtree(submission_dir, ignore_errors=True)
                                                 
-   return render_template("result.html", verdict = verdict, output = output)
+   return render_template("result.html", verdict = verdict, output = output, id = id)
 
 @app.route('/output_problems', methods=['GET', 'POST'])
 @login_required

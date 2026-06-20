@@ -48,11 +48,11 @@
 
         <form action="/case_problems/solving-page/{{case_problem.id}}/submit" method="post">
 
-        <textarea id="code" name="code">class Test:    
+        <textarea id="code" name="code">{% if saved_code %}{{ saved_code }}{% else %}class Test:    
     def test_{{case_problem.function_name}}(self, {{case_problem.args}}) -> {{case_problem.return_type}}:
         # your code here
         
-        </textarea>
+{% endif %}</textarea>
 
         <input type="submit" value="Submit">
 

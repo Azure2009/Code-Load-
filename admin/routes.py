@@ -174,6 +174,7 @@ def case_problem_creation():
       function_name = request.form['function_name']
       args = request.form['args']
       return_type = request.form['return_type']
+      
 
       if request.form['follow_ups'] == "":
 
@@ -183,6 +184,8 @@ def case_problem_creation():
 
          hints = None
    
+      unordered = 'unordered' in request.form
+
       try:
 
          converted = bool(difficulty)
@@ -200,7 +203,8 @@ def case_problem_creation():
          difficulty = difficulty,
          function_name = function_name,
          args = args,
-         return_type = return_type
+         return_type = return_type,
+         unordered = unordered
          
          )
 
