@@ -232,6 +232,8 @@ def submit(id):
 
       with open(os.path.join(submission_dir, "solution.py"), "w") as f:
          f.write(user_code)
+         f.flush()
+         os.fsync(f.fileno())
 
       history = db.session.query(CaseProblem_History).filter(
       CaseProblem_History.user_id == int(session.get("user_id")),
@@ -258,6 +260,15 @@ def submit(id):
       with open(os.path.join(submission_dir, "test_cases.json"), "w") as f:
 
          json.dump(test_cases_list, f)
+         f.flush()
+         os.fsync(f.fileno())
+
+      HOST_SUBMISSION_BASE = os.environ.get("HOST_SUBMISSION_DIR")
+
+      if HOST_SUBMISSION_BASE:
+         host_submission_dir = os.path.join(HOST_SUBMISSION_BASE, submission_id)
+      else:
+         host_submission_dir = os.path.abspath(submission_dir)
 
       #run a container using my docker image
 
@@ -269,7 +280,7 @@ def submit(id):
       "--pids-limit", "50",
       "--stop-timeout", "10",
       "--env", f"FUNCTION_NAME={function_name}",
-      "-v", f"{os.path.abspath(submission_dir)}:/app/submission:ro",
+      "-v", f"{host_submission_dir}:/app/submission:ro",
 
       ])
 

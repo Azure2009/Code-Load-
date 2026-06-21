@@ -1,18 +1,20 @@
 services:
-
   app:
     build: .
     ports:
       - "5000:5000"
-    depends_on:
-      - db
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./submission:/app/submission
     environment:
       - DATABASE_URL=${DATABASE_URL}
       - SECRET_KEY=${SECRET_KEY}
       - ADMIN_USERNAME=${ADMIN_USERNAME}
       - ADMIN_PASSWORD=${ADMIN_PASSWORD}
-
-
+      - HOST_SUBMISSION_DIR=${HOST_SUBMISSION_DIR}
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: mysql:8.0
@@ -21,6 +23,11 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     volumes:
       - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u", "root", "-p${MYSQL_ROOT_PASSWORD}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
 
 volumes:
   mysql_data:
