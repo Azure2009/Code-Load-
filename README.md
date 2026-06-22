@@ -20,12 +20,23 @@ Flask, SQLAlchemy, Flask-Login, Flask-Migrate, Docker, MySQL, pytest, HTML, Jinj
 
 ## Screenshots
 
-![Dashboard](docs/images/CodeLoad/Main_Dashboard.png)
-![Sample Problem](docs/images/CodeLoad/Sample_Case_Problem.png)
-![Sample Passed Verdict](docs/images/CodeLoad/Sample_Correct_Verdict.png)
-![Sample Wrong Answer Verdict](docs/images/CodeLoad/Sample_Wrong_Answer_Verdict.png)
-![Sample Runtime Error Verdict](docs/images/CodeLoad/Sample_Runtime_Error_Verdict.png)
-![Sample Problems](docs/images/CodeLoad/Case_Problems.png)
+## Dasboard
+![Dashboard](docs/Images/CodeLoad/Main_Dashboard.png)
+
+## Sample Problem
+![Sample Problem](docs/Images/CodeLoad/Sample_Case_Problem.png)
+
+## Sample Passed Verdict
+![Sample Passed Verdict](docs/Images/CodeLoad/Sample_Correct_Verdict.png)
+
+## Sample Wrong Answer Verdict
+![Sample Wrong Answer Verdict](docs/Images/CodeLoad/Sample_Wrong_Answer_Verdict.png)
+
+## Sample Runtime Error Verdict 
+![Sample Runtime Error Verdict](docs/Images/CodeLoad/Sample_Runtime_Error_Verdict.png)
+
+## Sample Problems
+![Sample Problems](docs/Images/CodeLoad/Case_Problems.png)
 
 ## Local Setup
 1. Clone the repo
