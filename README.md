@@ -18,6 +18,15 @@ Python is the most in demand language right now. Whether you are an experienced 
 ## Tech Stack
 Flask, SQLAlchemy, Flask-Login, Flask-Migrate, Docker, MySQL, pytest, HTML, Jinja, CSS
 
+## Screenshots
+
+![Dashboard](docs/images/CodeLoad/Main_Dashboard.png)
+![Sample Problem](docs/images/CodeLoad/Sample_Case_Problem.png)
+![Sample Passed Verdict](docs/images/CodeLoad/Sample_Correct_Verdict.png)
+![Sample Wrong Answer Verdict](docs/images/CodeLoad/Sample_Wrong_Answer_Verdict.png)
+![Sample Runtime Error Verdict](docs/images/CodeLoad/Sample_Runtime_Error_Verdict.png)
+![Sample Problems](docs/images/CodeLoad/Case_Problems.png)
+
 ## Local Setup
 1. Clone the repo
 2. Create a `.env` file (see `.env.example`)
