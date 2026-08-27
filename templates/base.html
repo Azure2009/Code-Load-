@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="{{url_for('static', filename='main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='output.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/theme/dracula.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/codemirror/5.65.17/codemirror.min.js"></script>
@@ -15,23 +15,23 @@
     
     <script>
 
-       document.addEventListener("pageshow", function(event) {
+      document.addEventListener("pageshow", function(event) {
 
-        if (event.persisted) {
+      if (event.persisted) {
 
-          window.location.reload()
+        window.location.reload()
 
-        }
+      }
 
 
-       })
+      })
 
     </script>
     
     {% endblock %}
 
 </head>
-<body>
+<body class="p-2">
     <div class="app-shell">
         {% block body %}{% endblock %}
     </div>

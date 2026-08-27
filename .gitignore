@@ -4,3 +4,6 @@ admin/__pycache__/
 *.pyc
 .env
 submission/
+node_modules/
+package-lock.json
+package.json

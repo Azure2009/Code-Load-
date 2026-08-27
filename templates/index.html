@@ -11,20 +11,38 @@
 
 {% block body %}
 
-<div class="hero">
+<div class="relative flex ml-50 items-center">
 
-<h3>Welcome to Code load!</h3>
+    <div class="relative flex border border-slate-500 rounded-xl p-4 inline-screen items-center">
+        <p class="text-3xl font-bold text-blue-500">Code<span class="text-yellow-500">Load</span></p>
 
+        <div class="ml-auto grid grid-cols-1 gap-x-10 text-slate-500">
+            <button onclick="window.location.href='/login'" class="row-start-1 hover:text-yellow-500 hover:transition-text duration-200">Login</button>
+            <button onclick="window.location.href='/register' " class="row-start-1 hover:text-yellow-500 hover:transition-text duration-200">Start coding</button>
+        </div>
+    </div>
 
-    <button><a href="/register">Register</a></button>
-    <br>
-    <br>
-    <button><a href="/login">Login</a></button>
-    <br>
-    <br>
-    <button><a href="/admin/">Login as Administrator</a></button>
-    
+    <!-- Admin Sign In -->
+    <div
+    onclick="window.location.href='/admin/'" 
+    class="flex ml-30 bg-yellow-500 rounded-full px-4 py-2 inline-40 items-center cursor-default group"
+    >
+        <p class="text-slate-500 mr-2 group-hover:text-white transition-text duration-200">Admin</p>
+        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-move-left-icon lucide-move-left bg-white ml-auto rounded-full inline-10 text-yellow-500 p-2 group-hover:rotate-180 transition-transform duration-200">
+        <path d="M6 8L2 12L6 16"/><path d="M2 12H22"/>
+        </svg>
 
+    </div>
+
+</div>
+
+<div class="flex justify-self-center items-center text-7xl mt-10 cursor-default">
+
+    <div class="justify-items-center items-center">
+        <p class="">A python-focus</p>
+        <p class="">code evaluation system</p>
+    </div>
 </div>
 
 {% endblock %}
