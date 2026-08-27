@@ -31,10 +31,11 @@
     {% endblock %}
 
 </head>
-<body class="p-2">
-    <div class="app-shell">
-        {% block body %}{% endblock %}
-    </div>
+<body>
+  
+  <div>
+    {% block body %}{% endblock %}
+  </div>
 
   {% with messages = get_flashed_messages(with_categories=true) %}
     {% if messages %}
