@@ -8,16 +8,19 @@
 
 {% block body %}
 
-<div class="flex flex-col min-h-screen bg-slate-100">
+<!-- <div class="flex flex-col min-h-screen bg-slate-100"> -->
 
-    <div onclick="window.location.href = '/' " class="flex">
+    <!-- Home button -->
+    <!-- <div class="flex">
         <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        onclick="window.location.href = '/' "
         class="lucide lucide-house-icon lucide-house ml-auto">
         <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
         </svg>
-    </div>
+    </div> -->
 
-    <div class="flex-1 flex justify-center items-center">
+    <!-- Register -->
+    <!-- <div class="flex-1 flex ">
 
         <div class="grid grid-cols-1 gap-y-2 text-xl bg-white p-2 rounded-xl w-1/4">
 
@@ -27,22 +30,22 @@
 
                 <div>
                     <label for="first_name">Given Name</label>
-                    <input type="text" name="first_name" required>
+                    <input type="text" name="first_name" required class="rounded-xl p-2">
                 </div>
 
                 <div>
                     <label for="last_name">Last Name</label>
-                    <input type="text" name="last_name" required>
+                    <input type="text" name="last_name" required class="rounded-xl p-2">
                 </div>
 
                 <div>
                     <label for="username">Username</label>
-                    <input type="text" name="username" required>
+                    <input type="text" name="username" required class="rounded-xl p-2">
                 </div>
 
                 <div>
                     <label for="password">Password</label>
-                    <input type="password" name="password" required >
+                    <input type="password" name="password" required class="rounded-xl p-2" >
                 </div>
 
                 <input type="submit" value="Submit" class="justify-self-center">
@@ -51,8 +54,63 @@
 
         </div>
 
+    </div> -->
+
+<!-- </div> -->
+
+<div class="min-h-screen bg-slate-100 p-4">
+
+    <div class="bg-white flex flex-col rounded-xl max-w-xl mx-auto mt-20 gap-y-4 p-10">
+        
+        
+        <div class="flex self-center w-fit group">   
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            onclick="window.location.href = '/' "
+            class="lucide lucide-house-icon lucide-house text-slate-400 cursor-pointer">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <div class="absolute opacity-0 -translate-x-6 -translate-y-8 z-10 bg-black border text-xs text-white border-slate-500 p-1 group-hover:opacity-100 transition-opacity duration-200 ">
+                <p>Back to home</p>
+            </div>
+        </div>
+
+        <div class="relative flex items-center">
+            <div class="flex-1 h-1 bg-blue-500"></div>
+            <p class="mx-2 text-2xl text-yellow-500 font-bold">Registration</p>
+            <div class="flex-1 h-1 bg-blue-500"></div>
+        </div>
+
+        <form action='/register' method='POST' class="flex flex-col gap-y-4">
+
+                <div class="flex items-center" >
+                    <label class="mr-2 text-xl text-slate-500" for="first_name">Given Name</label>
+                    <input type="text" name="first_name" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
+
+                <div class="flex items-center">
+                    <label class="mr-2 text-xl text-slate-500" for="last_name">Last Name</label>
+                    <input type="text" name="last_name" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
+
+                <div class="flex items-center">
+                    <label class="mr-2 text-xl text-slate-500" for="username">Username</label>
+                    <input type="text" name="username" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
+
+                <div class="flex items-center">
+                    <label class="mr-2 text-xl text-slate-500" for="password">Password</label>
+                    <input type="password" name="password" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
+
+                <input type="submit" value="Submit" class="w-fit bg-yellow-300 text-white px-10 py-1 rounded-xl self-center hover:bg-yellow-500 transition-all duration-200">
+
+        </form>
+
+        
+
     </div>
 
 </div>
+
 
 {% endblock %}
