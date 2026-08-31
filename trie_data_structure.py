@@ -19,23 +19,21 @@ class trie:
     def getWordsWithPrefix(self, prefix: str):
 
         node = self.root
-
-        # walk down to the end of the prefix
+        
         for char in prefix:
             if char not in node.children:
-                return []           # prefix doesn't exist, return empty
+                return []         
             node = node.children[char]
-
-        # now collect all words from this node downward
+        
         words = []
         self._collect(node, prefix, words)
         return words
 
     def _collect(self, node, current_word, words):
         if node.is_end:
-            words.append(current_word)      # found a complete word
+            words.append(current_word)      
 
-        for char in node.children:          # try every child
+        for char in node.children:          
             next_node = node.children[char]
             self._collect(next_node, current_word + char, words)
 

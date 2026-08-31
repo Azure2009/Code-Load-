@@ -8,49 +8,53 @@
 
 {% block body %}
 
-    <button
-    id="admin_logout"
-    onclick="window.location.href='/admin/logout'"
-    title="Log Out"
-    >
-    Logout
-    </button>
+<div class="flex flex-col min-h-screen">
 
-    <div class="admin dashboard-page">
-
-    <div class="hero-card">
-
-        <p class="page-eyebrow">Administrator Console</p>
-
-        <h1 class="page-title">
-            Welcome,
-            <span>{{admin.username}}</span>
-        </h1>
-
-        <p class="page-subtitle">
-            Manage coding challenges, output problems, and test cases.
-        </p>
-
+    <div class="flex bg-yellow-500 items-center text-white p-4 cursor-default">
+        <div>
+            <p class="font-bold text-2xl">Administrator Console</p>
+            <p class="italic">Manage coding challenges, output problems, and test cases.</p>
+        </div>
+        
+        <div class="flex ml-auto">
+            <p>{{admin.username}}</p>
+            <button
+                class="ml-4 hover:text-slate-300 transition-colors duration-200"
+                onclick="window.location.href='/admin/logout'"
+                title="Sign Out"
+            >
+                Sign out
+            </button>
+        </div>
     </div>
 
-    <div class="admin-action-grid">
+    <div class="flex flex-col flex-1 justify-center items-center bg-slate-100">
 
-        <a href="/admin/dashboard/new_output_problem" class="admin-action-card">
-            <h3>Output Problems</h3>
-            <p>Create and manage output prediction exercises.</p>
-        </a>
+        <div class="flex flex-col gap-y-10">
+            <div class="flex justify-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
+                <a href="/admin/dashboard/new_output_problem" class="">
+                    <h3 class="justify-self-center text-3xl">Output Problems</h3>
+                    <p class="justify-self-center text-base">Create and manage output prediction exercises.</p>   
+                </a>
+            </div>
 
-        <a href="/admin/dashboard/new_case_problem" class="admin-action-card">
-            <h3>Case Problems</h3>
-            <p>Create algorithmic coding challenges.</p>
-        </a>
-
-        <a href="/admin/dashboard/new_test_case" class="admin-action-card">
-            <h3>Test Cases</h3>
-            <p>Add and maintain automated test cases.</p>
-        </a>
-
+            <div class="flex justify-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
+                <a href="/admin/dashboard/new_case_problem" class="">
+                    <h3 class="justify-self-center text-3xl">Case Problems</h3>
+                    <p class="justify-self-center text-base">Create algorithmic coding challenges.</p>
+                </a>
+            </div>
+            
+            <div class="flex justify-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
+                <a href="/admin/dashboard/new_test_case" class="">
+                    <h3 class="justify-self-center">Test Cases</h3>
+                    <p class="justify-self-center text-xl">Add and maintain automated test cases.</p>
+                </a>    
+            </div>
+        </div>
+        
     </div>
 
-</div>  
+</div>
+
 {% endblock %}

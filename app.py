@@ -88,7 +88,7 @@ def login():
       else:
 
          return render_template('popup_error.html', show_popup = True, redirect_url = "/login", popup_message = "The user does not exist")
-      
+
    else:
 
       return render_template('login.html')

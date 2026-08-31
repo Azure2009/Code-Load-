@@ -9,33 +9,46 @@
 
 {% block body %}
 
-<a href="/" class="home-btn" aria-label="Home">
-    <span>⌂</span>
-</a>
+<div class="min-h-screen bg-slate-100 p-4">
 
-<div class="admin">
+    <div class="bg-white flex flex-col rounded-xl max-w-xl mx-auto mt-20 gap-y-4 p-10">
+        
+        <p class="absolute -translate-y-20  text-3xl font-bold text-blue-500">Code<span class="text-yellow-500">Load</span></p>
+        
+        <div class="flex self-center w-fit group">   
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            onclick="window.location.href = '/' "
+            class="lucide lucide-house-icon lucide-house text-slate-400 cursor-pointer">
+            <path d="M15 21v-8a1 1 0 0 0-1-1h-4a1 1 0 0 0-1 1v8"/><path d="M3 10a2 2 0 0 1 .709-1.528l7-6a2 2 0 0 1 2.582 0l7 6A2 2 0 0 1 21 10v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+            </svg>
+            <div class="absolute opacity-0 -translate-x-6 -translate-y-8 z-10 bg-black border text-xs text-white border-slate-500 p-1 group-hover:opacity-100 transition-opacity duration-200 ">
+                <p>Back to home</p>
+            </div>
+        </div>
+            
+        <p class="mx-2 text-2xl text-yellow-500 font-bold">Administrator access</p>
+        <div class="w-full">
+            <div class="flex-1 h-1 bg-blue-500"></div>
+        </div>
+        <form action='/admin/' method='POST' class="flex flex-col gap-y-4">
 
-<div class="auth-card">
+                <div class="flex items-center">
+                    <label class="mr-2 text-xl text-slate-500" for="username">Username</label>
+                    <input type="text" name="username" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
 
-<p class="page-eyebrow">Administrator Access</p>
+                <div class="flex items-center">
+                    <label class="mr-2 text-xl text-slate-500" for="password">Password</label>
+                    <input type="password" name="password" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
+                </div>
 
-<h1>Sign in</h1>
+                <input type="submit" value="Submit" class="w-fit bg-yellow-300 text-white px-10 py-1 rounded-xl self-center hover:bg-yellow-500 transition-all duration-200">
 
-<form action='/admin/' method='POST' autocomplete="off" class="">
+        </form>
 
-    <label>Username</label>
-    <input type="text" name="username" required>
-    <br>
-    <br>
-    <label>Password</label>
-    <input type="password" name="password" required>
-    <br>
-    <br>
-    <input type="submit" value="Continue">
+        
 
-</form>
-
-</div>
+    </div>
 
 </div>
 
