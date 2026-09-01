@@ -9,148 +9,146 @@
 
 {% block body %}
 
-        <a href="/admin/dashboard" class="home-btn" aria-label="Home">
-        <span>←</span>
-        </a>
-
-        <div class="admin-card large-card">
-
-        <form action="/admin/dashboard/new_output_problem" method="POST">
-
-            <h2>Create Output Problem</h2>
-            <p class="section-subtitle">
+<div class="min-h-screen bg-slate-100 p-10">
+    <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit border hover:bg-yellow-500 hover:transition-all duration-200">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/>
+        </svg>
+    </div>
+    <div class="flex flex-1 flex-col px-10 py-2">
+        <p class="text-sm text-slate-500 italic">
             Create a new output prediction exercise.
-            </p>
+        </p>
+        <form action="/admin/dashboard/new_output_problem" method="POST" class="flex flex-col gap-y-4 p-4 border-2 bg-white">
 
             <input type="hidden" name= "difficulty" id="difficulty" value="">
 
-            <div class="difficulty-btn">
+            <div class="flex ml-auto">
+                <p class="mr-2">Select difficulty:</p>
+                <div class="font-bold">
 
-            <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
-            <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
-            <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
+                    <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
+                    <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
+                    <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
 
+                </div>
             </div>
 
             <label for="problem_title">Problem Title:</label>
-            <textarea name="problem_title" id="problem_title" required></textarea>
+            <textarea name="problem_title" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
 
             <label for="problem_title">Problem Description:</label>
-            <textarea name="problem_description" id="problem_description" required></textarea>
+            <textarea name="problem_description" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
                 
             <label for="coding_problem">Coding Problem</label>
-            <textarea name="coding_problem" id="coding_problem" required></textarea>
+            <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
 
             <label for="expected_output">Expected Output</label>
-            <textarea name="expected_output" id="expected_output" required></textarea>
+            <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" required></textarea>
 
-            <input type="submit" value="Submit">
+            
+            <input type="submit" value="Submit" class="w-fit bg-yellow-300 text-white px-10 py-1 rounded-xl self-center hover:bg-yellow-500 transition-all duration-200">
+            
 
         </form>
+    </div>
 
-        </div>
+    <div class="">
 
-        <br>
-        <br>
-
-        <div class="search-card">
-
-        <h4>Manage Existing Problems</h4>
         <input type="search" name="search_bar" id="search_bar" placeholder="Search problems..." autocomplete="off">
         
         <input type="hidden" value="" name="problem_id" id="problem_id">
 
         <div id="results_panel"></div>
 
-        <input type="button" onclick="delete_problem()" value="Delete Selected Problem" class="danger-btn"></input>
+        <input type="button" onclick="delete_problem()" value="Delete Selected Problem" class=""></input>
 
-        
+    </div>
+</div>
 
-        </div>
+<script>
 
-        <script>
+let selectedProblemId = null
 
-        let selectedProblemId = null
+function select_difficulty(btn) {
 
-        function select_difficulty(btn) {
+    document.querySelectorAll(".difficulty-btn button").forEach(b => {
 
-            document.querySelectorAll(".difficulty-btn button").forEach(b => {
+        b.classList.remove('active')
 
-                b.classList.remove('active')
+    })
 
-            })
+    btn.classList.add('active')
 
-            btn.classList.add('active')
-
-            document.getElementById("difficulty").value = btn.dataset.value
+    document.getElementById("difficulty").value = btn.dataset.value
 
 
-        }
+}
 
-        function delete_problem() {
+function delete_problem() {
 
-            const problem_id_raw = document.getElementById("problem_id").value 
+    const problem_id_raw = document.getElementById("problem_id").value 
 
-            window.location.href = `/admin/dashboard/new_output_problem/delete/${problem_id_raw}`
+    window.location.href = `/admin/dashboard/new_output_problem/delete/${problem_id_raw}`
 
-        }
+}
 
-        function render(results) {
+function render(results) {
 
-            const panel = document.getElementById('results_panel');
+    const panel = document.getElementById('results_panel');
 
-            if (results.length === 0) {
+    if (results.length === 0) {
 
-                panel.style.display = 'none';
-                return;
+        panel.style.display = 'none';
+        return;
 
-            }
+    }
 
-            panel.style.display = 'block';
+    panel.style.display = 'block';
 
-            panel.innerHTML = results.map(item =>
+    panel.innerHTML = results.map(item =>
 
-                `<div 
-                id="${item.id}" 
-                onclick="toggle(this)"
-                style="padding: 8px; cursor: pointer; display: block; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
-                ${item.title}
-                </div>`
+        `<div 
+        id="${item.id}" 
+        onclick="toggle(this)"
+        style="padding: 8px; cursor: pointer; display: block; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
+        ${item.title}
+        </div>`
 
-            ).join('');
+    ).join('');
 
-        }
+}
 
-        function toggle(div) {
+function toggle(div) {
 
-            document.querySelectorAll('#results_panel div').forEach(d => {
+    document.querySelectorAll('#results_panel div').forEach(d => {
 
-                d.style.backgroundColor = '';
+        d.style.backgroundColor = '';
 
-            });
+    });
 
-            div.style.backgroundColor = '#d0ebff';
+    div.style.backgroundColor = '#d0ebff';
 
-            selectedProblemId = div.id;
+    selectedProblemId = div.id;
 
-            document.getElementById('problem_id').value = selectedProblemId;
+    document.getElementById('problem_id').value = selectedProblemId;
 
-        }
+}
 
-        
 
-        document.getElementById('search_bar').addEventListener('input', async i => {
 
-            const query = i.target.value;
+document.getElementById('search_bar').addEventListener('input', async i => {
 
-            const response = await fetch(`/admin/dashboard/new_output_problem/search?q=${query}`);
+    const query = i.target.value;
 
-            const result = await response.json();
+    const response = await fetch(`/admin/dashboard/new_output_problem/search?q=${query}`);
 
-            render(result);
-        })
+    const result = await response.json();
 
-        </script>
+    render(result);
+})
+
+</script>
 
 {% endblock %}
 
