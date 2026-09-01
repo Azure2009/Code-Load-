@@ -10,59 +10,61 @@
 {% block body %}
 
 <div class="min-h-screen bg-slate-100 p-10">
-    <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit border hover:bg-yellow-500 hover:transition-all duration-200">
+    <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-        class="lucide lucide-chevron-left-icon lucide-chevron-left"><path d="m15 18-6-6 6-6"/>
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
         </svg>
     </div>
-    <div class="flex flex-1 flex-col px-10 py-2">
-        <p class="text-sm text-slate-500 italic">
-            Create a new output prediction exercise.
-        </p>
-        <form action="/admin/dashboard/new_output_problem" method="POST" class="flex flex-col gap-y-4 p-4 border-2 bg-white">
 
-            <input type="hidden" name= "difficulty" id="difficulty" value="">
+    <div class="grid grid-cols-2 mx-10 divide-x-2 divide-dashed divide-yellow-300">
+        <div class="flex flex-col bg-yellow-500 p-4">
 
-            <div class="flex ml-auto">
-                <p class="mr-2">Select difficulty:</p>
-                <div class="font-bold">
+            <input type="hidden" value="" name="problem_id" id="problem_id">
 
-                    <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
-                    <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
-                    <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
+            <p class="text-sm text-white italic">
+                <span class="text-red-500">Delete</span> an output prediction exercise.
+            </p>
 
+            <input type="search" name="search_bar" id="search_bar" placeholder="Search problems..." autocomplete="off" class="mt-2 text-white px-2 w-fit border-2 border-slate-300">                
+            
+            
+            <div id="results_panel"></div>
+        </div> 
+
+        <form action="/admin/dashboard/new_output_problem" method="POST" class="flex flex-col gap-y-4 p-4 bg-yellow-500 text-white">
+
+            <input type="hidden" name="difficulty" id="difficulty" value="">
+            <div class="flex items-center">
+                <p class="text-sm italic">
+                    <span class="text-blue-500">Create</span> a new output prediction exercise.
+                </p>
+                <div class="flex ml-auto">
+                    <p class="mr-2">Select difficulty:</p>
+                    <div class="difficulty-btn">
+
+                        <button type="button" onclick="select_difficulty(this)" class="px-2" data-value="Easy">Easy</button>
+                        <button type="button" onclick="select_difficulty(this)" class="px-2" data-value="Medium">Medium</button>
+                        <button type="button" onclick="select_difficulty(this)" class="px-2" data-value="Hard">Hard</button>
+
+                    </div>
                 </div>
             </div>
 
             <label for="problem_title">Problem Title:</label>
-            <textarea name="problem_title" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
+            <textarea name="problem_title" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
 
             <label for="problem_title">Problem Description:</label>
-            <textarea name="problem_description" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
+            <textarea name="problem_description" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
                 
             <label for="coding_problem">Coding Problem</label>
-            <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 rounded-xl p-2 resize-none focus:outline-yellow-500" required></textarea>
+            <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
 
             <label for="expected_output">Expected Output</label>
-            <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" required></textarea>
+            <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
 
             
-            <input type="submit" value="Submit" class="w-fit bg-yellow-300 text-white px-10 py-1 rounded-xl self-center hover:bg-yellow-500 transition-all duration-200">
-            
-
+            <input type="submit" value="Submit" class="w-fit bg-yellow-400 text-white px-10 py-1 self-center hover:bg-yellow-300 transition-all duration-200">
         </form>
-    </div>
-
-    <div class="">
-
-        <input type="search" name="search_bar" id="search_bar" placeholder="Search problems..." autocomplete="off">
-        
-        <input type="hidden" value="" name="problem_id" id="problem_id">
-
-        <div id="results_panel"></div>
-
-        <input type="button" onclick="delete_problem()" value="Delete Selected Problem" class=""></input>
-
     </div>
 </div>
 
@@ -134,8 +136,6 @@ function toggle(div) {
     document.getElementById('problem_id').value = selectedProblemId;
 
 }
-
-
 
 document.getElementById('search_bar').addEventListener('input', async i => {
 

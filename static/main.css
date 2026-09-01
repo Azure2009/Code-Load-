@@ -1,1 +1,14 @@
 @import "tailwindcss";
+
+.difficulty-btn .active {
+
+    background-color: #894b00;
+    
+}
+
+@theme {
+
+    --color-neutralYellow: oklch(0.612305 0.14375 90);
+    --color-turquoise: oklch(0.59082 0.14375 180);
+
+}
