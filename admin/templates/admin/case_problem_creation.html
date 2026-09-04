@@ -8,102 +8,107 @@
 
 {% block body %}
 
-    <a href="/admin/dashboard" class="home-btn" aria-label="Home">
-        <span>←</span>
-    </a>
+<div class="min-h-screen bg-slate-100 p-4">
+    <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        </svg>
+    </div>
 
-    <div class="admin-card">
+    <div class="flex-1 mx-20 text-white bg-yellow-500 p-2">
 
-    <h1>Create Case Problem</h1>
+        <div class="mb-10">
+            <p class="text-3xl">Create Case Problem</p>
 
-    <p class="section-subtitle">
-        Build a coding challenge with examples,
-        constraints and optional hints.
-    </p>
+            <p class="italic">
+                Build a coding challenge with examples,
+                constraints and optional hints.
+            </p>
+        </div>
 
-        <form action="/admin/dashboard/new_case_problem" method="POST">
-
-            <section class="form-section">
-
-            <h3>What is the difficulty of the coding problem?</h3>
+        <form action="/admin/dashboard/new_case_problem" method="POST" class="flex flex-col gap-y-4">
 
             <input type="hidden" name= "difficulty" id="selected_difficulty" value="">
 
-            <div class="difficulty-btn">
+            <div class="flex ml-auto">
+                <p class="mr-2">Select difficulty:</p>
 
-            <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
-            <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
-            <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
-
+                <div class="difficulty-btn">
+                    <button type="button" onclick="select_difficulty(this)" data-value="Easy">Easy</button>
+                    <button type="button" onclick="select_difficulty(this)" data-value="Medium">Medium</button>
+                    <button type="button" onclick="select_difficulty(this)" data-value="Hard">Hard</button>
+                </div>
             </div>
 
-            </section>
+            <div class="flex items-center">
+                <label for="problem_title" class="mr-2">Problem Title:</label>
+                <input name="problem_title" id="problem_title" required class="border border-slate-300 px-2 focus:outline-white"/>
+            </div>   
 
-            <section class="form-section">
+            <div class="flex flex-col">
+                <label for="coding_problem">Coding Problem</label>
+                <textarea name="coding_problem" id="coding_problem" required class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <label for="problem_title">Problem Title:</label>
-            <textarea name="problem_title" id="problem_title" required></textarea>
-            <br>
-            <br>    
-            <label for="coding_problem">Coding Problem</label>
-            <textarea name="coding_problem" id="coding_problem" required></textarea>
-            
-            </section>
+            <div class="flex flex-col">
+                <label for="examples">Provide some examples for input and expected output</label>
+                <textarea name="examples" id="examples" required class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <section class="form-section">
+            <div class="flex flex-col">
+                <label for="constraints">Constraints</label>
+                <textarea name="constraints" id="constraints" required class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <p>Provide some examples for input and expected output.</p>
-            <label for="examples">Give examples</label>
-            <textarea name="examples" id="examples" required></textarea>
+            <div class="flex flex-col">
+                <label for="follow_ups">follow-ups (Optional)</label>
+                <textarea name="follow_ups" id="follow_ups" class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <label for="constraints">Constraints</label>
-            <textarea name="constraints" id="constraints" required></textarea>
+            <div class="flex flex-col">
+                <label for="hints">Hints (Optional)</label>
+                <textarea name="hints" id="hints" class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            </section>
+            <div class="flex flex-col">
+                <label for="function_name">Function name</label>
+                <textarea name="function_name" id="function_name" required class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <section class="form-section">
+            <div class="flex flex-col">
+                <label for="args">Arguments/Parameters</label>
+                <textarea name="args" id="args" class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
-            <label for="follow_ups">follow-ups (Optional)</label>
-            <textarea name="follow_ups" id="follow_ups" ></textarea>
-
-            <label for="hints">Hints (Optional)</label>
-            <textarea name="hints" id="hints" ></textarea>
-
-            <label for="function_name">Function name</label>
-            <textarea name="function_name" id="function_name" ></textarea>
-
-            <label for="args">Arguments/Parameters</label>
-            <textarea name="args" id="args" ></textarea>
-
-            <label for="return_type">Return value's datatype</label>
-            <textarea name="return_type" id="return_type" ></textarea>
+            <div class="flex flex-col">
+                <label for="return_type">Return value's datatype</label>
+                <textarea name="return_type" id="return_type" class="border border-slate-300 px-2 focus:outline-white resize-none"></textarea>
+            </div>
 
             <label for="unordered">
             <input type="checkbox" name="unordered" id="unordered">
             Output order doesn't matter (e.g. combinations, subsets)
             </label>
 
-            </section>
-
-            <input type="submit" value="Submit">
+            <input type="submit" value="Submit" class="w-fit bg-yellow-400 text-white px-10 py-1 self-center hover:bg-yellow-300 transition-all duration-200">
 
         </form>
-
     </div>
 
-    <script>
+</div>
 
-                function select_difficulty(btn) {
+<script>
 
-                    document.querySelectorAll('[data-value]').forEach(b => b.classList.remove('active'));
+    function select_difficulty(btn) {
 
-                    btn.classList.add('active')
-                    
-                    document.getElementById('selected_difficulty').value = btn.dataset.value
+        document.querySelectorAll('[data-value]').forEach(b => b.classList.remove('active'));
 
-                }
+        btn.classList.add('active')
+        
+        document.getElementById('selected_difficulty').value = btn.dataset.value
 
+    }
 
-            </script>
+</script>
 
 {% endblock %}

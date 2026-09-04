@@ -1,14 +1,121 @@
 @import "tailwindcss";
+@import "./admin/static/style.css";
+
+.difficulty-btn button {
+
+    padding-left: 4px;
+    padding-right: 4px;
+
+}
+
 
 .difficulty-btn .active {
 
     background-color: #894b00;
-    
+
+}
+
+#results_pnel {
+
+    position: relative;
+
+    display: grid;
+
+    margin-top: 2px;
+
+}
+
+.editor-container {
+
+    display: flex;
+
+    background: white;
+
+    border: 1px solid var(--border);
+
+    border-radius: 18px;
+
+    overflow: hidden;
+
+    margin-top: 10px;
+
+    margin-bottom: 24px;
+
+}
+
+.line-numbers {
+
+    min-width: 50px;
+
+    padding-top: 16px;
+    padding-right: 10px;
+
+    background: #f7f7f8;
+
+    color: #8e8e93;
+
+    text-align: right;
+
+    font-family:
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        monospace;
+
+    font-size: inherit;
+
+    line-height: 24px;
+
+    user-select: none;
+
+    border-right: 1px solid var(--border);
+
+    overflow: hidden;
+
+}
+
+.line-numbers div {
+
+    height: 24px;
+
+    line-height: 24px;
+
+}
+
+.editor-container textarea {
+
+    flex: 1;
+
+    border: none;
+
+    resize: vertical;
+
+    min-height: 220px;
+
+    padding-top: 16px;
+
+    padding-left: 12px;
+
+    padding-right: 12px;
+
+    font-family:
+        SFMono-Regular,
+        Menlo,
+        Monaco,
+        monospace;
+
+    font-size: inherit;
+
+    line-height: 24px;
+
+    outline: none;
+
 }
 
 @theme {
 
     --color-neutralYellow: oklch(0.612305 0.14375 90);
+
     --color-turquoise: oklch(0.59082 0.14375 180);
 
 }

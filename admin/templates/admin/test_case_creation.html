@@ -1,182 +1,241 @@
 {% extends 'admin/base.html' %}
 
-{% block head %} 
+{% block head %}
 
-{{ super() }} <!-- keeps the CSS link from base.html -->
+{{ super() }}
 
 {% endblock %}
 
 {% block body %}
 
-    <a href="/admin/dashboard" class="home-btn" aria-label="Home">
-        <span>←</span>
-    </a>
+<div class="min-h-screen bg-slate-100 p-4">
 
-    <div class="testcase-layout">
+    <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        </svg>
+    </div>
 
-        <div class="search-card">
+    <div class="mx-10">
 
-       <input type="search" name="search_bar" id="search_bar" style="margin-right: 85%;" placeholder="Search for problem" autocomplete="off">
-       
-       <input type="hidden" value="" name="problem_id_proxy" id="problem_id_proxy">
+        <div class="">
 
-       <input type="button" onclick="delete_problem()" value="Delete" style="display: inline-block" class="delete-btn"></input>
+            <input type="hidden" value="" name="problem_id_proxy" id="problem_id_proxy">
 
-       <div id="results_panel" style="border: 1px solid #ccc; display:none;"></div>
-
-       </div>
-
-       <div class="admin-card">
-
-        <form action="/admin/dashboard/new_test_case" method="POST">
-
-            <input type="hidden" name="problem_id" id="problem_id" value="">
-            
-            <p>You can submit multiple test cases at the same time. A new line would be considered as a new test case.</p>
-            <label for="new_TestCases">Test Case</label>
-
-            <div class="editor-container">
-            <div class="line-numbers" id="tc-lines">1</div>
-            <textarea name="new_TestCases" id="new_TestCases" placeholder="Write testcase.." required></textarea>
-            </div>
-
-            <br>
-            <br>
-            <br>
-            <p>A new line would be considered as a new expected output.Test case and expected output are partnered based on their number in the number line.</p>
-            <label for="new_expected_output">Expected output</label>
-
-            <div class="editor-container">
-            <div class="line-numbers" id="eo-lines">1</div>
-            <textarea name="new_expected_output" id="new_expected_output" placeholder="Write expected output.." required></textarea>
+            <div class="flex">
+                <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem" autocomplete="off" class="border border-yellow-500 px-2 focus:outline-yellow-300">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                class="relative lucide lucide-trash2-icon lucide-trash-2 text-red-500 ml-2"
+                onclick="delete_problem()"
+                >
+                <path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                </svg>
             </div>
             
-            <input type="submit" value="Submit">
+
+            <div id="results_panel"></div>
+
+        </div>
+        
+        <form action="/admin/dashboard/new_test_case" method="POST" class="bg-yellow-500 p-4">
+
+            <input
+                type="hidden"
+                name="problem_id"
+                id="problem_id"
+                value=""
+            >   
+
+            <div class="grid grid-cols-2 gap-x-4">
+                
+                <div class="col-start-1">
+                    <p class="text-white italic mb-6.5">
+                        You can submit multiple test cases at the same time.
+                        A new line would be considered as a new test case.
+                    </p>
+
+                    <div class="editor-container">
+
+                        <div
+                            class="line-numbers"
+                            id="tc-lines"
+                        >
+                            <div>1</div>
+                        </div>
+
+                        <textarea
+                            name="new_TestCases"
+                            id="new_TestCases"
+                            placeholder="Write testcase.."
+                            required
+                            spellcheck="false"
+                        ></textarea>
+
+                    </div>
+                    
+                </div>
+
+                <div class="col-start-2">
+                    <p class="text-white italic mb-6.5">
+                        A new line would be considered as a new expected output.
+                        Test case and expected output are partnered based on
+                        their number in the number line.
+                    </p>
+
+                    <div class="editor-container">
+
+                        <div
+                            class="line-numbers"
+                            id="eo-lines"
+                        >
+                            <div>1</div>
+                        </div>
+
+                        <textarea
+                            name="new_expected_output"
+                            id="new_expected_output"
+                            placeholder="Write expected output.."
+                            required
+                            spellcheck="false"
+                        ></textarea>
+
+                    </div>
+                </div>
+
+            </div>
+
+            <input type="submit" value="Submit" class="grid justify-self-center w-fit bg-yellow-400 text-white px-10 py-1 hover:bg-yellow-300 transition-all duration-200">
 
         </form>
 
-        </div>
-
     </div>
 
-    <script>
+</div>
 
-        let selectedProblemId = null
 
-        function delete_problem() {
+<script>
 
-            document.getElementById("problem_id_proxy").value = document.getElementById("problem_id").value
+    let selectedProblemId = null;
 
-            const problem_id_raw = document.getElementById("problem_id_proxy").value 
+    function delete_problem() {
 
-            window.location.href = `/admin/dashboard/new_test_case/delete/${problem_id_raw}`
+        if (!document.getElementById("problem_id").value) {
+
+            alert('No case problem was selected.')
+            return
 
         }
 
-        function render(results) {
+        document.getElementById("problem_id_proxy").value = document.getElementById("problem_id").value;
 
-            const panel = document.getElementById('results_panel');
+        const problem_id_raw = document.getElementById("problem_id_proxy").value;
 
-            if (results.length === 0) {
+        window.location.href = `/admin/dashboard/new_test_case/delete/${problem_id_raw}`;
+    }
 
-                panel.style.display = 'none';
-                return;
+    function render(results) {
 
-            }
+        const panel = document.getElementById('results_panel');
 
-            panel.style.display = 'block';
+        if (results.length === 0) {
 
-            panel.innerHTML = results.map(item =>
+            panel.style.display = 'none';
 
-                `<div 
-                id="${item.id}" 
+            return;
+        }
+
+        panel.style.display = 'block';
+
+        panel.innerHTML = results.map(item =>
+
+            `<div
+                id="${item.id}"
                 onclick="toggle(this)"
-                style="padding: 8px; cursor: pointer; display: block; background-color: ${item.id == selectedProblemId ? '#d0ebff' : ''}">
+                style="
+                    padding: 8px;
+                    cursor: pointer;
+                    display: block;
+                    background-color:
+                        ${item.id == selectedProblemId
+                            ? '#d0ebff'
+                            : ''}
+                "
+            >
                 ${item.title}
-                </div>`
+            </div>`
 
-            ).join('');
+        ).join('');
+    }
 
-        }
+    function toggle(div) {
 
-        function toggle(div) {
+        document.querySelectorAll('#results_panel div').forEach(d => {
 
-            document.querySelectorAll('#results_panel div').forEach(d => {
+            d.style.backgroundColor = '';
 
-                d.style.backgroundColor = '';
+        });
 
-            });
+        div.style.backgroundColor = '#d0ebff';
 
-            div.style.backgroundColor = '#d0ebff';
+        selectedProblemId = div.id;
 
-            selectedProblemId = div.id;
+        document.getElementById('problem_id').value = selectedProblemId;
+    }
 
-            document.getElementById('problem_id').value = selectedProblemId;
-
-        }
-
-        document.querySelector('form').addEventListener('submit', function(e) {
+    document.querySelector('form').addEventListener('submit', function(e) {
 
             if (!selectedProblemId) {
 
-                e.preventDefault()
-                alert('Please select a problem first.')
+                e.preventDefault();
 
+                alert('Please select a problem first by using the search bar.');
             }
 
+    });
 
-        })
+    document.getElementById('search_bar').addEventListener('input', async function(e) {
 
-        document.getElementById('search_bar').addEventListener('input', async i => {
+            const query = e.target.value;
 
-            const query = i.target.value;
-
-            const response = await fetch(`/admin/dashboard/new_test_case/query?q=${query}`);
+            const response = await fetch(
+                `http://127.0.0.1:5000/admin/dashboard/new_test_case/query?q=${query}`
+            );
 
             const result = await response.json();
 
             render(result);
-        })
 
-        function updateLineNumbers(textareaId, linesId) {
+    });
 
-            const textarea = document.getElementById(textareaId);
-            const lines = document.getElementById(linesId);
+    function updateLineNumbers(textareaId, linesId) {
 
-            function refresh() {
+        const textarea = document.getElementById(textareaId);
 
-                const count =
-                    textarea.value.split('\n').length;
+        const lines = document.getElementById(linesId);
 
-                lines.innerHTML =
-                    Array.from(
-                        { length: count },
-                        (_, i) => i + 1
-                    ).join('<br>');
 
-            }
+        function refresh() {
 
-            textarea.addEventListener('input', refresh);
+            const count = textarea.value.split('\n').length;
 
-            textarea.addEventListener('scroll', () => {
-
-                lines.scrollTop = textarea.scrollTop;
-
-            });
-
-            refresh();
+            lines.innerHTML = Array.from({ length: count }, (_, i) => `<div>${i + 1}</div>`).join('');
         }
 
-        updateLineNumbers(
-            'new_TestCases',
-            'tc-lines'
-        );
+        textarea.addEventListener('input', refresh);
 
-        updateLineNumbers(
-            'new_expected_output',
-            'eo-lines'
-        );
+        textarea.addEventListener('scroll', () => {
 
-    </script>
+            lines.scrollTop = textarea.scrollTop;
+
+        });
+
+        refresh();
+
+    }
+
+    updateLineNumbers('new_TestCases', 'tc-lines');
+    updateLineNumbers('new_expected_output', 'eo-lines');
+
+</script>
 
 {% endblock %}
