@@ -10,6 +10,20 @@
 
 <div class="flex flex-col min-h-screen">
 
+    <div id="confirmation" class="fixed inset-0 justify-center items-center hidden z-10">
+        
+        <div class="flex justify-center bg-yellow-500 text-2xl text-white w-3xl h-fit z-30 py-4">
+            <div>
+                <p>Are you sure you want to sign out?</p>
+                <div class="flex justify-center mt-4">
+                    <button class="mr-4 hover:bg-yellow-300 transition-bg duration-200 px-2" onclick="verdict(this)" value="true">Yes</button>
+                    <button class="ml-4 hover:bg-yellow-300 transition-bg duration-200 px-2" onclick="verdict(this)" value="false">No</button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
     <div class="flex bg-yellow-500 items-center text-white p-4 cursor-default">
         <div>
             <p class="font-bold text-2xl">Administrator Console</p>
@@ -20,7 +34,7 @@
             <p>{{admin.username}}</p>
             <button
                 class="ml-4 hover:text-slate-300 transition-colors duration-200"
-                onclick="window.location.href='/admin/logout'"
+                onclick="confirm()"
                 title="Sign Out"
             >
                 Sign out
@@ -56,5 +70,28 @@
     </div>
 
 </div>
+
+<script>
+
+    function confirm() {
+
+        document.getElementById('confirmation').style.display = 'flex';
+
+    };
+
+    function verdict(button) {
+
+        if (button.value == 'true') {
+
+            window.location.href = '/admin/logout';
+
+        }
+
+        document.getElementById('confirmation').style.display = 'none';
+
+    }
+
+
+</script>
 
 {% endblock %}

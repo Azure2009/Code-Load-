@@ -2,142 +2,156 @@
 
 {% block body %}
 
-<a href="/dashboard" class="home-btn" aria-label="Home">
-        <span>←</span>
-</a>
+<div class="p-4">
 
-<div class="profile-dashboard">
+    <a href="/dashboard" class="flex" aria-label="Home">
+            <span>←</span>
+    </a>
 
-    <div class="profile-card">
+    <div class="flex justify-center ">
+        <div class="flex w-3xl h-40 border p-2 bg-yellow-300">
+            <div class="size-36 border mr-2">
+                <p class="flex justify-center items-center text-3xl h-full bg-yellow-500 outline-yellow-500">
+                    {{user.username[0]|upper}}
+                </p>
+            </div>
+            <div class="flex flex-1 flex-col text-xl">
+                <div class="flex items-center">
+                    <p class="text-3xl font-bold">{{ user.username }}</p>
+                    <button onclick="window.location.href='/logout'" class="ml-auto bg-red-500 px-2 cursor-pointer">
+                        ⎋ Logout
+                    </button>
+                </div>
+                <p class="text-slate-500 italic">Keep building your coding skills.</p>
+                <!-- <div class="grid grid-cols-2 gap-y-2">
+                    <div class="col-start-1">
+                        <p class="text-3xl font-bold">{{ user.username }}</p>
+                        <p class="text-slate-500 italic">Keep building your coding skills.</p>
+                    </div>
+                    <div class=" col-start-2">
+                        <button onclick="window.location.href='/logout'" class="flex ml-auto bg-red-500 text-white px-2">
+                            ⎋ Logout
+                        </button>
+                    </div>
+                </div> -->
+                <div class="flex flex-col flex-1 justify-center">
+                    <div class="">
+                        <span class="">{{total_unsolved_op}}</span>
+                        <span class="">Output Problems Unsolved</span>
+                    </div>
 
-    <div class="profile-left">
-
-        <div class="profile-avatar">
-            {{ user.username[0]|upper }}
-        </div>
-
-        <div class="profile-info">
-            <h2>{{ user.username }}</h2>
-            <p>Keep building your coding skills.</p>
+                    <div class="">
+                        <span class="">{{total_unsolved_cp}}</span>
+                        <span class="">Case Problems Unsolved</span>
+                    </div>
+                </div>
+            </div>
         </div>
 
     </div>
 
-    <button
-        class="logout-btn"
-        onclick="window.location.href='/logout'"
-    >
-        ⎋ Logout
-    </button>
+    <div class="">
 
-    </div>
+        <div class="">
 
-    <div class="stats-card">
+        <div class="">
 
-        <div class="stat-item">
-            <span class="stat-number">{{total_unsolved_op}}</span>
-            <span class="stat-label">Output Problems Unsolved</span>
+            
+
         </div>
 
-        <div class="stat-item">
-            <span class="stat-number">{{total_unsolved_cp}}</span>
-            <span class="stat-label">Case Problems Unsolved</span>
+
+        
+
         </div>
 
     </div>
 
+
+
+        <h1>Output Problems</h1>
+
+        <div class="progress-grid">
+
+            <div class="difficulty-card easy">
+
+                <div class="">
+                    <span class="">{{solved_op_hashmap['Easy']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_op_hashmap['Easy']}}</span>
+                </div>
+
+                <p>Easy</p>
+
+            </div>
+
+            <div class="">
+
+                <div class="">
+                    <span class="">{{solved_op_hashmap['Medium']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_op_hashmap['Medium']}}</span>
+                </div>
+
+                <p>Medium</p>
+
+            </div>
+
+            <div class="difficulty-card hard">
+
+                <div class="">
+                    <span class="">{{solved_op_hashmap['Hard']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_op_hashmap['Hard']}}</span>
+                </div>
+
+                <p>Hard</p>
+
+            </div>
+
+        </div>
+
+        <h1>Case Problems</h1>
+
+        <div class="">
+
+            <div class="">
+
+                <div class="">
+                    <span class="">{{solved_cp_hashmap['Easy']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_cp_hashmap['Easy']}}</span>
+                </div>
+
+                <p>Easy</p>
+
+            </div>
+
+            <div class="">
+
+                <div class="">
+                    <span class="">{{solved_cp_hashmap['Medium']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_cp_hashmap['Medium']}}</span>
+                </div>
+
+                <p>Medium</p>
+
+            </div>
+
+            <div class="difficulty-card hard">
+
+                <div class="">
+                    <span class="">{{solved_cp_hashmap['Hard']}}</span>
+                    <span class="">/</span>
+                    <span class="">{{total_cp_hashmap['Hard']}}</span>
+                </div>
+
+                <p>Hard</p>
+
+            </div>
+
+    </div>
 </div>
-
-<section class="progress-section">
-
-    <h1>Output Problems</h1>
-
-    <div class="progress-grid">
-
-        <div class="difficulty-card easy">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_op_hashmap['Easy']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_op_hashmap['Easy']}}</span>
-            </div>
-
-            <p>Easy</p>
-
-        </div>
-
-        <div class="difficulty-card medium">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_op_hashmap['Medium']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_op_hashmap['Medium']}}</span>
-            </div>
-
-            <p>Medium</p>
-
-        </div>
-
-        <div class="difficulty-card hard">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_op_hashmap['Hard']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_op_hashmap['Hard']}}</span>
-            </div>
-
-            <p>Hard</p>
-
-        </div>
-
-    </div>
-
-</section>
-
-<section class="progress-section">
-
-    <h1>Case Problems</h1>
-
-    <div class="progress-grid">
-
-        <div class="difficulty-card easy">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_cp_hashmap['Easy']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_cp_hashmap['Easy']}}</span>
-            </div>
-
-            <p>Easy</p>
-
-        </div>
-
-        <div class="difficulty-card medium">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_cp_hashmap['Medium']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_cp_hashmap['Medium']}}</span>
-            </div>
-
-            <p>Medium</p>
-
-        </div>
-
-        <div class="difficulty-card hard">
-
-            <div class="fraction">
-                <span class="numerator">{{solved_cp_hashmap['Hard']}}</span>
-                <span class="separator">/</span>
-                <span class="denominator">{{total_cp_hashmap['Hard']}}</span>
-            </div>
-
-            <p>Hard</p>
-
-        </div>
-
-    </div>
-
-</section>
 
 {% endblock %}

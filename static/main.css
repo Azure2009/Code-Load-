@@ -1,5 +1,5 @@
 @import "tailwindcss";
-@import "./admin/static/style.css";
+@import "../admin/static/style.css";
 
 .difficulty-btn button {
 
@@ -56,11 +56,7 @@
 
     text-align: right;
 
-    font-family:
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        monospace;
+    font-family: SFMono-Regular, Menlo, Monaco, monospace;
 
     font-size: inherit;
 
@@ -98,11 +94,7 @@
 
     padding-right: 12px;
 
-    font-family:
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        monospace;
+    font-family: SFMono-Regular, Menlo, Monaco, monospace;
 
     font-size: inherit;
 

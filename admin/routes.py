@@ -98,7 +98,7 @@ def outputProblem_creation():
 
       except AssertionError:
 
-         return render_template('admin/popup.html', show_popup = True, redirect_url = '/admin/dashboard/new_output_problem', popup_message = "A difficulty must be selected.")
+         return render_template('admin/popup.html', redirect_url='/admin/dashboard/new_output_problem', popup_message="A difficulty must be selected.")
 
       except Exception as e:
 
@@ -247,7 +247,6 @@ def test_case_creation():
    
       def parse_input_line_to_json(line: str) -> str:
          
-         # Split by top-level commas only (not commas inside brackets)
          args = split_top_level(line)
          parsed_args = [ast.literal_eval(arg.strip()) for arg in args]
          return json.dumps(parsed_args)
@@ -340,3 +339,4 @@ def query_handler():
          results.append({'id': problem[0], 'title':problem[1]})
 
    return jsonify(results)
+ 

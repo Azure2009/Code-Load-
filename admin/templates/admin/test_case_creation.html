@@ -16,7 +16,7 @@
         </svg>
     </div>
 
-    <div class="mx-10">
+    <div class="flex flex-col gap-y-10 mx-10">
 
         <div class="">
 
@@ -36,77 +36,86 @@
             <div id="results_panel"></div>
 
         </div>
-        
-        <form action="/admin/dashboard/new_test_case" method="POST" class="bg-yellow-500 p-4">
 
-            <input
-                type="hidden"
-                name="problem_id"
-                id="problem_id"
-                value=""
-            >   
+        <div class="relative">
 
-            <div class="grid grid-cols-2 gap-x-4">
+            <div id="hintOverlay" class="absolute flex flex-col w-full h-full bg-black/90 justify-center items-center cursor-default gap-y-2 z-10">
                 
-                <div class="col-start-1">
-                    <p class="text-white italic mb-6.5">
-                        You can submit multiple test cases at the same time.
-                        A new line would be considered as a new test case.
-                    </p>
-
-                    <div class="editor-container">
-
-                        <div
-                            class="line-numbers"
-                            id="tc-lines"
-                        >
-                            <div>1</div>
-                        </div>
-
-                        <textarea
-                            name="new_TestCases"
-                            id="new_TestCases"
-                            placeholder="Write testcase.."
-                            required
-                            spellcheck="false"
-                        ></textarea>
-
-                    </div>
-                    
-                </div>
-
-                <div class="col-start-2">
-                    <p class="text-white italic mb-6.5">
-                        A new line would be considered as a new expected output.
-                        Test case and expected output are partnered based on
-                        their number in the number line.
-                    </p>
-
-                    <div class="editor-container">
-
-                        <div
-                            class="line-numbers"
-                            id="eo-lines"
-                        >
-                            <div>1</div>
-                        </div>
-
-                        <textarea
-                            name="new_expected_output"
-                            id="new_expected_output"
-                            placeholder="Write expected output.."
-                            required
-                            spellcheck="false"
-                        ></textarea>
-
-                    </div>
-                </div>
-
+                <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                class="lucide lucide-info text-white">
+                <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
+                </svg>
+                <p class="text-white text-2xl font-bold">Search and select a problem to start writing test cases</p>
+                
             </div>
 
-            <input type="submit" value="Submit" class="grid justify-self-center w-fit bg-yellow-400 text-white px-10 py-1 hover:bg-yellow-300 transition-all duration-200">
+            <form action="/admin/dashboard/new_test_case" method="POST" class="bg-yellow-500 p-4">
 
-        </form>
+                <input type="hidden" name="problem_id" id="problem_id" value="">   
+
+                <div class="grid grid-cols-2 gap-x-4">
+                    
+                    <div class="col-start-1">
+                        <p class="text-white italic mb-6.5">
+                            You can submit multiple test cases at the same time.
+                            A new line would be considered as a new test case.
+                        </p>
+
+                        <div class="editor-container">
+
+                            <div
+                                class="line-numbers"
+                                id="tc-lines"
+                            >
+                                <div>1</div>
+                            </div>
+
+                            <textarea
+                                name="new_TestCases"
+                                id="new_TestCases"
+                                placeholder="Write testcase.."
+                                required
+                                spellcheck="false"
+                            ></textarea>
+
+                        </div>
+                        
+                    </div>
+
+                    <div class="col-start-2">
+                        <p class="text-white italic mb-6.5">
+                            A new line would be considered as a new expected output.
+                            Test case and expected output are partnered based on
+                            their number in the number line.
+                        </p>
+
+                        <div class="editor-container">
+
+                            <div
+                                class="line-numbers"
+                                id="eo-lines"
+                            >
+                                <div>1</div>
+                            </div>
+
+                            <textarea
+                                name="new_expected_output"
+                                id="new_expected_output"
+                                placeholder="Write expected output.."
+                                required
+                                spellcheck="false"
+                            ></textarea>
+
+                        </div>
+                    </div>
+
+                </div>
+
+                <input type="submit" value="Submit" class="grid justify-self-center w-fit bg-yellow-400 text-white px-10 py-1 hover:bg-yellow-300 transition-all duration-200">
+
+            </form>
+
+        </div>
 
     </div>
 
@@ -130,7 +139,14 @@
 
         const problem_id_raw = document.getElementById("problem_id_proxy").value;
 
-        window.location.href = `/admin/dashboard/new_test_case/delete/${problem_id_raw}`;
+        const confirmed = confirm('Are you sure you want to delete this case problem?')
+
+        if (confirmed) {
+
+            window.location.href = `/admin/dashboard/new_test_case/delete/${problem_id_raw}`;
+
+        }
+
     }
 
     function render(results) {
@@ -180,6 +196,15 @@
         selectedProblemId = div.id;
 
         document.getElementById('problem_id').value = selectedProblemId;
+
+        const overlay = document.getElementById('hintOverlay');
+
+        if (overlay) {
+
+            overlay.style.display = 'none';
+
+        }
+
     }
 
     document.querySelector('form').addEventListener('submit', function(e) {
