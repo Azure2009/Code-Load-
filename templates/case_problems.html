@@ -2,52 +2,33 @@
 
 {% block head %} 
 
-
-
 {% endblock %}
 
 {% block body %}
+    <div class="min-h-screen bg-slate-200 p-4">
+        <div onclick="window.location.href='/dashboard?fresh=true' " class="flex w-fit mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+            </svg>
+        </div>
 
-    <a href="/dashboard?fresh=true" class="home-btn" aria-label="Home">
-        <span>←</span>
-    </a>
-
-    <h3>Case Problems</h3>
-
-    <h1>Python<span><h1 class="python-logo"></h1></span></h1></h1>
-
-    <br>
-
-    <div class="python_container">
-
-        {% for problem in case_problems_list %}
-
-        <ol>
-                      
-            <div class="problem-card">
-
-                <div>
-
-                    <h3>{{problem.title}}</h3>
-
-                    <p>
-                        {{problem.difficulty}}
-                        •
-                        {{status_list[loop.index0]}}
-                    </p>
-
-                </div>
-
-                <a href="/case_problems/solving-page/{{problem.id}}?fresh=true">
-                    Solve →
-                </a>
-
+        <div class="mx-10">
+            <p class="text-5xl mb-2">Case Problems</p>
+            <div class="flex flex-col gap-y-6 bg-white p-2">
+                {% for problem in case_problems_list %}
+                    <div class="flex flex-col bg-slate-200 p-2">                 
+                        <p class="text-3xl">{{problem.title}}</p>
+                        <div class="flex items-center">
+                            <p class="">
+                                {{problem.difficulty}} • {{status_list[loop.index0]}}
+                            </p>
+                            <a href="/case_problems/solving-page/{{problem.id}}?fresh=true" class="ml-auto bg-blue-500 text-white px-2">
+                                Solve →
+                            </a>
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
-
-        </ol>
-
-        {% endfor %}
-
+        </div>
     </div>
-
 {% endblock %}

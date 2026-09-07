@@ -2,11 +2,13 @@
 
 {% block body %}
 
-<div class="p-4">
+<div class="p-4 min-h-screen bg-slate-200 cursor-default">
 
-    <a href="/dashboard" class="flex" aria-label="Home">
-            <span>←</span>
-    </a>
+    <div onclick="window.location.href='/dashboard' " class="flex w-fit mb-2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        </svg>
+    </div>
 
     <div class="flex justify-center ">
         <div class="flex w-3xl h-40 border p-2 bg-yellow-300">
@@ -18,31 +20,21 @@
             <div class="flex flex-1 flex-col text-xl">
                 <div class="flex items-center">
                     <p class="text-3xl font-bold">{{ user.username }}</p>
-                    <button onclick="window.location.href='/logout'" class="ml-auto bg-red-500 px-2 cursor-pointer">
+                    <button onclick="window.location.href='/logout'" class="ml-auto bg-red-500 px-2 cursor-pointer border border-red-300">
                         ⎋ Logout
                     </button>
                 </div>
-                <p class="text-slate-500 italic">Keep building your coding skills.</p>
-                <!-- <div class="grid grid-cols-2 gap-y-2">
-                    <div class="col-start-1">
-                        <p class="text-3xl font-bold">{{ user.username }}</p>
-                        <p class="text-slate-500 italic">Keep building your coding skills.</p>
-                    </div>
-                    <div class=" col-start-2">
-                        <button onclick="window.location.href='/logout'" class="flex ml-auto bg-red-500 text-white px-2">
-                            ⎋ Logout
-                        </button>
-                    </div>
-                </div> -->
+                <p class="text-slate-500 italic">"Improving my python skills"</p>
+                
                 <div class="flex flex-col flex-1 justify-center">
                     <div class="">
-                        <span class="">{{total_unsolved_op}}</span>
-                        <span class="">Output Problems Unsolved</span>
+                        <span class="">Case Problems remaining: </span>
+                        <span class="">{{total_unsolved_cp}}</span>
                     </div>
 
                     <div class="">
-                        <span class="">{{total_unsolved_cp}}</span>
-                        <span class="">Case Problems Unsolved</span>
+                        <span class="">Output Problems remaining: </span>
+                        <span class="">{{total_unsolved_op}}</span>
                     </div>
                 </div>
             </div>
@@ -50,108 +42,75 @@
 
     </div>
 
-    <div class="">
+    <div class="mx-30 mt-10">
 
-        <div class="">
+        <p class="flex justify-center text-5xl font-bold mb-10">Stats</p>
 
-        <div class="">
+        <div class="flex flex-col gap-y-10">
+            <div class="grid grid-cols-3 bg-white p-4 gap-y-6">
+                <p class="col-start-1 col-span-3 text-3xl">Case Problems</p>
+                <div class="flex flex-col items-center">
+                    <div class="">
+                        <span class="">{{solved_cp_hashmap['Easy']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_cp_hashmap['Easy']}}</span>
+                    </div>
+                    <p class="text-green-500">Easy</p>
+                </div>
 
-            
+                <div class="flex flex-col items-center">
+                    <div class="">
+                        <span class="">{{solved_cp_hashmap['Medium']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_cp_hashmap['Medium']}}</span>
+                    </div>
+                    <p class="text-orange-500">Medium</p>
+                </div>
 
+                <div class="flex flex-col items-center">
+                    <div class="">
+                        <span class="">{{solved_cp_hashmap['Hard']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_cp_hashmap['Hard']}}</span>
+                    </div>
+                    <p class="text-red-500">Hard</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-3 bg-white p-4 gap-y-6">
+
+                <p class="col-start-1 col-span-3 text-3xl">Output Problems</p>
+
+                <div class="flex flex-col items-center">
+                    <div>
+                        <span class="">{{solved_op_hashmap['Easy']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_op_hashmap['Easy']}}</span>
+                    </div>
+                    <p class="text-green-500">Easy</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div>
+                        <span class="">{{solved_op_hashmap['Medium']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_op_hashmap['Medium']}}</span>
+                    </div>
+                    <p class="text-orange-500">Medium</p>
+                </div>
+
+                <div class="flex flex-col items-center">
+                    <div>
+                        <span class="">{{solved_op_hashmap['Hard']}}</span>
+                        <span class="">/</span>
+                        <span class="">{{total_op_hashmap['Hard']}}</span>
+                    </div>
+                    <p class="text-red-500">Hard</p>
+                </div>
+            </div>
         </div>
-
-
-        
-
-        </div>
-
     </div>
 
-
-
-        <h1>Output Problems</h1>
-
-        <div class="progress-grid">
-
-            <div class="difficulty-card easy">
-
-                <div class="">
-                    <span class="">{{solved_op_hashmap['Easy']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_op_hashmap['Easy']}}</span>
-                </div>
-
-                <p>Easy</p>
-
-            </div>
-
-            <div class="">
-
-                <div class="">
-                    <span class="">{{solved_op_hashmap['Medium']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_op_hashmap['Medium']}}</span>
-                </div>
-
-                <p>Medium</p>
-
-            </div>
-
-            <div class="difficulty-card hard">
-
-                <div class="">
-                    <span class="">{{solved_op_hashmap['Hard']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_op_hashmap['Hard']}}</span>
-                </div>
-
-                <p>Hard</p>
-
-            </div>
-
-        </div>
-
-        <h1>Case Problems</h1>
-
-        <div class="">
-
-            <div class="">
-
-                <div class="">
-                    <span class="">{{solved_cp_hashmap['Easy']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_cp_hashmap['Easy']}}</span>
-                </div>
-
-                <p>Easy</p>
-
-            </div>
-
-            <div class="">
-
-                <div class="">
-                    <span class="">{{solved_cp_hashmap['Medium']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_cp_hashmap['Medium']}}</span>
-                </div>
-
-                <p>Medium</p>
-
-            </div>
-
-            <div class="difficulty-card hard">
-
-                <div class="">
-                    <span class="">{{solved_cp_hashmap['Hard']}}</span>
-                    <span class="">/</span>
-                    <span class="">{{total_cp_hashmap['Hard']}}</span>
-                </div>
-
-                <p>Hard</p>
-
-            </div>
-
-    </div>
 </div>
 
 {% endblock %}
