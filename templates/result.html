@@ -2,64 +2,64 @@
 
 {% block body %}
 
-<a href="/case_problems/solving-page/{{id}}" class="home-btn" aria-label="Home">
-        <span>←</span>
+<div class="min-h-screen p-4">
+
+    <a href="/case_problems/solving-page/{{id}}" class="flex w-fit mb-2 cursor-default">
+        <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-[2.5px] transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        </svg>
     </a>
 
-<div class="result-page">
+    <div class="result-page">
 
-    <div class="result-card">
+        <div class="result-card">
 
-        <button
-            class="return-btn"
-            onclick="window.location.href='/dashboard?fresh=true'"
-        >
-            ← Return to Dashboard
-        </button>
+            <button
+                class="bg-blue-500 p-2 rounded-xl text-white mb-4 cursor-pointer hover:scale-105 transition-transform duration-200"
+                onclick="window.location.href='/dashboard?fresh=true'"
+            >
+                ← Return to Dashboard
+            </button>
 
-        <p class="dashboard-subtitle">
-    Note: Once you return to dashboard, solving page will be reset. Use back arrow to try again.
-</p>
-        
-        {% if verdict == "Accepted" %}
-            <div class="verdict accepted">
-                <div class="verdict-icon">✓</div>
-                <h1>{{ verdict }}</h1>
+            <p class="text-slate-500">
+        Note: Once you return to dashboard, solving page will be reset. Use back arrow to try again.
+    </p>
+            
+            {% if verdict == "Accepted" %}
+                <div class="verdict accepted">
+                    <div class="verdict-icon">✓</div>
+                    <h1>{{ verdict }}</h1>
+                </div>
+
+            {% elif verdict == "Wrong Answer" %}
+                <div class="verdict wrong">
+                    <div class="verdict-icon">✕</div>
+                    <h1>{{ verdict }}</h1>
+                </div>
+
+            {% elif verdict == "Syntax Error" or verdict == "Runtime Error" %}
+                <div class="verdict warning">
+                    <div class="verdict-icon">!</div>
+                    <h1>{{ verdict }}</h1>
+                </div>
+
+            {% elif verdict == "Time Limit Exceeded" %}
+                <div class="verdict warning">
+                    <div class="verdict-icon">⏱</div>
+                    <h1>{{ verdict }}</h1>
+                </div>
+            {% endif %}
+
+            <div class="output-card">
+
+                <p class="output-label">
+                    Program Output
+                </p>
+
+                <pre>{{ output }}</pre>
             </div>
-
-        {% elif verdict == "Wrong Answer" %}
-            <div class="verdict wrong">
-                <div class="verdict-icon">✕</div>
-                <h1>{{ verdict }}</h1>
-            </div>
-
-        {% elif verdict == "Syntax Error" or verdict == "Runtime Error" %}
-            <div class="verdict warning">
-                <div class="verdict-icon">!</div>
-                <h1>{{ verdict }}</h1>
-            </div>
-
-        {% elif verdict == "Time Limit Exceeded" %}
-            <div class="verdict warning">
-                <div class="verdict-icon">⏱</div>
-                <h1>{{ verdict }}</h1>
-            </div>
-        {% endif %}
-
-        <div class="output-card">
-
-            <p class="output-label">
-                Program Output
-            </p>
-
-            <pre>{{ output }}</pre>
-
         </div>
-
-        
-
     </div>
-
 </div>
 
 {% endblock %}

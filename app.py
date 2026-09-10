@@ -190,7 +190,20 @@ def case_problem(id):
       saved_code = history.last_submission if history and history.last_submission else None
 
    return render_template("solving_page-case_problems.html", case_problem = case_problem, saved_code = saved_code)
-               
+
+# Code provided by ai
+@app.template_filter('format_example')
+def format_example(text):
+   if not text:
+      return text
+   
+   keywords = ['Example', 'Output', 'Explanation']
+   pattern = r'(?=\b(?:' + '|'.join(keywords) + r')\b)'
+   chunks = re.split(pattern, text)
+   lines = [chunk.strip() for chunk in chunks if chunk.strip()]
+   return '\n'.join(lines)  
+##################################
+ 
 @app.route('/case_problems/solving-page/<int:id>/submit', methods=['POST', 'GET'])
 @login_required
 @nocache

@@ -8,35 +8,28 @@
 
 {% block body %}
 
-    <a href="/output_problems" class="home-btn" aria-label="Home">
-        <span>←</span>
-    </a>
+    <div class="min-h-screen bg-slate-950 p-4">
 
-    <div class="main_Container">
-
-        <div id="title">
-            <h1>{{problem.problem_title}}</h1>
+        <div onclick="window.location.href='/case_problems' " class="flex w-fit mb-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+            class="lucide lucide-chevron-left-icon lucide-chevron-left bg-slate-800 text-slate-300 hover:-translate-x-[2.5px] transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+            </svg>
         </div>
 
-        <div id="description">
-            <h3>{{problem.problem_description}}</h3>
-        </div>
+        <div class="flex flex-col flex-1 justify-center items-center text-slate-500">
 
-        <div id="problem">
+            <p class="text-yellow-600 text-3xl">{{problem.problem_title}}</p>
+            <p>{{problem.problem_description}}</p>
             
             <pre>{{problem.problem_set | e}}</pre>
-        </div>
-
-        <div id="solving_area_container">
-            
-            <form action="/output_problems/solving_page/{{problem.problem_id}}" method='POST'>
-            <textarea name='submission' rows="10" cols="50" id="textarea"></textarea>
-            <input type="submit" value="Submit">
+   
+            <form action="/output_problems/solving_page/{{problem.problem_id}}" method='POST' class="flex flex-col">
+                <textarea name='submission' rows="10" cols="50" class="resize-none border border-slate-500 p-2"></textarea>
+                <input type="submit" value="Submit" class="mt-2 w-fit self-center cursor-pointer px-2 text-yellow-300 bg-yellow-800 hover:text-yellow-200">
             </form>
 
         </div>
 
     </div>
-
 
 {% endblock %}

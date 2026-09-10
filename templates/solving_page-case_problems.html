@@ -12,7 +12,7 @@
 
     <div onclick="window.location.href='/case_problems' " class="flex w-fit mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-slate-800 text-slate-300 hover:-translate-x-2 transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-slate-800 text-slate-300 hover:-translate-x-[2.5px] transition-all duration-200"><path d="m15 18-6-6 6-6"/>
         </svg>
     </div>
 
@@ -30,7 +30,7 @@
     {% endif %}</textarea>
 
         <div class="flex justify-center">
-            <input type="submit" value="Submit" class="px-2 text-yellow-300 bg-yellow-800">
+            <input type="submit" value="Submit" class="cursor-pointer px-2 text-yellow-300 bg-yellow-800 hover:text-yellow-200">
         </div>
 
         </form>
@@ -43,10 +43,10 @@
         <div class="ml-2 flex-1 h-px bg-slate-800"></div>
     </div>
 
-    <div class="text-slate-500">
+    <div class="sticky flex flex-col gap-y-4 text-slate-500">
         <p class="flex justify-center mb-4 text-3xl text-yellow-600">{{case_problem.title}}</p>
         <p>{{case_problem.instruction}}</p>
-        <p>{{case_problem.example}}</p>
+        <p class="whitespace-pre-line">{{case_problem.example|format_example}}</p>
         <p>{{case_problem.constraints}}</p>
 
         {% if case_problem.follow_up != None %}
@@ -72,5 +72,9 @@
     </div>
 
 </div>
+
+<script>
+
+</script>
 
 {% endblock %}
