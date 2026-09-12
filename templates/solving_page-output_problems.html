@@ -16,17 +16,22 @@
             </svg>
         </div>
 
-        <div class="flex flex-col flex-1 justify-center items-center text-slate-500">
+        <div class="flex flex-col flex-1 text-slate-500 gap-y-4 mx-10">
 
-            <p class="text-yellow-600 text-3xl">{{problem.problem_title}}</p>
-            <p>{{problem.problem_description}}</p>
+            <p class="text-yellow-600 text-3xl flex justify-center">{{problem.problem_title}}</p>
             
-            <pre>{{problem.problem_set | e}}</pre>
-   
-            <form action="/output_problems/solving_page/{{problem.problem_id}}" method='POST' class="flex flex-col">
-                <textarea name='submission' rows="10" cols="50" class="resize-none border border-slate-500 p-2"></textarea>
-                <input type="submit" value="Submit" class="mt-2 w-fit self-center cursor-pointer px-2 text-yellow-300 bg-yellow-800 hover:text-yellow-200">
-            </form>
+            <div class="grid grid-cols-2">
+                
+                <div class="">
+                    <p>{{problem.problem_description}}</p>
+                    <pre>{{problem.problem_set | e}}</pre>
+                </div>
+
+                <form action="/output_problems/solving_page/{{problem.problem_id}}" method='POST' class="flex flex-col">
+                    <textarea name='submission' rows="10" cols="50" class="resize-none border border-slate-500 p-2 focus:border-slate-400"></textarea>
+                    <input type="submit" value="Submit" class="mt-2 w-fit self-center cursor-pointer px-2 text-yellow-300 bg-yellow-800 hover:text-yellow-200">
+                </form>
+            </div>
 
         </div>
 
