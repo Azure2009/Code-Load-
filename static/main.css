@@ -1,6 +1,13 @@
 @import "tailwindcss";
 @import "../admin/static/style.css";
 
+@theme {
+
+    --breakpoint-mobileM: 23.438rem;
+    --breakpoint-mobileL: 26.563rem;
+
+}
+
 .difficulty-btn button {
 
     padding-left: 4px;
