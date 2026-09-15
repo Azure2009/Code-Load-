@@ -22,44 +22,46 @@
             </button>
 
             <p class="text-slate-500">
-        Note: Once you return to dashboard, solving page will be reset. Use back arrow to try again.
-    </p>
+                Note: Once you return to dashboard, solving page will be reset. Use back arrow to try again.
+            </p>
             
             {% if verdict == "Accepted" %}
                 <div class="verdict accepted">
                     <div class="verdict-icon">✓</div>
-                    <h1>{{ verdict }}</h1>
+                    <p class="">{{ verdict }}</p>
                 </div>
 
             {% elif verdict == "Wrong Answer" %}
                 <div class="verdict wrong">
                     <div class="verdict-icon">✕</div>
-                    <h1>{{ verdict }}</h1>
+                    <p class="">{{ verdict }}</p>
                 </div>
 
             {% elif verdict == "Syntax Error" or verdict == "Runtime Error" %}
                 <div class="verdict warning">
                     <div class="verdict-icon">!</div>
-                    <h1>{{ verdict }}</h1>
+                    <p class="">{{ verdict }}</p>
                 </div>
 
             {% elif verdict == "Time Limit Exceeded" %}
                 <div class="verdict warning">
                     <div class="verdict-icon">⏱</div>
-                    <h1>{{ verdict }}</h1>
+                    <p class="">{{ verdict }}</p>
                 </div>
             {% endif %}
-
-            <div class="output-card">
-
-                <p class="output-label">
-                    Program Output
-                </p>
-
-                <pre>{{ output }}</pre>
-            </div>
+    
         </div>
+
     </div>
+
+    <p class="output-label">
+        Program Output
+    </p>
+
+    <div class="border bg-[#1c1c1e] p-2 wrap-anywhere rounded-xl text-white">
+        <p>{{ output }}</p>
+    </div>    
+
 </div>
 
 {% endblock %}

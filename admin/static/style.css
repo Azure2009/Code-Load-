@@ -1,1 +1,27 @@
 @import "tailwindcss";
+
+#side_panel {
+
+    position: fixed;
+    display: block;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    z-index: 10;
+    width: 8rem;
+    padding: 4px;
+    background-color: #ffdf20;
+    transform: translateX(100%);
+    transition-property: transform;
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+    transition-duration: 300ms;
+
+}
+
+#side_panel.is-open {
+
+    transform: translateX(0);
+
+}
+
+

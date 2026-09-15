@@ -22,14 +22,17 @@
 
             <input type="hidden" value="" name="problem_id_proxy" id="problem_id_proxy">
 
-            <div class="flex">
-                <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem" autocomplete="off" class="border border-yellow-500 px-2 focus:outline-yellow-300">
-                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                class="relative lucide lucide-trash2-icon lucide-trash-2 text-red-500 ml-2"
-                onclick="delete_problem()"
-                >
-                <path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
-                </svg>
+            <div class="flex flex-col">
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
+                    class="relative lucide lucide-trash2-icon lucide-trash-2 text-red-500 w-15 h-15"
+                    onclick="delete_problem()"
+                    >
+                    <path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                    </svg>
+                    <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem" autocomplete="off" class="border border-yellow-500 px-2 focus:outline-yellow-300">
+                </div>
+
                 <p class="ml-2 text-xs text-slate-500 self-center">PS: By selecting a problem, you can also optionally delete it instantly using the trash icon.</p>
             </div>
             

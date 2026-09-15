@@ -18,13 +18,17 @@
                 {% for problem in problems_list %}
                     <div class="flex flex-col bg-slate-200 p-2">                 
                         <p class="text-3xl">{{problem.problem_title}}</p>
-                        <div class="flex items-center">
-                            <p class="">
-                                {{problem.difficulty}} • {{status_list[loop.index0]}}
-                            </p>
-                            <a href="/output_problems/solving_page/{{problem.problem_id}}?fresh=true" class="ml-auto bg-blue-500 text-white px-2">
-                                Solve →
-                            </a>
+                        <div class="flex flex-col">
+                            <div class="w-fit self-start">
+                                <p class="">
+                                    {{problem.difficulty}} • {{status_list[loop.index0]}}
+                                </p>
+                            </div>
+                            <div class="w-fit self-end">
+                                <a href="/output_problems/solving_page/{{problem.problem_id}}?fresh=true" class="bg-blue-500 text-white px-2">
+                                    Solve →
+                                </a>
+                            </div>
                         </div>
                     </div>
                 {% endfor %}

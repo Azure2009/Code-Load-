@@ -21,7 +21,7 @@
     <!-- ^^^^^^^^^^^^^^Coding Area^^^^^^^^^^^^^^^^^^^^^^ -->
     <div class="">
 
-        <form action="/case_problems/solving-page/{{case_problem.id}}/submit" method="post" class="flex flex-col gap-y-2 mx-20">
+        <form action="/case_problems/solving-page/{{case_problem.id}}/submit" method="post" class="flex flex-col gap-y-2">
 
         <textarea id="code" name="code" class="">{% if saved_code %}{{ saved_code }}{% else %}class Test:    
     def test_{{case_problem.function_name}}(self, {{case_problem.args}}) -> {{case_problem.return_type}}:

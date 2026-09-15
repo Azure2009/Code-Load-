@@ -9,13 +9,13 @@
 
 <div class="min-h-screen bg-yellow-500 flex items-center">
     <div class="relative flex flex-1 justify-center">
-        <div class="text-5xl text-white">
+        <div class="text-xl text-white">
             <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-            class="lucide lucide-circle-x text-red-500 grid justify-self-center">
+            class="lucide lucide-circle-x text-red-500/80 grid justify-self-center mb-2">
             <circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/>
             </svg>
             <p class="grid justify-self-center">{{popup_message}}</p>
-            <button onclick="closeAndRedirect()" class="grid justify-self-center mt-4 cursor-pointer underline underline-offset-4 text-3xl hover:text-slate-300 transition-text duration-200">OK</button>
+            <button onclick="closeAndRedirect()" class="grid justify-self-center mt-4 cursor-pointer underline underline-offset-4 text-xl hover:text-slate-300 transition-text duration-200">OK</button>
         </div>
     </div>
 </div>

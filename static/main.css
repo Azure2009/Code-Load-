@@ -10,11 +10,11 @@
 
 .difficulty-btn button {
 
+    display: flex;
     padding-left: 4px;
     padding-right: 4px;
 
 }
-
 
 .difficulty-btn .active {
 
@@ -115,7 +115,8 @@
 
     min-height:100vh;
 
-    display:flex;
+    display: flex;
+    flex-direction: column;
     align-items:center;
     justify-content:center;
 
@@ -176,9 +177,10 @@
     color:#ff9f0a;
 }
 
-.verdict h1{
-    font-size:48px;
+.verdict p{
+    font-size:36px;
     font-weight:700;
+    justify-self: center;
 }
 
 .output-card{
@@ -198,30 +200,7 @@
 
     color:#86868b;
 
-    margin-bottom:12px;
-}
-
-.output-card pre{
-
-    background:#1c1c1e;
-
-    color:#f5f5f7;
-
-    padding:24px;
-
-    border-radius:18px;
-
-    overflow-x:auto;
-
-    font-size:14px;
-
-    line-height:1.7;
-
-    font-family:
-        SFMono-Regular,
-        Menlo,
-        Monaco,
-        monospace;
+    margin-bottom:6px;
 }
 
 .toast {
