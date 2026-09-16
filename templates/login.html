@@ -7,7 +7,7 @@
 {% block body %}
 
     <div class="min-h-screen bg-slate-100 p-4">
-        <div class="bg-white flex flex-col rounded-xl mx-auto mt-20 gap-y-4 p-2">
+        <div class="bg-white flex flex-col rounded-xl max-w-xl mx-auto mt-20 gap-y-4 p-10">
             <div class="flex self-center w-fit group">   
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                 onclick="window.location.href = '/' "
@@ -26,13 +26,13 @@
             </div>
 
             <form action='/login' method='POST' class="flex flex-col gap-y-4">
-                <div class="flex items-center justify-center">
-                    <label class="mr-[1.5px] text-base text-slate-500" for="username">Username:</label>
+                <div class="flex flex-col justify-center">
+                    <label class="text-xl text-slate-500" for="username">Username</label>
                     <input type="text" name="username" required class="border border-slate-300 rounded-xl focus:outline-yellow-500 p-2" autocomplete="off">
                 </div>
 
-                <div class="flex items-center justify-center">
-                    <label class="mr-[1.5px] text-base text-slate-500" for="password">Password:</label>
+                <div class="flex flex-col justify-center">
+                    <label class="text-xl text-slate-500" for="password">Password</label>
                     <input type="password" name="password" required class="flex-1 border border-slate-300 rounded-xl p-2 focus:outline-yellow-500" autocomplete="off">
                 </div>
 

@@ -3,6 +3,7 @@
 
 @theme {
 
+    --breakpoint-mobileS: 20rem;
     --breakpoint-mobileM: 23.438rem;
     --breakpoint-mobileL: 26.563rem;
 

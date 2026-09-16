@@ -32,11 +32,11 @@
 
         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
         onclick="showSidePanel()"
-        class="lucide lucide-panel-right w-10 h-10">
+        class="lucide lucide-panel-right w-10 h-10 min-[523px]:hidden">
         <rect width="18" height="18" x="3" y="3" rx="2"/><path d="M15 3v18"/>
         </svg>
 
-        <aside id="side_panel">
+        <aside id="side_panel" class="">
             <div class="flex flex-col gap-4">
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
                 onclick="closeSidePanel()"
@@ -54,30 +54,46 @@
                 </button>
             </div>
         </aside>
+
+        <div class="max-[523px]:hidden min-[523px]:flex flex-1 gap-4 justify-end">
+            <p class="self-start truncate">{{admin.username}}</p>
+                
+            <button
+                class="self-start text-nowrap hover:text-slate-300 transition-colors duration-200"
+                onclick="confirm()"
+                title="Sign Out"
+            >
+                Sign out
+            </button>
+        </div>
+
     </div>
 
-    <div class="flex flex-col flex-1 justify-center bg-slate-100 mx-10">
+    <div class="flex flex-col flex-1 justify-center mx-10">
 
         <div class="flex flex-col gap-y-10">
-            <div class="flex justify-start bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
-                <a href="/admin/dashboard/new_output_problem" class="">
-                    <h3 class="text-3xl">Output Problems</h3>
-                    <p class="text-base">Create and manage output prediction exercises.</p>   
-                </a>
+            <div
+            onclick="window.location.href = '/admin/dashboard/new_output_problem' " 
+            class="flex flex-col justify-start min-[698px]:items-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200"
+            >    
+                <h3 class="text-3xl">Output Problems</h3>
+                <p class="text-base">Create and manage output prediction exercises.</p>      
             </div>
 
-            <div class="flex justify-start bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
-                <a href="/admin/dashboard/new_case_problem" class="">
-                    <h3 class="text-3xl">Case Problems</h3>
-                    <p class="text-base">Create algorithmic coding challenges.</p>
-                </a>
+            <div
+            onclick="window.location.href = '/admin/dashboard/new_case_problem' "
+            class="flex flex-col justify-start min-[698px]:items-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200"
+            >                
+                <h3 class="text-3xl">Case Problems</h3>
+                <p class="text-base">Create algorithmic coding challenges.</p>   
             </div>
             
-            <div class="flex justify-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200">
-                <a href="/admin/dashboard/new_test_case" class="">
-                    <h3 class="text-3xl">Test Cases</h3>
-                    <p class="text-base">Add and maintain automated test cases.</p>
-                </a>    
+            <div
+            onclick="window.location.href = '/admin/dashboard/new_test_case' " 
+            class="flex flex-col justify-start min-[698px]:items-center bg-blue-100 border bg-border-500 px-4 py-2 hover:scale-110 transition-all duration-200"
+            >
+                <h3 class="text-3xl">Test Cases</h3>
+                <p class="text-base">Add and maintain automated test cases.</p>
             </div>
         </div>
         

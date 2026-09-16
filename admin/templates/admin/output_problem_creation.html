@@ -58,18 +58,25 @@
                 </div>
             </div>
 
-            <label for="problem_title">Problem Title:</label>
-            <textarea name="problem_title" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            <div class="flex flex-col">
+                <label for="problem_title">Problem Title:</label>
+                <textarea name="problem_title" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            </div>
 
-            <label for="problem_title">Problem Description:</label>
-            <textarea name="problem_description" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
-                
-            <label for="coding_problem">Coding Problem</label>
-            <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            <div class="flex flex-col">
+                <label for="problem_title">Problem Description:</label>
+                <textarea name="problem_description" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            </div>    
 
-            <label for="expected_output">Expected Output</label>
-            <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            <div class="flex flex-col">
+                <label for="coding_problem">Coding Problem:</label>
+                <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            </div>
 
+            <div class="flex flex-col">
+                <label for="expected_output">Expected Output:</label>
+                <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
+            </div>
             
             <input type="submit" value="Submit" class="w-fit bg-yellow-400 text-white px-10 py-1 self-center hover:bg-yellow-300 transition-all duration-200">
         </form>
