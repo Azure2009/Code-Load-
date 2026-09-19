@@ -5,7 +5,7 @@
 <div class="relative min-h-screen bg-slate-100 p-4">
 
     <div class="group w-fit flex ml-auto mr-6 mt-4">
-        <button onclick="window.location.href='/dashboard/account'" class="flex ml-auto text-3xl bg-white px-4 py-px font-bold cursor-pointer shadow-md group-hover:shadow-xl/30 transition-all duration-200">
+        <button onclick="window.location.href='/dashboard/account'" class="flex ml-auto text-3xl 3xl:text-5xl bg-white px-4 py-px font-bold cursor-pointer shadow-md group-hover:shadow-xl/30 transition-all duration-200">
         {{ user.username[0]|upper }}
         </button>
         <div class="absolute -translate-y-6  bg-black invisible text-xs text-white px-2 border border-slate-500 z-10 group-hover:visible group-hover:transition-all duration-200">
@@ -13,13 +13,13 @@
         </div>
     </div>
 
-    <div class="mt-10 flex flex-col items-center gap-y-6">
-        <p class="text-7xl font-bold">
+    <div class="mt-10 flex flex-col items-center gap-y-6 3xl:gap-10">
+        <p class="text-7xl font-bold 3xl:text-9xl">
             Choose your path,
             <span>{{ user.username }}</span>
         </p>
 
-        <p class="text-slate-500">
+        <p class="text-slate-500 3xl:text-xl">
             Build confidence through guided exercises or
             challenge yourself with real coding problems.
         </p>
@@ -28,14 +28,14 @@
 
             <div onclick="window.location.href= '/output_problems' " class="grid gap-y-2 justify-items-center border-2 border-yellow-500 p-4 group hover:scale-110 transition-all duration-200">
 
-                <p class="text-xl">Output Problems</p>
+                <p class="text-xl 3xl:text-3xl">Output Problems</p>
 
-                <p class="text-sm">
+                <p class="text-sm 3xl:text-lg">
                     Practice reading and understanding code by
                     predicting program output.
                 </p>
 
-                <p class="px-2 group-hover:bg-blue-500 group-hover:text-white font-bold transition-all duration-200">
+                <p class="px-2 3xl:text-3xl group-hover:bg-blue-500 group-hover:text-white font-bold transition-all duration-200">
                     Start →
                 </p>
 
@@ -43,14 +43,14 @@
 
             <div onclick="window.location.href = '/case_problems' " class="grid gap-y-2 justify-items-center border-2 border-yellow-500 group p-4 hover:scale-110 transition-all duration-200">
 
-                <p class="text-xl">Case Problems</p>
+                <p class="text-xl 3xl:text-3xl">Case Problems</p>
 
-                <p class="text-sm">
+                <p class="text-sm 3xl:text-lg">
                     Solve coding challenges and
                     pass every test case with your own solution.
                 </p>
 
-                <p class="font-bold px-2 group-hover:bg-blue-500 group-hover:text-white transition-all duration-200">
+                <p class="3xl:text-3xl font-bold px-2 group-hover:bg-blue-500 group-hover:text-white transition-all duration-200">
                     Start →
                 </p>
 
@@ -60,11 +60,11 @@
 
     </div>
 
-    <div class="absolute bottom-0 left-0 bg-yellow-300 min-w-screen">
-        <p class="flex justify-center text-white text-xl font-bold">
+    <div class="fixed flex justify-center bottom-0 left-0 bg-yellow-300 min-w-screen 3xl:h-24">
+        <div class="flex justify-center items-center text-white text-xl 3xl:text-5xl font-bold">
             <span class="text-blue-500">Code</span>
             <span class="text-yellow-500 mr-2">Load</span> 
-        </p>
+        </div>
     </div>
 </div>
 

@@ -12,31 +12,30 @@
 
     <div onclick="window.location.href='/admin/dashboard' " class="flex w-fit mb-2">
         <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white hover:-translate-x-[2.5px] transition-all duration-200"><path d="m15 18-6-6 6-6"/>
+        class="lucide lucide-chevron-left-icon lucide-chevron-left bg-white 3xl:w-14 3xl:h-14 hover:-translate-x-[2.5px] transition-all duration-200"><path d="m15 18-6-6 6-6"/>
         </svg>
     </div>
 
-    <div class="flex flex-col gap-y-10">
+    <div class="flex flex-col gap-y-10 mt-10">
 
         <div class="">
 
             <input type="hidden" value="" name="problem_id_proxy" id="problem_id_proxy">
 
-            <div class="flex flex-col gap-2">
+            <div class="flex items-center min-mobileS:max-md:flex-col gap-2">
                 <div class="flex gap-x-2 items-center">
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                    class="relative lucide lucide-trash2-icon lucide-trash-2 text-red-500 w-4 h-4"
+                    class="relative lucide lucide-trash2-icon lucide-trash-2 text-red-500 w-4 h-4 3xl:w-12 3xl:h-12"
                     onclick="delete_problem()"
                     >
                     <path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
                     </svg>
-                    <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem" autocomplete="off" class="border border-yellow-500 px-2 focus:outline-yellow-300">
+                    <input type="search" name="search_bar" id="search_bar" placeholder="Search for problem" autocomplete="off" class="border border-yellow-500 px-2 3xl:h-14 3xl:text-xl focus:outline-yellow-300">
                 </div>
 
-                <p class="text-xs text-slate-500 self-center min-sm:text-lg">PS: By selecting a problem, you can also optionally delete it instantly using the trash icon.</p>
-                <p class="text-xs text-slate-500 self-center min-sm:text-lg">We recommend sizing your window tab from 1089px or wider when writing test cases.</p>
+                <p class="text-xs text-slate-500 min-mobileS:max-md:self-center 3xl:text-2xl">PS: By selecting a problem, you can also optionally delete it instantly using the trash icon.</p>
+
             </div>
-            
 
             <div id="results_panel" class=""></div>
 
@@ -47,11 +46,11 @@
             <div id="hintOverlay" class="absolute flex flex-col w-full h-full bg-black/90 justify-center cursor-default z-10">
                 
                 <svg xmlns="http://www.w3.org/2000/svg" width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                class="lucide lucide-info text-white self-center mb-2">
+                class="lucide lucide-info text-white self-center mb-2 3xl:w-14 3xl:h-14">
                 <circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/>
                 </svg>
-                <p class="flex flex-col text-white text-xs wrap-anywhere items-center font-bold min-[426px]:text-base">Search and select a problem to start writing test</p>
-                <p class="flex flex-col text-white text-xs wrap-anywhere items-center font-bold min-[426px]:text-base">cases</p>
+                <p class="flex flex-col text-white text-xs wrap-anywhere items-center font-bold min-[426px]:text-base 3xl:text-2xl">Search and select a problem to start writing test</p>
+                <p class="flex flex-col text-white text-xs wrap-anywhere items-center font-bold min-[426px]:text-base 3xl:text-2xl">cases</p>
 
             </div>
 
@@ -60,12 +59,10 @@
                 <input type="hidden" name="problem_id" id="problem_id" value="">   
 
                 <div class="grid grid-cols-2 gap-x-4">
+
+                    <p class="col-span-2 justify-self-center my-4 text-white 3xl:text-2xl">Each test case and expected output is partnered based on their number in the number line.</p>
                     
-                    <div class="col-start-1">
-                        <p class="text-white italic mb-6.5">
-                            You can submit multiple test cases at the same time.
-                            A new line would be considered as a new test case.
-                        </p>
+                    <div class="col-start-1 border border-yellow-400 p-2">
 
                         <div class="editor-container">
 
@@ -82,19 +79,19 @@
                                 placeholder="Write testcase.."
                                 required
                                 spellcheck="false"
+                                class="resize-none 3xl:text-2xl"
                             ></textarea>
 
                         </div>
+
+                        <p class="flex justify-center text-white italic mb-6.5 3xl:text-2xl">
+                            A new line would be considered as a new test case.
+                        </p>
                         
                     </div>
 
-                    <div class="col-start-2">
-                        <p class="text-white italic mb-6.5">
-                            A new line would be considered as a new expected output.
-                            Test case and expected output are partnered based on
-                            their number in the number line.
-                        </p>
-
+                    <div class="col-start-2 border border-yellow-400 p-2">
+                        
                         <div class="editor-container">
 
                             <div
@@ -110,14 +107,19 @@
                                 placeholder="Write expected output.."
                                 required
                                 spellcheck="false"
+                                class="resize-none"
                             ></textarea>
 
                         </div>
+
+                        <p class="flex justify-center text-white italic mb-6.5 3xl:text-2xl">
+                            A new line would be considered as a new expected output.
+                        </p>
                     </div>
 
                 </div>
 
-                <input type="submit" value="Submit" class="grid justify-self-center w-fit bg-yellow-400 text-white px-10 py-1 hover:bg-yellow-300 transition-all duration-200">
+                <input type="submit" value="Submit" class="grid justify-self-center w-fit bg-yellow-400 text-white px-10 py-1 mt-4 3xl:text-2xl hover:bg-yellow-300 transition-all duration-200">
 
             </form>
 

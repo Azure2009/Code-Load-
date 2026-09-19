@@ -21,14 +21,14 @@
 
             <input type="hidden" value="" name="problem_id" id="problem_id">
 
-            <p class="text-sm text-white italic">
-                <span class="text-red-500 text-base">Delete</span> an output prediction exercise.
+            <p class="text-sm text-white italic 3xl:text-2xl">
+                <span class="text-red-500 text-base 3xl:text-2xl">Delete</span> an output prediction exercise.
             </p>
 
-            <div class="flex flex-col gap-y-2">
+            <div class="flex max-md:flex-col gap-y-2 min-md:gap-2">
                 
                 <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" 
-                class="relative lucide lucide-trash2-icon lucide-trash-2 text-white bg-yellow-300 px-px "
+                class="relative lucide lucide-trash2-icon lucide-trash-2 text-white bg-yellow-300 px-px 3xl:w-10 3xl:h-10"
                 onclick="delete_problem()"
                 >
                 <path d="M10 11v6"/><path d="M14 11v6"/><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/><path d="M3 6h18"/><path d="M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
@@ -43,10 +43,10 @@
 
             <input type="hidden" name="difficulty" id="difficulty" value="">
             <div class="flex flex-col gap-y-4">
-                <p class="italic text-base">
+                <p class="italic text-base 3xl:text-2xl">
                     <span class="text-blue-500">Create</span> a new output prediction exercise.
                 </p>
-                <div class="flex flex-col">
+                <div class="flex flex-col 3xl:text-2xl">
                     <p class="">Select difficulty:</p>
                     <div class="difficulty-btn">
 
@@ -58,27 +58,27 @@
                 </div>
             </div>
 
-            <div class="flex flex-col">
+            <div class="flex flex-col 3xl:text-2xl">
                 <label for="problem_title">Problem Title:</label>
                 <textarea name="problem_title" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
             </div>
 
-            <div class="flex flex-col">
+            <div class="flex flex-col 3xl:text-2xl">
                 <label for="problem_title">Problem Description:</label>
                 <textarea name="problem_description" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
             </div>    
 
-            <div class="flex flex-col">
+            <div class="flex flex-col 3xl:text-2xl">
                 <label for="coding_problem">Coding Problem:</label>
                 <textarea name="coding_problem" id="coding_problem" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
             </div>
 
-            <div class="flex flex-col">
+            <div class="flex flex-col 3xl:text-2xl">
                 <label for="expected_output">Expected Output:</label>
                 <textarea name="expected_output" id="expected_output" class="flex-1 border border-slate-300 p-2 resize-none focus:outline-white" required></textarea>
             </div>
             
-            <input type="submit" value="Submit" class="w-fit bg-yellow-400 text-white px-10 py-1 self-center hover:bg-yellow-300 transition-all duration-200">
+            <input type="submit" value="Submit" class="w-fit bg-yellow-400 text-white px-10 py-1 self-center 3xl:text-2xl hover:bg-yellow-300 transition-all duration-200">
         </form>
     </div>
 </div>

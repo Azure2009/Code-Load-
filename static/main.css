@@ -7,7 +7,18 @@
     --breakpoint-mobileM: 23.438rem;
     --breakpoint-mobileL: 26.563rem;
     --breakpoint-3xl: 124.625rem;
+    --breakpoint-4xl: 160rem;
 
+}
+
+@media (width >= 124.625rem) {
+
+    .CodeMirror {
+
+        font-size: 22px;
+
+
+    }    
 }
 
 .difficulty-btn button {
@@ -24,14 +35,26 @@
 
 }
 
-#results_pnel {
+#results_panel {
 
     position: relative;
 
     display: grid;
 
-    margin-top: 2px;
+    margin-top: 30px;
 
+}
+
+@media (width >= 124.625rem) {
+
+    #results_panel div {
+
+        font-size:  32px;
+
+
+    }
+
+    
 }
 
 .editor-container {
@@ -115,14 +138,11 @@
 
 .result-page{
 
-    min-height:100vh;
-
     display: flex;
     flex-direction: column;
     align-items:center;
     justify-content:center;
 
-    padding:40px;
 }
 
 .result-card{
@@ -130,11 +150,11 @@
     width:100%;
     max-width:900px;
 
+    padding: 30px;
+
     background:white;
 
     border-radius:32px;
-
-    padding:48px;
 
     box-shadow:
         0 12px 40px rgba(0,0,0,.06);
@@ -164,19 +184,84 @@
     font-weight:700;
 }
 
+@media (width >= 124.625rem) {
+    
+    .verdict-icon{
+
+        width:150px;
+        height:150px;
+
+        margin:0 auto 30px;
+
+        border-radius:50%;
+
+        display:flex;
+        align-items:center;
+        justify-content:center;
+
+        font-size:42px;
+        font-weight:700;
+    }   
+
+
+}
+
 .accepted .verdict-icon{
     background:#e8fff0;
     color:#34c759;
+
+    margin-top: 10px;
+}
+
+@media (width >= 124.625rem) {
+    
+    .accepted .verdict-icon{
+        background:#e8fff0;
+        color:#34c759;
+
+        margin-top: 10px;
+        font-size: 100px;
+    }
+
 }
 
 .wrong .verdict-icon{
     background:#fff0f0;
     color:#ff3b30;
+
+    margin-top: 10px;
+    font-size: 100px;
+}
+
+@media (width >= 124.625rem) {
+       
+    .wrong .verdict-icon{
+        background:#fff0f0;
+        color:#ff3b30;
+
+        margin-top: 10px;
+        font-size: 100px;
+    }
+
 }
 
 .warning .verdict-icon{
     background:#fff7e6;
     color:#ff9f0a;
+
+    margin-top: 10px;
+}
+
+@media (width >= 124.625rem) {
+    
+    .warning .verdict-icon{
+        background:#fff7e6;
+        color:#ff9f0a;
+
+        margin-top: 10px;
+        font-size: 100px;
+    }
+
 }
 
 .verdict p{
@@ -202,7 +287,25 @@
 
     color:#86868b;
 
+    margin-top: 20px;
     margin-bottom:6px;
+}
+
+@media (width >= 124.625rem) {
+    
+    .output-label{
+
+        font-size:40px;
+        font-weight:600;
+
+        letter-spacing:.08em;
+        text-transform:uppercase;
+
+        color:#86868b;
+
+        margin-bottom:6px;
+    }
+
 }
 
 .toast {
